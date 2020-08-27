@@ -278,7 +278,7 @@ namespace ModMyFactory.Models
         /// <summary>
         /// Checks if this modpack contains a specified mod.
         /// </summary>
-        public bool Contains(string modName, Version factorioVersion, out ModReference reference)
+        public bool Contains(string modName, GameCompatibleVersion factorioVersion, out ModReference reference)
         {
             foreach (var @ref in Mods)
             {

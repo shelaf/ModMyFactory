@@ -40,7 +40,7 @@ namespace ModMyFactory
         /// <param name="name">The name of the mod.</param>
         /// <param name="factorioVersion">The mods Factorio version.</param>
         /// <returns>Returns true if the collection contains the mod, otherwise false.</returns>
-        public bool ContainsbyFactorioVersion(string name, Version factorioVersion)
+        public bool ContainsbyFactorioVersion(string name, GameCompatibleVersion factorioVersion)
         {
             return this.Any(mod =>
                 string.Equals(mod.Name, name, StringComparison.InvariantCultureIgnoreCase)
@@ -63,7 +63,7 @@ namespace ModMyFactory
         /// <param name="name">The name of the mods.</param>
         /// <param name="factorioVersion">The mods Factorio version.</param>
         /// <returns>Returns the mods searched for.</returns>
-        public IEnumerable<Mod> Find(string name, Version factorioVersion)
+        public IEnumerable<Mod> Find(string name, GameCompatibleVersion factorioVersion)
         {
             return this.Where(mod => string.Equals(mod.Name, name, StringComparison.InvariantCultureIgnoreCase) && (mod.FactorioVersion == factorioVersion));
         }

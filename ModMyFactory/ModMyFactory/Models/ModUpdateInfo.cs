@@ -19,7 +19,7 @@ namespace ModMyFactory.Models
 
         public Version UpdateVersion => Update.Version;
 
-        public Version FactorioVersion => Update.InfoFile.FactorioVersion;
+        public GameCompatibleVersion FactorioVersion => Update.InfoFile.FactorioVersion;
 
         public List<ModVersionUpdateInfo> ModVersions { get; }
 

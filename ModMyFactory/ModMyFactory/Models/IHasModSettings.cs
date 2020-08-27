@@ -12,7 +12,7 @@ namespace ModMyFactory.Models
 
         GameCompatibleVersion Version { get; }
 
-        Version FactorioVersion { get; }
+        GameCompatibleVersion FactorioVersion { get; }
 
         string DisplayName { get; }
 

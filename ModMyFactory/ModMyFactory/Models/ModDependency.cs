@@ -154,7 +154,7 @@ namespace ModMyFactory.Models
         /// <summary>
         /// Checks if a dependency is present on the mod portal.
         /// </summary>
-        public bool IsPresent(ExtendedModInfo modInfo, Version factorioVersion, out ModRelease release)
+        public bool IsPresent(ExtendedModInfo modInfo, GameCompatibleVersion factorioVersion, out ModRelease release)
         {
             bool result = false;
             release = null;

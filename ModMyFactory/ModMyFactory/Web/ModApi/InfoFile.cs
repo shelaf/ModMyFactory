@@ -6,8 +6,8 @@ namespace ModMyFactory.Web.ModApi
     sealed class InfoFile
     {
         [JsonProperty("factorio_version")]
-        [JsonConverter(typeof(TwoPartVersionConverter))]
-        public Version FactorioVersion { get; set; }
+        [JsonConverter(typeof(GameVersionConverter))]
+        public GameCompatibleVersion FactorioVersion { get; set; }
 
         [JsonProperty("dependencies")]
         [JsonConverter(typeof(SingleOrArrayJsonConverter<string>))]

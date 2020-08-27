@@ -5,12 +5,12 @@ using System.Windows.Data;
 
 namespace ModMyFactory.MVVM.Converters
 {
-    [ValueConversion(typeof(Version), typeof(string))]
+    [ValueConversion(typeof(GameCompatibleVersion), typeof(string))]
     sealed class FactorioVersionConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var version = value as Version;
+            var version = value as GameCompatibleVersion;
             if (version == null) throw new ArgumentException("Value has to be of type Version.", nameof(value));
 
             if (version == OnlineModsViewModel.EmptyVersion)
