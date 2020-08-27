@@ -58,8 +58,11 @@ namespace ModMyFactory.ModSettings.Serialization
 
         public void AddMod(IHasModSettings mod)
         {
-            foreach (var setting in mod.Settings)
-                AddSetting(setting);
+            if (mod.Settings != null)
+            {
+                foreach (var setting in mod.Settings)
+                    AddSetting(setting);
+            }
         }
 
         public bool TryGetValue<T>(IModSetting<T> setting, out T value) where T : IEquatable<T>

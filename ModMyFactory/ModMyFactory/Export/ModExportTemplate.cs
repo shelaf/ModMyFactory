@@ -53,9 +53,9 @@ namespace ModMyFactory.Export
         public GameCompatibleVersion Version { get; }
 
         [DefaultValue(null)]
-        [JsonConverter(typeof(VersionConverter))]
+        [JsonConverter(typeof(GameVersionConverter))]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public Version FactorioVersion { get; }
+        public GameCompatibleVersion FactorioVersion { get; }
 
         [JsonIgnore]
         public bool Included => ExportMode.HasFlag(ExportMode.Included);
@@ -69,7 +69,7 @@ namespace ModMyFactory.Export
 
 
         [JsonConstructor]
-        private ModExportTemplate(int uid, string name, ExportMode exportMode, GameCompatibleVersion version, Version factorioVersion)
+        private ModExportTemplate(int uid, string name, ExportMode exportMode, GameCompatibleVersion version, GameCompatibleVersion factorioVersion)
         {
             Uid = uid;
             Name = name;

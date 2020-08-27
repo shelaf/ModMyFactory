@@ -35,7 +35,7 @@ namespace ModMyFactory.Models
             
             if (!file.ResidesInModDirectory)
             {
-                var modDirectory = App.Instance.Settings.GetModDirectory(infoFile.FactorioVersion);
+                var modDirectory = App.Instance.Settings.GetModDirectory(infoFile.FactorioVersion.ToFactorioMinor());
                 if (!modDirectory.Exists) modDirectory.Create();
 
                 if (copy)

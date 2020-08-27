@@ -45,6 +45,18 @@ namespace ModMyFactory
             baseVersion = version;
         }
 
+        public GameCompatibleVersion ToMinor() => new GameCompatibleVersion(Major, Minor);
+
+        public GameCompatibleVersion ToFactorioMinor()
+        {
+            var version = ToMinor();
+            if (version.Major == 1 && version.Minor == 0)
+            {
+                version = new GameCompatibleVersion(0, 18);
+            }
+            return version;
+        }
+
         public int CompareTo(GameCompatibleVersion other)
         {
             if (ReferenceEquals(other, null)) return 1;

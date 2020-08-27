@@ -27,7 +27,7 @@ namespace ModMyFactory.Models
 
         public GameCompatibleVersion Version => baseMod.Version;
 
-        public Version FactorioVersion => baseMod.FactorioVersion;
+        public GameCompatibleVersion FactorioVersion => baseMod.FactorioVersion;
 
         public string DisplayName => baseMod.DisplayName;
 

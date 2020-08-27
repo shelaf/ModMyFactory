@@ -59,7 +59,7 @@ namespace ModMyFactory.Models
         /// <summary>
         /// Indicaes whether this mod file resides inside the managed mod directory.
         /// </summary>
-        public bool ResidesInModDirectory => file.ParentDirectory().DirectoryEquals(App.Instance.Settings.GetModDirectory(InfoFile.FactorioVersion));
+        public bool ResidesInModDirectory => file.ParentDirectory().DirectoryEquals(App.Instance.Settings.GetModDirectory(InfoFile.FactorioVersion.ToFactorioMinor()));
 
         /// <summary>
         /// An optional thumbnail provided in the mod file.
@@ -184,7 +184,7 @@ namespace ModMyFactory.Models
         /// </summary>
         public void Enable()
         {
-            if (InfoFile.FactorioVersion >= FactorioVersion.DisableBehaviourSwitch) return; // Do not disable on file level for Factorio 0.17 and later.
+            if (InfoFile.FactorioVersion.ToFactorioMinor() >= FactorioVersion.DisableBehaviourSwitch) return; // Do not disable on file level for Factorio 0.17 and later.
             if (Enabled) return;
 
             if (isFile)
@@ -209,7 +209,7 @@ namespace ModMyFactory.Models
         /// </summary>
         public void Disable()
         {
-            if (InfoFile.FactorioVersion >= FactorioVersion.DisableBehaviourSwitch) return; // Do not disable on file level for Factorio 0.17 and later.
+            if (InfoFile.FactorioVersion.ToFactorioMinor() >= FactorioVersion.DisableBehaviourSwitch) return; // Do not disable on file level for Factorio 0.17 and later.
             if (!Enabled) return;
 
             if (isFile)
@@ -292,7 +292,7 @@ namespace ModMyFactory.Models
                 script.Globals.Set("data", luaData);
 
                 var modsTable = new Table(script);
-                foreach (var mod in parentCollection.Where(m => m.FactorioVersion == InfoFile.FactorioVersion))
+                foreach (var mod in parentCollection.Where(m => m.FactorioVersion.ToFactorioMinor() == InfoFile.FactorioVersion.ToFactorioMinor()))
                     modsTable.Set(DynValue.NewString(mod.Name), DynValue.True);
                 script.Globals.Set("mods", DynValue.NewTable(modsTable));
 
@@ -300,9 +300,16 @@ namespace ModMyFactory.Models
                 {
                     using (var archive = ZipFile.OpenRead(file.FullName))
                     {
-                        script.Options.ScriptLoader = new ArchiveSettingsScriptLoader(LoadSettingsFileFromArchive, archive, parentCollection, InfoFile) { ModulePaths = new[] { "?.lua" } };
-                        string mainFile = LoadSettingsFileFromArchive(archive, mainFileName);
-                        script.DoString(mainFile);
+                        try
+                        {
+                            script.Options.ScriptLoader = new ArchiveSettingsScriptLoader(LoadSettingsFileFromArchive, archive, parentCollection, InfoFile) { ModulePaths = new[] { "?.lua" } };
+                            string mainFile = LoadSettingsFileFromArchive(archive, mainFileName);
+                            script.DoString(mainFile);
+                        }
+                        catch (ScriptRuntimeException)
+                        {
+                            // ignore mod settings error
+                        }
                     }
                 }
                 else

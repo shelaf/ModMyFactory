@@ -15,7 +15,7 @@ namespace ModMyFactory.Models
 
         public FileInfo Executable { get; private set; }
 
-        public Version Version { get; }
+        public GameCompatibleVersion Version { get; }
 
         public bool Is64Bit { get; }
         
@@ -63,7 +63,7 @@ namespace ModMyFactory.Models
             Executable = new FileInfo(Path.Combine(newDir.FullName, executablePath));
         }
 
-        private FactorioFolder(DirectoryInfo directory, FileInfo executable, Version version, bool is64Bit)
+        private FactorioFolder(DirectoryInfo directory, FileInfo executable, GameCompatibleVersion version, bool is64Bit)
         {
             Directory = directory;
             Executable = executable;

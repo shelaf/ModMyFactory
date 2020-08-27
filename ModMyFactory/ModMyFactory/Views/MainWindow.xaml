@@ -10,6 +10,8 @@
         xmlns:controls="clr-namespace:ModMyFactory.Controls"
         xmlns:converter="clr-namespace:ModMyFactory.MVVM.Converters"
         xmlns:local="clr-namespace:ModMyFactory"
+        xmlns:helper="clr-namespace:ModMyFactory.Helpers"
+
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="{DynamicResource MainWindowTitle}"
@@ -60,6 +62,7 @@
         <sys:Boolean x:Key="True">True</sys:Boolean>
 
         <converter:AdvancedVisibilityConverter x:Key="AdvancedVisibilityConverter"/>
+        <helper:GroupNameConverter x:Key="groupNameConverter"/>
 
         <Style x:Key="ActiveInactiveCheckBoxStyle" TargetType="{x:Type CheckBox}">
             <Style.Setters>
@@ -536,7 +539,7 @@
                                                                 <ColumnDefinition Width="*"/>
                                                             </Grid.ColumnDefinitions>
 
-                                                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="8,2" VerticalAlignment="Center" FontSize="14" Text="{Binding Name}"/>
+                                                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="8,2" VerticalAlignment="Center" FontSize="14" Text="{Binding Path=Name, Converter={StaticResource groupNameConverter}}"/>
                                                             <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,-24,-4" Fill="{DynamicResource SelectionBrush}"/>
                                                         </Grid>
                                                     </controls:DefaultExpandedExpander.Header>

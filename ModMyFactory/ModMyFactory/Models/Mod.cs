@@ -176,9 +176,9 @@ namespace ModMyFactory.Models
         public GameCompatibleVersion Version => InfoFile.Version;
 
         /// <summary>
-        /// The version of Factorio this mod is compatible with.
+        /// The version of Factorio this mod is compatible with, where version 1.0 is considered to be version 0.18 for compatibility reasons
         /// </summary>
-        public Version FactorioVersion => InfoFile.FactorioVersion;
+        public GameCompatibleVersion FactorioVersion => InfoFile.FactorioVersion;
 
         /// <summary>
         /// The friendly of the mod.

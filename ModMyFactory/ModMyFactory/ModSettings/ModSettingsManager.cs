@@ -56,7 +56,7 @@ namespace ModMyFactory.ModSettings
             {
                 if (mod.Active)
                 {
-                    var binary = GetTemplate(mod.FactorioVersion);
+                    var binary = GetTemplate(mod.FactorioVersion.ToFactorioMinor());
                     binary.AddMod(mod);
                 }
             }
@@ -119,6 +119,7 @@ namespace ModMyFactory.ModSettings
             binaryFiles = new Dictionary<Version, BinaryFile>();
             deserializedBinary = new Dictionary<Version, ModSettingsExportTemplate>();
             var modDir = App.Instance.Settings.GetModDirectory();
+            if (!modDir.Exists) modDir.Create();
             foreach (var subDir in modDir.EnumerateDirectories())
             {
                 if (Version.TryParse(subDir.Name, out var version))

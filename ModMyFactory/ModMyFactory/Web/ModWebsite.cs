@@ -129,7 +129,7 @@ namespace ModMyFactory.Web
         public static async Task<Mod> DownloadReleaseAsync(ModRelease release, string username, string token, IProgress<double> progress, CancellationToken cancellationToken,
             ModCollection parentCollection, ModpackCollection modpackCollection)
         {
-            DirectoryInfo modDirectory = App.Instance.Settings.GetModDirectory(release.InfoFile.FactorioVersion);
+            DirectoryInfo modDirectory = App.Instance.Settings.GetModDirectory(release.InfoFile.FactorioVersion.ToFactorioMinor());
             if (!modDirectory.Exists) modDirectory.Create();
 
             var downloadUrl = BuildUrl(release, username, token);
@@ -142,7 +142,7 @@ namespace ModMyFactory.Web
                 {
                     if (ModFile.TryLoadFromFile(file, out ModFile modFile))
                     {
-                        if (modFile.InfoFile.FactorioVersion == release.InfoFile.FactorioVersion)
+                        if (modFile.InfoFile.ActualFactorioVersion == release.InfoFile.FactorioVersion)
                         {
                             return await Mod.Add(modFile, parentCollection, modpackCollection, false);
                         }
@@ -172,7 +172,7 @@ namespace ModMyFactory.Web
         /// <param name="cancellationToken">A cancelation token that can be used to cancel the operation.</param>
         public static async Task<Mod> DownloadReleaseToFileAsync(ModRelease release, string username, string token, string fileName, IProgress<double> progress, CancellationToken cancellationToken)
         {
-            DirectoryInfo modDirectory = App.Instance.Settings.GetModDirectory(release.InfoFile.FactorioVersion);
+            DirectoryInfo modDirectory = App.Instance.Settings.GetModDirectory(release.InfoFile.FactorioVersion.ToFactorioMinor());
             if (!modDirectory.Exists) modDirectory.Create();
 
             var downloadUrl = BuildUrl(release, username, token);
@@ -202,7 +202,7 @@ namespace ModMyFactory.Web
         /// <param name="cancellationToken">A cancelation token that can be used to cancel the operation.</param>
         public static async Task<ModFile> DownloadUpdateAsync(ModRelease release, string username, string token, IProgress<double> progress, CancellationToken cancellationToken)
         {
-            DirectoryInfo modDirectory = App.Instance.Settings.GetModDirectory(release.InfoFile.FactorioVersion);
+            DirectoryInfo modDirectory = App.Instance.Settings.GetModDirectory(release.InfoFile.FactorioVersion.ToFactorioMinor());
             if (!modDirectory.Exists) modDirectory.Create();
 
             var downloadUrl = BuildUrl(release, username, token);

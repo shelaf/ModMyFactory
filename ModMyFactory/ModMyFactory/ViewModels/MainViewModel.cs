@@ -23,6 +23,7 @@ using WPFCore;
 using WPFCore.Commands;
 using ModMyFactory.Web;
 using ModMyFactory.ModSettings;
+using ModMyFactory.Controls;
 
 namespace ModMyFactory.ViewModels
 {
@@ -1022,7 +1023,7 @@ namespace ModMyFactory.ViewModels
 
                 foreach (var mod in Mods)
                 {
-                    var dir = App.Instance.Settings.GetModDirectory(mod.FactorioVersion);
+                    var dir = App.Instance.Settings.GetModDirectory(mod.FactorioVersion.ToFactorioMinor());
                     if (!dir.Exists) dir.Create();
                     await mod.MoveToAsync(dir.FullName);
                 }

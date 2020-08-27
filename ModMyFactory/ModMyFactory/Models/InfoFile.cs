@@ -22,11 +22,18 @@ namespace ModMyFactory.Models
         public GameCompatibleVersion Version { get; }
 
         /// <summary>
-        /// The version of Factorio this mod is compatible with.
+        /// The actual version of Factorio this mod is compatible with.
         /// </summary>
         [JsonProperty("factorio_version")]
-        [JsonConverter(typeof(TwoPartVersionConverter))]
-        public Version FactorioVersion { get; }
+        [JsonConverter(typeof(GameVersionConverter))]
+        public GameCompatibleVersion ActualFactorioVersion { get; }
+
+        /// <summary>
+        /// The version of Factorio this mod is compatible with.<br/>
+        /// This is always a minor version, where version 1.0 is considered to be version 0.18 for compatibility reasons
+        /// </summary>
+        [JsonIgnore]
+        public GameCompatibleVersion FactorioVersion { get; }
 
         /// <summary>
         /// The mods friendly name.
@@ -55,16 +62,21 @@ namespace ModMyFactory.Models
 
         /// <summary>
         /// Indicates whether this info file is valid.
-        /// To be valid, the <see cref="Name"/>, <see cref="Version"/> and <see cref="FactorioVersion"/> properties must be non-null.
+        /// To be valid, the <see cref="Name"/>, <see cref="Version"/> and <see cref="ActualFactorioVersion"/> properties must be non-null.
         /// </summary>
-        public bool IsValid => !string.IsNullOrWhiteSpace(Name) && (Version != null) && ((Name == "base") || (FactorioVersion != null));
+        public bool IsValid => !string.IsNullOrWhiteSpace(Name) && (Version != null) && ((Name == "base") || (ActualFactorioVersion != null));
 
         [JsonConstructor]
-        private InfoFile(string name, GameCompatibleVersion version, Version factorioVersion, string friendlyName, string author, string description, ModDependency[] dependencies)
+        private InfoFile(string name, GameCompatibleVersion version, GameCompatibleVersion actualFactorioVersion, string friendlyName, string author, string description, ModDependency[] dependencies)
         {
             Name = name;
             Version = version;
-            FactorioVersion = factorioVersion;
+            ActualFactorioVersion = actualFactorioVersion;
+            FactorioVersion = null;
+            if (actualFactorioVersion != null)
+            {
+                FactorioVersion = actualFactorioVersion.ToFactorioMinor();
+            }
             FriendlyName = friendlyName;
             Author = author;
             Description = description;

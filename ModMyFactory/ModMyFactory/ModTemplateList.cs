@@ -82,9 +82,9 @@ namespace ModMyFactory
             Mods.Add(new ModTemplate("base", true, null));
         }
 
-        private ModTemplate CreateTemplate(string name, bool enabled, GameCompatibleVersion version, Version factorioVersion)
+        private ModTemplate CreateTemplate(string name, bool enabled, GameCompatibleVersion version, GameCompatibleVersion factorioVersion)
         {
-            if (factorioVersion >= FactorioVersion.DisableBehaviourSwitch)
+            if (factorioVersion.ToFactorioMinor() >= FactorioVersion.DisableBehaviourSwitch)
             {
                 return new ModTemplate(name, enabled, version);
             }
@@ -105,11 +105,11 @@ namespace ModMyFactory
         /// </summary>
         /// <param name="name">The mods name.</param>
         /// <returns>Returns if the specified mod is active.</returns>
-        public bool GetActive(string name, GameCompatibleVersion version, Version factorioVersion, bool isOnly)
+        public bool GetActive(string name, GameCompatibleVersion version, GameCompatibleVersion factorioVersion, bool isOnly)
         {
             if (TryGetMod(name, out var mod))
             {
-                if ((factorioVersion >= FactorioVersion.DisableBehaviourSwitch) && !isOnly)
+                if ((factorioVersion.ToFactorioMinor() >= FactorioVersion.DisableBehaviourSwitch) && !isOnly)
                 {
                     return mod.Enabled && (mod.Version == version);
                 }
@@ -133,7 +133,7 @@ namespace ModMyFactory
         /// </summary>
         /// <param name="name">The mods name.</param>
         /// <param name="value">The new active state of the mod.</param>
-        public void SetActive(string name, bool value, GameCompatibleVersion version, Version factorioVersion, bool isOnly, bool isDefault)
+        public void SetActive(string name, bool value, GameCompatibleVersion version, GameCompatibleVersion factorioVersion, bool isOnly, bool isDefault)
         {
             if (TryGetMod(name, out var mod))
             {

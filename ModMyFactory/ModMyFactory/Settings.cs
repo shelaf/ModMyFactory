@@ -182,7 +182,7 @@ namespace ModMyFactory
             throw new InvalidOperationException();
         }
 
-        public DirectoryInfo GetModDirectory(Version version = null)
+        public DirectoryInfo GetModDirectory(GameCompatibleVersion version = null)
         {
             const string directoryName = "mods";
 
@@ -190,19 +190,19 @@ namespace ModMyFactory
             {
                 case DirectoryOption.AppData:
                     if (version != null)
-                        return new DirectoryInfo(Path.Combine(App.Instance.AppDataPath, directoryName, version.ToString(2)));
+                        return new DirectoryInfo(Path.Combine(App.Instance.AppDataPath, directoryName, version.ToFactorioMinor().ToString()));
                     else
                         return new DirectoryInfo(Path.Combine(App.Instance.AppDataPath, directoryName));
 
                 case DirectoryOption.ApplicationDirectory:
                     if (version != null)
-                        return new DirectoryInfo(Path.Combine(App.Instance.ApplicationDirectoryPath, directoryName, version.ToString(2)));
+                        return new DirectoryInfo(Path.Combine(App.Instance.ApplicationDirectoryPath, directoryName, version.ToFactorioMinor().ToString()));
                     else
                         return new DirectoryInfo(Path.Combine(App.Instance.ApplicationDirectoryPath, directoryName));
 
                 case DirectoryOption.Custom:
                     if (version != null)
-                        return new DirectoryInfo(Path.Combine(ModDirectory, version.ToString(2)));
+                        return new DirectoryInfo(Path.Combine(ModDirectory, version.ToFactorioMinor().ToString()));
                     else
                         return new DirectoryInfo(ModDirectory);
             }

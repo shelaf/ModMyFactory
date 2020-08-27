@@ -32,12 +32,12 @@ namespace ModMyFactory.ViewModels
 
         public static OnlineModsViewModel Instance => instance ?? (instance = new OnlineModsViewModel());
 
-        public static Version EmptyVersion => emptyVersion ?? (emptyVersion = new Version(0, 0));
+        public static GameCompatibleVersion EmptyVersion => emptyVersion ?? (emptyVersion = new GameCompatibleVersion(0, 0));
 
         public OnlineModsWindow Window => (OnlineModsWindow)View;
         
-        List<Version> versionFilterList;
-        Version selectedVersionFilter;
+        List<GameCompatibleVersion> versionFilterList;
+        GameCompatibleVersion selectedVersionFilter;
         List<ModInfo> mods;
         string filter;
         readonly ModInfoSorter sorter;
@@ -60,7 +60,7 @@ namespace ModMyFactory.ViewModels
 
         public ListCollectionView VersionFilterView { get; private set; }
 
-        public List<Version> VersionFilterList
+        public List<GameCompatibleVersion> VersionFilterList
         {
             get => versionFilterList;
             private set
@@ -77,7 +77,7 @@ namespace ModMyFactory.ViewModels
             }
         }
 
-        public Version SelectedVersionFilter
+        public GameCompatibleVersion SelectedVersionFilter
         {
             get => selectedVersionFilter;
             set
@@ -109,7 +109,7 @@ namespace ModMyFactory.ViewModels
                     ModsView.CustomSort = sorter;
                     OnPropertyChanged(new PropertyChangedEventArgs(nameof(ModsView)));
 
-                    var versions = new List<Version>() { EmptyVersion };
+                    var versions = new List<GameCompatibleVersion>() { EmptyVersion };
                     foreach (var mod in mods)
                     {
                         var version = mod.LatestRelease?.InfoFile?.FactorioVersion;
@@ -431,7 +431,7 @@ namespace ModMyFactory.ViewModels
         private bool FilterVersion(ModInfo mod)
         {
             if (SelectedVersionFilter == EmptyVersion) return true;
-
+            if (mod.LatestRelease == null) return true;
             return mod.LatestRelease.InfoFile.FactorioVersion == SelectedVersionFilter;
         }
 

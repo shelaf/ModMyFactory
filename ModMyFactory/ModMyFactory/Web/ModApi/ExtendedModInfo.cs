@@ -43,7 +43,7 @@ namespace ModMyFactory.Web.ModApi
 
         public override ModRelease LatestRelease { get => GetLatestRelease(); set => base.LatestRelease = value; }
 
-        public ModRelease GetLatestRelease(Version factorioVersion = null)
+        public ModRelease GetLatestRelease(GameCompatibleVersion factorioVersion = null)
         {
             if (factorioVersion == null)
                 return Releases.MaxBy(release => release.Version, new VersionComparer());
