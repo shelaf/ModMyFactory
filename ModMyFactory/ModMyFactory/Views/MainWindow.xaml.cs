@@ -159,6 +159,19 @@ namespace ModMyFactory.Views
                 e.Effects = (item == null) ? DragDropEffects.Copy : DragDropEffects.Link;
             }
 
+            double tolerance = 10;
+            double offset = 15;
+            double verticalPos = e.GetPosition(listBox).Y;
+            ScrollViewer scrollViewer = FindVisualChild<ScrollViewer>(listBox);
+            if (verticalPos < tolerance)
+            {
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - offset);
+            }
+            else if (verticalPos > listBox.ActualHeight - tolerance)
+            {
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset + offset);
+            }
+
             e.Handled = true;
         }
 
@@ -309,6 +322,20 @@ namespace ModMyFactory.Views
 
                 modsListBoxDeselectionOmitted = false;
             }
+        }
+
+        private static ChildItem FindVisualChild<ChildItem>(DependencyObject obj) where ChildItem : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is ChildItem childItem) return childItem;
+
+                ChildItem childOfChild = FindVisualChild<ChildItem>(child);
+                if (childOfChild != null) return childOfChild;
+            }
+
+            return null;
         }
 
         private void RenameTextBoxLostFocusHandler(object sender, EventArgs e)
