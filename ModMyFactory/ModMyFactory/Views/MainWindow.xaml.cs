@@ -174,7 +174,8 @@ namespace ModMyFactory.Views
             if (item != null)
             {
                 dragStartPoint = e.GetPosition(null);
-                dragging = true;
+                dragging = e.GetPosition((IInputElement)sender).X < listBox.ActualWidth - SystemParameters.VerticalScrollBarWidth
+                    && e.GetPosition((IInputElement)sender).Y < listBox.ActualHeight - SystemParameters.HorizontalScrollBarHeight;
 
                 if (item.IsSelected)
                     modpacksListBoxDeselectionOmitted = true;
@@ -247,7 +248,8 @@ namespace ModMyFactory.Views
             if (item != null)
             {
                 dragStartPoint = e.GetPosition(null);
-                dragging = true;
+                dragging = e.GetPosition((IInputElement)sender).X < listBox.ActualWidth - SystemParameters.VerticalScrollBarWidth
+                    && e.GetPosition((IInputElement)sender).Y < listBox.ActualHeight - SystemParameters.HorizontalScrollBarHeight;
 
                 if (item.IsSelected)
                     modsListBoxDeselectionOmitted = true;
