@@ -149,8 +149,13 @@ namespace ModMyFactory.Models
                         case SettingType.String:
                             if (hasDefaultValue && (defaultValueDyn.Type != DataType.String)) return false;
                             bool allowEmptyValue = false;
-                            if (dict.TryGetValue("allow_blank", out var allowEmptyValueDyn) && (allowEmptyValueDyn.Type == DataType.Boolean))
-                                allowEmptyValue = allowEmptyValueDyn.Boolean;
+                            if (dict.TryGetValue("allow_blank", out var allowEmptyValueDyn))
+                            {
+                                if (allowEmptyValueDyn.Type == DataType.Boolean)
+                                    allowEmptyValue = allowEmptyValueDyn.Boolean;
+                                else if (allowEmptyValueDyn.Type == DataType.String)
+                                    bool.TryParse(allowEmptyValueDyn.String, out allowEmptyValue);
+                            }
                             result = new StringModSetting(owner, name, loadTime, ordering, hasDefaultValue ? defaultValueDyn.String : string.Empty, allowEmptyValue);
                             break;
                     }
