@@ -159,7 +159,7 @@ namespace ModMyFactory.Views
                 e.Effects = (item == null) ? DragDropEffects.Copy : DragDropEffects.Link;
             }
 
-            double tolerance = 10;
+            double tolerance = 15;
             double offset = 15;
             double verticalPos = e.GetPosition(listBox).Y;
             ScrollViewer scrollViewer = FindVisualChild<ScrollViewer>(listBox);
