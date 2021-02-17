@@ -1,4 +1,6 @@
-﻿using ModMyFactory.Models;
+﻿using ModMyFactory.Controls;
+using ModMyFactory.Models;
+using ModMyFactory.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,7 +9,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using ModMyFactory.ViewModels;
 using System.Windows.Threading;
 
 namespace ModMyFactory.Views
@@ -370,6 +371,17 @@ namespace ModMyFactory.Views
             {
                 droppedFiles = ((string[])e.Data.GetData(DataFormats.FileDrop));
                 dropTimer.Start();
+            }
+        }
+
+        private void ModpacksListBoxMouseDoubleClickHandler(object sender, MouseButtonEventArgs e)
+        {
+            DragDropReadyListBox listBox = sender as DragDropReadyListBox;
+            var listBoxItem = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromItem(listBox.SelectedItem);
+            if (listBoxItem.InputHitTest(e.GetPosition(listBoxItem)) != null)
+            {
+                Expander expander = FindVisualChild<Expander>(listBoxItem);
+                expander.IsExpanded = !expander.IsExpanded;
             }
         }
 
