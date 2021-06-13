@@ -378,7 +378,7 @@ namespace ModMyFactory.Views
         {
             DragDropReadyListBox listBox = sender as DragDropReadyListBox;
             var listBoxItem = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromItem(listBox.SelectedItem);
-            if (listBoxItem.InputHitTest(e.GetPosition(listBoxItem)) != null)
+            if (listBoxItem != null && listBoxItem.InputHitTest(e.GetPosition(listBoxItem)) != null)
             {
                 Expander expander = FindVisualChild<Expander>(listBoxItem);
                 expander.IsExpanded = !expander.IsExpanded;
