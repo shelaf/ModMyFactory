@@ -225,6 +225,10 @@ namespace ModMyFactory.Models
                 IsHidden = true;
                 value = value.Substring(3).TrimStart();
             }
+            else if (value[0] == '~') // Other dependencies
+            {
+                value = value.Substring(1).TrimStart();
+            }
             if (string.IsNullOrEmpty(value)) throw new ArgumentException("No mod name specified.", nameof(value));
 
             HasRestriction = false;
