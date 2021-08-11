@@ -88,8 +88,16 @@ namespace ModMyFactory.ModSettings.Serialization
             bool hasValue = dict.TryGetValue(setting.Name, out var template);
             if (hasValue && (template != null))
             {
-                value = template.GetValue<T>();
-                return true;
+                try
+                {
+                    value = template.GetValue<T>();
+                    return true;
+                }
+                catch (FormatException)
+                {
+                    value = default(T);
+                    return false;
+                }
             }
             else
             {
