@@ -19,10 +19,11 @@ namespace ModMyFactory.ModSettings.Serialization
         {
             None = 0,
             Bool = 1,
-            Number = 2,
+            Double = 2,
             String = 3,
             List = 4,
             Dictionary = 5,
+            Int = 6,
         }
 
         static readonly BinaryVersion OldestSupportedVersion = new BinaryVersion(0, 16, 0, 0);
@@ -80,7 +81,7 @@ namespace ModMyFactory.ModSettings.Serialization
                     jsonWriter.WriteValue(reader.ReadBoolean());
                     break;
 
-                case PropertyTreeType.Number:
+                case PropertyTreeType.Double:
                     jsonWriter.WriteValue(reader.ReadDouble());
                     break;
 
@@ -120,7 +121,10 @@ namespace ModMyFactory.ModSettings.Serialization
                         jsonWriter.WriteEndObject();
                         break;
                     }
-                    
+
+                case PropertyTreeType.Int:
+                    jsonWriter.WriteValue(reader.ReadInt32());
+                    break;
 
                 default:
                     throw new InvalidOperationException($"Found unknown type {type} in property tree.");
@@ -174,8 +178,8 @@ namespace ModMyFactory.ModSettings.Serialization
             {
                 case JTokenType.Object: return PropertyTreeType.Dictionary;
                 case JTokenType.Array: return PropertyTreeType.List;
-                case JTokenType.Integer: return PropertyTreeType.Number;
-                case JTokenType.Float: return PropertyTreeType.Number;
+                case JTokenType.Integer: return PropertyTreeType.Int;
+                case JTokenType.Float: return PropertyTreeType.Double;
                 case JTokenType.String: return PropertyTreeType.String;
                 case JTokenType.Boolean: return PropertyTreeType.Bool;
                 default:
@@ -219,7 +223,7 @@ namespace ModMyFactory.ModSettings.Serialization
                     writer.Write(token.Value<bool>());
                     break;
 
-                case PropertyTreeType.Number:
+                case PropertyTreeType.Double:
                     writer.Write(token.Value<double>());
                     break;
 
@@ -253,6 +257,10 @@ namespace ModMyFactory.ModSettings.Serialization
 
                         break;
                     }
+
+                case PropertyTreeType.Int:
+                    writer.Write(token.Value<int>());
+                    break;
             }
         }
 
