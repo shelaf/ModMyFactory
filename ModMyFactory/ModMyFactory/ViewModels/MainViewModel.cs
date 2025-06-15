@@ -14,16 +14,15 @@ using System.Windows;
 using System.Windows.Data;
 using ModMyFactory.Helpers;
 using ModMyFactory.Lang;
-using Ookii.Dialogs.Wpf;
 using ModMyFactory.Models;
+using ModMyFactory.ModSettings;
 using ModMyFactory.MVVM.Sorters;
 using ModMyFactory.Views;
+using ModMyFactory.Web;
 using ModMyFactory.Web.ModApi;
+using Ookii.Dialogs.Wpf;
 using WPFCore;
 using WPFCore.Commands;
-using ModMyFactory.Web;
-using ModMyFactory.ModSettings;
-using ModMyFactory.Controls;
 
 namespace ModMyFactory.ViewModels
 {
@@ -244,12 +243,12 @@ namespace ModMyFactory.ViewModels
                     if (e.NewItems != null)
                     {
                         foreach (Mod mod in e.NewItems)
-                        mod.PropertyChanged += ModPropertyChanged;
+                            mod.PropertyChanged += ModPropertyChanged;
                     }
                     if (e.OldItems != null)
                     {
                         foreach (Mod mod in e.OldItems)
-                        mod.PropertyChanged -= ModPropertyChanged;
+                            mod.PropertyChanged -= ModPropertyChanged;
                     }
                     SetAllModsActive();
                     break;
@@ -409,11 +408,12 @@ namespace ModMyFactory.ViewModels
                     if (e.NewItems != null)
                     {
                         foreach (Modpack modpack in e.NewItems)
-                        modpack.PropertyChanged += ModpackPropertyChanged;
+                            modpack.PropertyChanged += ModpackPropertyChanged;
                     }
                     if (e.OldItems != null)
-                    { foreach (Modpack modpack in e.OldItems)
-                        modpack.PropertyChanged -= ModpackPropertyChanged;
+                    {
+                        foreach (Modpack modpack in e.OldItems)
+                            modpack.PropertyChanged -= ModpackPropertyChanged;
                     }
                     SetAllModpacksActive();
                     break;
@@ -629,10 +629,11 @@ namespace ModMyFactory.ViewModels
                 Modpacks.Clear();
             }
 
-            
-            Mod.LoadMods(Mods, Modpacks);
+
+            var factorioDirectories = factorioVersions.Select(version => version.Directory).ToList();
+            Mod.LoadMods(Mods, Modpacks, factorioDirectories);
             ModpackTemplateList.Instance.PopulateModpackList(Mods, Modpacks, ModpacksView);
-            
+
 
             modpacksLoading = false;
         }
@@ -658,6 +659,8 @@ namespace ModMyFactory.ViewModels
 
         private bool ModpacksSelected() => Modpacks.Any(modpack => modpack.IsSelected);
 
+        private bool DeletableModsSelected() => Mods.Any(mod => mod.IsSelected && !mod.File.IsOfficial);
+
         private MainViewModel()
         {
             if (!App.IsInDesignMode) // Make view model designer friendly.
@@ -680,7 +683,7 @@ namespace ModMyFactory.ViewModels
                 App.Instance.Settings.WarningShown = true;
 
                 Refresh();
-                
+
 
                 modGridLength = App.Instance.Settings.ModGridLength;
                 modpackGridLength = App.Instance.Settings.ModpackGridLength;
@@ -730,13 +733,13 @@ namespace ModMyFactory.ViewModels
                     if (!scenariosDirectory.Exists) scenariosDirectory.Create();
                     Process.Start(scenariosDirectory.FullName);
                 });
-                
+
                 RefreshCommand = new RelayCommand(Refresh);
 
                 // 'Info' menu
                 BrowseFactorioWebsiteCommand = new RelayCommand(() => Process.Start("https://www.factorio.com/"));
                 BrowseModWebsiteCommand = new RelayCommand(() => Process.Start("https://mods.factorio.com/"));
-                BrowseForumThreadCommand =  new RelayCommand(() => Process.Start("https://forums.factorio.com/viewtopic.php?f=137&t=33370"));
+                BrowseForumThreadCommand = new RelayCommand(() => Process.Start("https://forums.factorio.com/viewtopic.php?f=137&t=33370"));
 
                 UpdateCommand = new RelayCommand<bool>(async silent => await Update(silent), () => !updating);
                 OpenAboutWindowCommand = new RelayCommand(OpenAboutWindow);
@@ -745,7 +748,7 @@ namespace ModMyFactory.ViewModels
                 // context menu
                 ActivateSelectedModsCommand = new RelayCommand(ActivateSelectedMods, ModsSelected);
                 DeactivateSelectedModsCommand = new RelayCommand(DeactivateSelectedMods, ModsSelected);
-                DeleteSelectedModsCommand = new RelayCommand(DeleteSelectedMods, ModsSelected);
+                DeleteSelectedModsCommand = new RelayCommand(DeleteSelectedMods, DeletableModsSelected);
                 SelectActiveModsCommand = new RelayCommand(SelectActiveMods);
                 SelectInactiveModsCommand = new RelayCommand(SelectInactiveMods);
                 BrowseModsOnlineCommand = new RelayCommand(BrowseModsOnline, ModsSelected);
@@ -757,7 +760,7 @@ namespace ModMyFactory.ViewModels
                 SelectActiveModpacksCommand = new RelayCommand(SelectActiveModpacks);
                 SelectInactiveModpacksCommand = new RelayCommand(SelectInactiveModpacks);
 
-                DeleteSelectedModsAndModpacksCommand = new RelayCommand(DeleteSelectedModsAndModpacks, () => ModsSelected() || ModpacksSelected());
+                DeleteSelectedModsAndModpacksCommand = new RelayCommand(DeleteSelectedModsAndModpacks, () => DeletableModsSelected() || ModpacksSelected());
 
                 ClearModFilterCommand = new RelayCommand(() => ModFilterPattern = string.Empty);
                 ClearModpackFilterCommand = new RelayCommand(() => ModpackFilterPattern = string.Empty);
@@ -824,7 +827,7 @@ namespace ModMyFactory.ViewModels
 
             Mods.EndUpdate();
         }
-        
+
         private async Task AddModsFromFilesInner(string[] fileNames, bool copy, IProgress<Tuple<double, string>> progress, CancellationToken cancellationToken)
         {
             Mods.BeginUpdate();
@@ -872,7 +875,7 @@ namespace ModMyFactory.ViewModels
 
             Task closeWindowTask = processModsTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
             progressWindow.ShowDialog();
-            
+
             await processModsTask;
             await closeWindowTask;
         }
@@ -900,7 +903,7 @@ namespace ModMyFactory.ViewModels
         }
 
         #endregion
-        
+
         public void CreateNewModpack(ICollection<Mod> mods)
         {
             string name = App.Instance.GetLocalizedResourceString("NewModpackName");
@@ -1122,7 +1125,7 @@ namespace ModMyFactory.ViewModels
             DirectoryInfo oldModDirectory = settings.GetModDirectory();
             DirectoryInfo oldSavegameDirectory = settings.GetSavegameDirectory();
             DirectoryInfo oldScenarioDirectory = settings.GetScenarioDirectory();
-            
+
             // Update search
             settings.UpdateSearchOnStartup = settingsViewModel.UpdateSearchOnStartup;
             settings.IncludePreReleasesForUpdate = settingsViewModel.IncludePreReleasesForUpdate;
@@ -1238,7 +1241,7 @@ namespace ModMyFactory.ViewModels
             progressViewModel.CancelRequested += (sender, e) => cancellationSource.Cancel();
 
             var progress = new Progress<double>(p => progressViewModel.Progress = p);
-            
+
             try
             {
                 Task closeWindowTask = null;
@@ -1396,7 +1399,7 @@ namespace ModMyFactory.ViewModels
 
                 foreach (Mod mod in deletionList)
                     mod.Delete(false);
-                
+
                 Mods.EndUpdate();
                 ModManager.EndUpdateTemplates(true);
                 ModManager.SaveTemplates();

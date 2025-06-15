@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -36,7 +35,7 @@ namespace ModMyFactory.Models
 
             return dictionary;
         }
-        
+
         private static void LoadModsFromFileDictionary(Dictionary<string, ModFileCollection> fileDictionary, ModCollection parentCollection, ModpackCollection modpackCollection)
         {
             foreach (var modFileList in fileDictionary.Select(kvp => kvp.Value))
@@ -51,9 +50,23 @@ namespace ModMyFactory.Models
         /// </summary>
         /// <param name="parentCollection">The collection to contain the mods.</param>
         /// <param name="modpackCollection">The collection containing all modpacks.</param>
-        public static void LoadMods(ModCollection parentCollection, ModpackCollection modpackCollection)
+        /// <param name="factorioDirectories">The Factorio installation directories.</param>
+        public static void LoadMods(ModCollection parentCollection, ModpackCollection modpackCollection, List<DirectoryInfo> factorioDirectories)
         {
             parentCollection.BeginUpdate();
+
+            var officialModDictionary = new Dictionary<string, ModFileCollection>();
+            foreach (var factorioDirectory in factorioDirectories)
+            {
+                var dataDirectory = new DirectoryInfo(Path.Combine(factorioDirectory.FullName, "data"));
+                foreach (var subDirectory in dataDirectory.EnumerateDirectories())
+                {
+                    if (subDirectory.Name != "base" && subDirectory.Name != "core")
+                    {
+                        AddFileToDictionary(officialModDictionary, subDirectory);
+                    }
+                }
+            }
 
             var modDirectory = App.Instance.Settings.GetModDirectory();
             if (!modDirectory.Exists) modDirectory.Create();
@@ -66,6 +79,11 @@ namespace ModMyFactory.Models
             }
 
             var fileDictionary = CreateFileDictionary(selectedDirectories);
+
+            fileDictionary = fileDictionary.Concat(
+                officialModDictionary.Where(pair => !fileDictionary.ContainsKey(pair.Key))
+            ).ToDictionary(pair => pair.Key, pair => pair.Value);
+
             LoadModsFromFileDictionary(fileDictionary, parentCollection, modpackCollection);
 
             parentCollection.EndUpdate();

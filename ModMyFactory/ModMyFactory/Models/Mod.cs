@@ -283,7 +283,7 @@ namespace ModMyFactory.Models
             this.parentCollection = parentCollection;
             this.modpackCollection = modpackCollection;
 
-            DeleteCommand = new RelayCommand<bool?>(showPrompt => Delete(showPrompt ?? true));
+            DeleteCommand = new RelayCommand<bool?>(showPrompt => Delete(showPrompt ?? true), () => !file.IsOfficial);
             ViewSettingsCommand = new RelayCommand(ViewSettings);
         }
 
@@ -429,6 +429,8 @@ namespace ModMyFactory.Models
                 App.Instance.GetLocalizedMessageTitle("DeleteMod", MessageType.Question),
                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes))
             {
+                if (File.IsOfficial) return;
+
                 foreach (var modpack in modpackCollection)
                 {
                     ModReference reference;

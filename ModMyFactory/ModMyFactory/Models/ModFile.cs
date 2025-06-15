@@ -1,5 +1,4 @@
-﻿using ModMyFactory.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -8,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using MoonSharp.Interpreter;
+using ModMyFactory.Helpers;
 using ModMyFactory.Models.ModSettings;
+using MoonSharp.Interpreter;
 
 namespace ModMyFactory.Models
 {
@@ -30,7 +30,7 @@ namespace ModMyFactory.Models
         private FileSystemInfo file;
         private Dictionary<string, ModLocale> locales;
         private IList<IModSetting> settings;
-        
+
         /// <summary>
         /// The mods info file.
         /// </summary>
@@ -54,10 +54,10 @@ namespace ModMyFactory.Models
         /// <summary>
         /// Indicates whether updates for this mod should be extracted.
         /// </summary>
-        public bool ExtractUpdates => !(isFile || App.Instance.Settings.AlwaysUpdateZipped);
-        
+        public bool ExtractUpdates => !(isFile || App.Instance.Settings.AlwaysUpdateZipped || !IsOfficial);
+
         /// <summary>
-        /// Indicaes whether this mod file resides inside the managed mod directory.
+        /// Indicates whether this mod file resides inside the managed mod directory.
         /// </summary>
         public bool ResidesInModDirectory => file.ParentDirectory().DirectoryEquals(App.Instance.Settings.GetModDirectory(InfoFile.FactorioVersion.GetFactorioShortVersion()));
 
@@ -65,6 +65,11 @@ namespace ModMyFactory.Models
         /// An optional thumbnail provided in the mod file.
         /// </summary>
         public BitmapImage Thumbnail { get; }
+
+        /// <summary>
+        /// Indicates whether this mod is official
+        /// </summary>
+        public bool IsOfficial { get; }
 
         private string BuildNewFileName(int uid, bool enabled)
         {
@@ -121,7 +126,7 @@ namespace ModMyFactory.Models
             await file.CopyToAsync(newPath);
 
             var newFile = GetNewFile(newPath);
-            return new ModFile(newFile, InfoFile, isFile, true, Thumbnail);
+            return new ModFile(newFile, InfoFile, isFile, true, Thumbnail, false);
         }
 
         /// <summary>
@@ -137,7 +142,7 @@ namespace ModMyFactory.Models
             await Task.Run(() => ZipFile.ExtractToDirectory(fi.FullName, fi.DirectoryName));
 
             var newDir = new DirectoryInfo(Path.Combine(fi.DirectoryName, fi.NameWithoutExtension()));
-            var newModFile = new ModFile(newDir, InfoFile, false, Enabled, Thumbnail);
+            var newModFile = new ModFile(newDir, InfoFile, false, Enabled, Thumbnail, false);
 
             fi.Delete();
             return newModFile;
@@ -148,13 +153,16 @@ namespace ModMyFactory.Models
         /// </summary>
         public void Delete()
         {
-            file.DeleteRecursive();
+            if (!IsOfficial)
+            {
+                file.DeleteRecursive();
+            }
         }
 
         public int CompareTo(ModFile other)
         {
             int result = Version.CompareTo(other.Version);
-            
+
             if (result == 0)
             {
                 if (isFile)
@@ -167,16 +175,29 @@ namespace ModMyFactory.Models
                 }
             }
 
+            if (result == 0)
+            {
+                if (IsOfficial)
+                {
+                    result = other.IsOfficial ? 0 : -1;
+                }
+                else
+                {
+                    result = other.IsOfficial ? 1 : 0;
+                }
+            }
+
             return result;
         }
 
-        private ModFile(FileSystemInfo file, InfoFile infoFile, bool isFile, bool enabled, BitmapImage thumbnail)
+        private ModFile(FileSystemInfo file, InfoFile infoFile, bool isFile, bool enabled, BitmapImage thumbnail, bool isOfficial)
         {
             this.file = file;
             InfoFile = infoFile;
             this.isFile = isFile;
             Enabled = enabled;
             Thumbnail = thumbnail;
+            IsOfficial = isOfficial;
         }
 
         /// <summary>
@@ -278,11 +299,11 @@ namespace ModMyFactory.Models
                 return LoadSettingsFileFromDirectory(filePath);
             }
         }
-        
+
         public IList<IModSetting> GetSettings(ModCollection parentCollection, IHasModSettings owner)
         {
             const string mainFileName = "settings.lua";
-            
+
             if (settings == null)
             {
                 var script = new Script();
@@ -321,7 +342,7 @@ namespace ModMyFactory.Models
 
                 settings = data.ToSettings(owner);
             }
-            
+
             return settings;
         }
 
@@ -398,7 +419,7 @@ namespace ModMyFactory.Models
 
         private ModLocale GetDefaultLocale()
         {
-            
+
             if (locales.TryGetValue(DefaultLocaleString, out var storedValue))
             {
                 return storedValue;
@@ -496,6 +517,11 @@ namespace ModMyFactory.Models
             }
         }
 
+        private static bool IsOfficialMod(DirectoryInfo directory)
+        {
+            return (directory.Parent.Name.Equals("data", StringComparison.InvariantCultureIgnoreCase));
+        }
+
         /// <summary>
         /// Tries to load a file.
         /// </summary>
@@ -513,7 +539,7 @@ namespace ModMyFactory.Models
             if (!ArchiveFileValid(file, out infoFile, out enabled, hasUid)) return false;
 
             var thumbnail = GetThumbnailFromArchive(file);
-            result = new ModFile(file, infoFile, true, enabled, thumbnail);
+            result = new ModFile(file, infoFile, true, enabled, thumbnail, false);
             return true;
         }
 
@@ -534,7 +560,8 @@ namespace ModMyFactory.Models
             if (!DirectoryValid(directory, out infoFile, out enabled, hasUid)) return false;
 
             var thumbnail = GetThumbnailFromDirectory(directory);
-            result = new ModFile(directory, infoFile, false, enabled, thumbnail);
+            var isOfficial = IsOfficialMod(directory);
+            result = new ModFile(directory, infoFile, false, enabled, thumbnail, isOfficial);
             return true;
         }
 
@@ -558,7 +585,7 @@ namespace ModMyFactory.Models
 
             return false;
         }
-        
+
         /// <summary>
         /// Removes the UID from a mods name, if it is specified.
         /// </summary>
@@ -589,7 +616,7 @@ namespace ModMyFactory.Models
             version = null;
 
             enabled = (extension != ".disabled");
-            
+
             int index = fileName.LastIndexOf('_');
             if ((index < 1) || (index >= fileName.Length - 1)) return false;
 
@@ -719,9 +746,12 @@ namespace ModMyFactory.Models
         {
             infoFile = null;
 
-            if (directory.Name == "base")
+            if (IsOfficialMod(directory))
             {
-                enabled = true;
+                if (directory.Name == "base")
+                {
+                    enabled = true;
+                }
                 return TryReadInfoFileFromDirectory(directory, out infoFile, out enabled);
             }
             else

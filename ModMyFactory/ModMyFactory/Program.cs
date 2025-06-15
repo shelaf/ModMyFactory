@@ -142,7 +142,7 @@ namespace ModMyFactory
             return factorioVersion != null;
         }
 
-        private static void ActivateMods(CommandLine commandLine)
+        private static void ActivateMods(CommandLine commandLine, FactorioVersion factorioVersion)
         {
             var mods = new ModCollection();
             var modpacks = new ModpackCollection();
@@ -151,7 +151,7 @@ namespace ModMyFactory
             ModSettingsManager.LoadSettings();
             ModSettingsManager.BeginUpdate();
 
-            Mod.LoadMods(mods, modpacks);
+            Mod.LoadMods(mods, modpacks, new List<DirectoryInfo> { factorioVersion.Directory });
             ModpackTemplateList.Instance.PopulateModpackList(mods, modpacks, null);
 
             mods.ForEach(mod => mod.Active = false);
@@ -236,7 +236,7 @@ namespace ModMyFactory
             if (factorioVersion == null) return true;
 
 
-            ActivateMods(commandLine);
+            ActivateMods(commandLine, factorioVersion);
             string args = BuildArguments(commandLine);
             factorioVersion.Run(args);
 
