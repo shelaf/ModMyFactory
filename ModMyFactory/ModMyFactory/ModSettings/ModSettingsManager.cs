@@ -1,11 +1,11 @@
-﻿using ModMyFactory.Helpers;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using ModMyFactory.Helpers;
 using ModMyFactory.Models;
 using ModMyFactory.Models.ModSettings;
 using ModMyFactory.ModSettings.Serialization;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace ModMyFactory.ModSettings
 {
@@ -44,7 +44,7 @@ namespace ModMyFactory.ModSettings
             if (force) updateCount = 0;
             else updateCount--;
         }
-        
+
         public static void SaveBinarySettings(ModCollection mods)
         {
             if (updateCount > 0) return;
@@ -72,7 +72,7 @@ namespace ModMyFactory.ModSettings
             {
                 var version = kvp.Key;
                 var template = kvp.Value;
-                
+
                 if (version >= BehaviourSwitch)
                 {
                     string json = JsonHelper.Serialize(template);
@@ -162,7 +162,7 @@ namespace ModMyFactory.ModSettings
                 }
             }
         }
-        
+
         private static bool TryGetSavedBinaryValue<T>(IHasModSettings mod, IModSetting<T> setting, out T value) where T : IEquatable<T>
         {
             if (deserializedBinary.TryGetValue(mod.FactorioVersion, out var settings))
@@ -179,7 +179,7 @@ namespace ModMyFactory.ModSettings
         public static bool TryGetSavedValue<T>(IHasModSettings mod, IModSetting<T> setting, out T value) where T : IEquatable<T>
         {
             if (mod.UseBinaryFileOverride && TryGetSavedBinaryValue(mod, setting, out value)) return true;
-            
+
             bool result = modSettings.TryGetValue(mod.UniqueID, out var settings);
             if (result)
             {

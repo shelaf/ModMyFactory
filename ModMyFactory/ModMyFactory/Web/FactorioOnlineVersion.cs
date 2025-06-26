@@ -14,7 +14,7 @@ namespace ModMyFactory.Web
 
 
         public Version Version { get; }
-        
+
         public bool IsExperimental { get; }
 
         public string DownloadUrl { get; }

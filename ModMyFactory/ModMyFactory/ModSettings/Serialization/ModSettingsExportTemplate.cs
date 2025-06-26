@@ -1,8 +1,8 @@
-﻿using ModMyFactory.Models;
+﻿using System;
+using System.Collections.Generic;
+using ModMyFactory.Models;
 using ModMyFactory.Models.ModSettings;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
 namespace ModMyFactory.ModSettings.Serialization
 {
@@ -84,7 +84,7 @@ namespace ModMyFactory.ModSettings.Serialization
                     value = default(T);
                     return false;
             }
-            
+
             bool hasValue = dict.TryGetValue(setting.Name, out var template);
             if (hasValue && (template != null))
             {

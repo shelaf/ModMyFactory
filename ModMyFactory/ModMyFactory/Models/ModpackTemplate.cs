@@ -2,15 +2,15 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
+using ModMyFactory.Helpers;
 using ModMyFactory.MVVM.Sorters;
 using WPFCore;
-using ModMyFactory.Helpers;
 
 namespace ModMyFactory.Models
 {
     sealed class ModpackTemplate : NotifyPropertyChangedBase
     {
-        readonly List<ModpackTemplate> parentCollection; 
+        readonly List<ModpackTemplate> parentCollection;
 
         bool export;
         bool forcedExport;

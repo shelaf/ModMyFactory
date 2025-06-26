@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using ModMyFactory.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace ModMyFactory.Export
 {
@@ -104,7 +103,7 @@ namespace ModMyFactory.Export
                     break;
             }
         }
-        
+
 
 
         public bool Equals(ModExportTemplate other)

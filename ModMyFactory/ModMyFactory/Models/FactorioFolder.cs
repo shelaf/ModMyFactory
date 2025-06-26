@@ -1,8 +1,8 @@
-﻿using ModMyFactory.Helpers;
-using System;
+﻿using System;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
+using ModMyFactory.Helpers;
 
 namespace ModMyFactory.Models
 {
@@ -18,7 +18,7 @@ namespace ModMyFactory.Models
         public GameCompatibleVersion Version { get; }
 
         public bool Is64Bit { get; }
-        
+
         /// <summary>
         /// Renames this Factorio folder to a unique name.
         /// </summary>
@@ -41,7 +41,7 @@ namespace ModMyFactory.Models
             var dir = new DirectoryInfo(Directory.FullName);
             var newDir = new DirectoryInfo(Path.Combine(destination.FullName, newName));
             await dir.CopyToAsync(newDir.FullName);
-            
+
             string executablePath = Is64Bit ? $@"bin\{Win64BinName}\factorio.exe" : $@"bin\{Win32BinName}\factorio.exe";
             var executable = new FileInfo(Path.Combine(newDir.FullName, executablePath));
 
@@ -97,7 +97,7 @@ namespace ModMyFactory.Models
 
             ModFile modFile;
             if (!ModFile.TryLoadFromDirectory(baseModDir, out modFile)) return false;
-            
+
             Version = modFile.Version;
             return (modFile.Name == "base");
         }

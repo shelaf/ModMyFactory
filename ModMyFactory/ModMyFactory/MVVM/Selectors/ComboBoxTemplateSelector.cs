@@ -14,7 +14,7 @@ namespace ModMyFactory.MVVM.Selectors
             var parent = container;
             while (parent != null && !(parent is ComboBoxItem) && !(parent is ComboBox))
                 parent = VisualTreeHelper.GetParent(parent);
-            
+
             var inDropDown = parent is ComboBoxItem;
             return inDropDown ? ListItemTemplate : SelectedItemTemplate;
         }

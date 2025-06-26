@@ -90,7 +90,7 @@ namespace ModMyFactory.Controls
 
                 if (!string.IsNullOrEmpty(Text))
                 {
-                    AddTextToTextBlockFormatted(textBlock, RemoveSeparatorLines(string.Join(" ", Text.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries))));
+                    AddTextToTextBlockFormatted(textBlock, RemoveSeparatorLines(string.Join(" ", Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))));
                 }
             }
         }

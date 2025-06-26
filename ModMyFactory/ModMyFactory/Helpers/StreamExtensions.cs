@@ -1,5 +1,5 @@
-﻿using ModMyFactory.ModSettings.Serialization;
-using System.IO;
+﻿using System.IO;
+using ModMyFactory.ModSettings.Serialization;
 
 namespace ModMyFactory.Helpers
 {

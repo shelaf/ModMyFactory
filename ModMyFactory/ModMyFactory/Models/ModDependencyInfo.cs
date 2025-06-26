@@ -1,6 +1,6 @@
-﻿using ModMyFactory.Web.ModApi;
-using System;
+﻿using System;
 using System.ComponentModel;
+using ModMyFactory.Web.ModApi;
 using WPFCore;
 
 namespace ModMyFactory.Models

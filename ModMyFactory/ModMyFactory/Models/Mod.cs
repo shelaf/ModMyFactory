@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
@@ -89,7 +88,7 @@ namespace ModMyFactory.Models
                                 mod.SetInactiveFileDisabled();
                         }
                     }
-                    
+
                     if (active && App.Instance.Settings.ActivateDependencies)
                         ActivateDependencies(App.Instance.Settings.ActivateOptionalDependencies);
 
@@ -352,7 +351,7 @@ namespace ModMyFactory.Models
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(SettingsView)));
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(HasSettings)));
         }
-        
+
         public ILocale GetLocale(CultureInfo culture)
         {
             if (File == null) return new ModLocale(culture);
@@ -371,7 +370,7 @@ namespace ModMyFactory.Models
                     dependency.Activate(parentCollection, FactorioVersion);
             }
         }
-        
+
         /// <summary>
         /// Evaluates the dependencies of this mod.
         /// </summary>
@@ -411,7 +410,7 @@ namespace ModMyFactory.Models
             ModSettingsManager.SaveSettings(this);
             if (Active) ModSettingsManager.SaveBinarySettings(parentCollection);
         }
-        
+
         private void DeleteOldVersions()
         {
             foreach (var file in oldVersions)
@@ -447,7 +446,7 @@ namespace ModMyFactory.Models
                 ModpackTemplateList.Instance.Save();
             }
         }
-        
+
         /// <summary>
         /// Moves this mod to a specified directory.
         /// </summary>

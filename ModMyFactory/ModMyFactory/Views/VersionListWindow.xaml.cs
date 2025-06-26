@@ -26,7 +26,7 @@ namespace ModMyFactory.Views
 
             if (e.ChangedButton != MouseButton.Left)
                 return;
-            
+
             ListBoxItem item = null;
             int itemCount = ((ICollection)((ListCollectionView)listBox.ItemsSource).SourceCollection).Count;
             for (int i = 0; i < itemCount; i++)

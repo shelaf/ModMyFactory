@@ -1,11 +1,11 @@
-﻿using ModMyFactory.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using ModMyFactory.Models;
 
 namespace ModMyFactory.Web
 {
@@ -18,7 +18,7 @@ namespace ModMyFactory.Web
         {
             return versionList.Any(item => item.Version == version);
         }
-        
+
         private static void GetVersionsFromUrl(string url, bool isExperimental, List<FactorioOnlineVersion> versionList)
         {
             const string pattern = @"<h3> *(?<version>\d+\.\d+\.\d+) +\(.+\) *<\/h3>";
@@ -63,7 +63,7 @@ namespace ModMyFactory.Web
         {
             var factorioDirectory = App.Instance.Settings.GetFactorioDirectory();
             if (!factorioDirectory.Exists) factorioDirectory.Create();
-            
+
             var file = new FileInfo(Path.Combine(factorioDirectory.FullName, "package.zip"));
             string url = version.DownloadUrl + $"?username={username}&token={token}";
             await WebHelper.DownloadFileAsync(new Uri(url), file, progress, cancellationToken);

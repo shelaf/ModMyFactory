@@ -1,9 +1,4 @@
-﻿using ModMyFactory.Helpers;
-using ModMyFactory.Models;
-using ModMyFactory.Views;
-using ModMyFactory.Web;
-using ModMyFactory.Web.ModApi;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -11,6 +6,11 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using ModMyFactory.Helpers;
+using ModMyFactory.Models;
+using ModMyFactory.Views;
+using ModMyFactory.Web;
+using ModMyFactory.Web.ModApi;
 
 namespace ModMyFactory.ViewModels
 {
@@ -65,7 +65,7 @@ namespace ModMyFactory.ViewModels
 
             subDict[updateInfo.FactorioVersion] = updateInfo;
         }
-        
+
         private async Task<List<ModUpdateInfo>> GetModUpdatesAsync(IProgress<Tuple<double, string>> progress, CancellationToken cancellationToken)
         {
             var mods = new Dictionary<string, Dictionary<Version, List<Mod>>>();

@@ -1,8 +1,8 @@
-﻿using ModMyFactory.ModSettings;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
+using ModMyFactory.ModSettings;
 
 namespace ModMyFactory.Models.ModSettings
 {
@@ -47,7 +47,7 @@ namespace ModMyFactory.Models.ModSettings
         }
 
         public override DataTemplate Template => baseSetting.Template;
-        
+
         protected ModSettingProxy(ModSetting<T> baseSetting)
             : base(baseSetting.Owner, baseSetting.Name, baseSetting.LoadTime, baseSetting.Ordering, baseSetting.DefaultValue)
         {

@@ -1,7 +1,7 @@
-﻿using ModMyFactory.Helpers;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Linq;
+using ModMyFactory.Helpers;
+using Newtonsoft.Json;
 
 namespace ModMyFactory.Web.ModApi
 {
@@ -37,7 +37,7 @@ namespace ModMyFactory.Web.ModApi
 
         [JsonProperty("faq")]
         public string Faq { get; set; }
-        
+
         [JsonProperty("thumbnail")]
         public string ThumbnailUrl { get; set; }
 

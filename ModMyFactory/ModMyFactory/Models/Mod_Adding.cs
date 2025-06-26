@@ -32,7 +32,7 @@ namespace ModMyFactory.Models
                 if (!silent) ShowModExistsMessage(infoFile);
                 return existingMod;
             }
-            
+
             if (!file.ResidesInModDirectory)
             {
                 var modDirectory = App.Instance.Settings.GetModDirectory(infoFile.FactorioVersion.GetFactorioShortVersion());
@@ -47,7 +47,7 @@ namespace ModMyFactory.Models
                     await file.MoveToAsync(modDirectory.FullName);
                 }
             }
-            
+
             var newMod = new Mod(file, parentCollection, modpackCollection);
             parentCollection.Add(newMod);
             return newMod;

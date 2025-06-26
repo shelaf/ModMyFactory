@@ -16,9 +16,9 @@ namespace ModMyFactory.ViewModels
                 sb.Append('v');
                 sb.Append(App.Version);
 
-                #if PORTABLE
+#if PORTABLE
                 sb.Append(" portable");
-                #endif
+#endif
 
                 return sb.ToString();
             }

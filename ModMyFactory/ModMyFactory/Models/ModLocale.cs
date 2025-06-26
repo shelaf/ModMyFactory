@@ -1,8 +1,8 @@
-﻿using IniParser.Model;
-using ModMyFactory.Helpers;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using IniParser.Model;
+using ModMyFactory.Helpers;
 
 namespace ModMyFactory.Models
 {
@@ -89,7 +89,7 @@ namespace ModMyFactory.Models
 
             return data.TryGetKey(completeKey, out string result) ? result : key;
         }
-        
+
         public string GetValue(string key, LocaleType type)
         {
             return GetValue(type.Key(), key);

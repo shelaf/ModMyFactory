@@ -84,7 +84,7 @@ namespace ModMyFactory.ViewModels
                     targetRelease = info.Releases.Where(release => release.InfoFile.FactorioVersion == modTemplate.FactorioVersion).MaxBy(release => release.Version);
                     break;
             }
-            
+
             if (targetRelease != null)
             {
                 var fileVersion = GetVersionFromFile(file);
@@ -145,7 +145,7 @@ namespace ModMyFactory.ViewModels
 
             progress.Report(1);
         }
-        
+
         private async Task AddMod(ModExportTemplate modTemplate, DirectoryInfo fileLocation)
         {
             var fsInfo = GetIncludedFileOrDirectory(modTemplate, fileLocation);
@@ -218,7 +218,7 @@ namespace ModMyFactory.ViewModels
             var cancellationSource = new CancellationTokenSource();
             progressViewModel.CanCancel = true;
             progressViewModel.CancelRequested += (sender, e) => cancellationSource.Cancel();
-            
+
             try
             {
                 Task closeWindowTask = null;
@@ -266,7 +266,7 @@ namespace ModMyFactory.ViewModels
                     var modpack = new Modpack(modpackTemplate.Name, false, Modpacks);
                     modpacks.Add(modpack);
                     modpackTemplate.Modpack = modpack;
-                    
+
                     foreach (var modId in modpackTemplate.ModIds)
                     {
                         Mod mod = GetModFromUid(template, modId);

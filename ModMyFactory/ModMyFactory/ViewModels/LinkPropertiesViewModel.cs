@@ -41,7 +41,7 @@ namespace ModMyFactory.ViewModels
                 }
             }
         }
-        
+
         public ListCollectionView ModpacksView { get; }
 
         public ObservableCollection<Modpack> Modpacks { get; }

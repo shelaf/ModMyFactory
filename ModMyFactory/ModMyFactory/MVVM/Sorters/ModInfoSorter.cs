@@ -29,7 +29,7 @@ namespace ModMyFactory.MVVM.Sorters
         {
             return DateTime.Compare(y.LatestRelease.ReleaseDate, x.LatestRelease.ReleaseDate);
         }
-        
+
         public int Compare(ModInfo x, ModInfo y)
         {
             int result = 0;

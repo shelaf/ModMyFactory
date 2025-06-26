@@ -1,6 +1,6 @@
-﻿using ModMyFactory.Models;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using ModMyFactory.Models;
 
 namespace ModMyFactory.MVVM.Selectors
 {

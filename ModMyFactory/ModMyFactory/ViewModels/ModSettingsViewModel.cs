@@ -1,12 +1,12 @@
-﻿using ModMyFactory.Models;
-using ModMyFactory.Models.ModSettings;
-using ModMyFactory.MVVM.Sorters;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
+using ModMyFactory.Models;
+using ModMyFactory.Models.ModSettings;
+using ModMyFactory.MVVM.Sorters;
 using WPFCore;
 using WPFCore.Commands;
 
@@ -43,7 +43,7 @@ namespace ModMyFactory.ViewModels
                 {
                     selectedMod = value;
                     OnPropertyChanged(new PropertyChangedEventArgs(nameof(SelectedMod)));
-                    
+
                     SelectedModSettings = selectedMod.Settings;
                     SelectedModSettingsView = selectedMod.SettingsView;
                     OnPropertyChanged(new PropertyChangedEventArgs(nameof(SelectedModOverride)));

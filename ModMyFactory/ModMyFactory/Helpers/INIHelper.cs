@@ -8,9 +8,9 @@ namespace ModMyFactory.Helpers
     {
         public static IniData ReadINI(string content)
         {
-            #pragma warning disable CS0618
+#pragma warning disable CS0618
             var parser = new StringIniParser();
-            #pragma warning restore CS0618
+#pragma warning restore CS0618
             return parser.ParseString(content);
         }
 

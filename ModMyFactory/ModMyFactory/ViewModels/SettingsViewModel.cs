@@ -13,7 +13,7 @@ namespace ModMyFactory.ViewModels
         static SettingsViewModel instance;
 
         public static SettingsViewModel Instance => instance ?? (instance = new SettingsViewModel());
-        
+
         #region Misc
 
         bool updateSearchOnStartup;
@@ -485,7 +485,7 @@ namespace ModMyFactory.ViewModels
         public void Reset()
         {
             Settings settings = App.Instance.Settings;
-            
+
             UpdateSearchOnStartup = settings.UpdateSearchOnStartup;
             IncludePreReleasesForUpdate = settings.IncludePreReleasesForUpdate;
 

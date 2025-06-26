@@ -1,9 +1,9 @@
 ﻿using System;
+using System.IO.Compression;
 using System.Linq;
+using System.Text.RegularExpressions;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Loaders;
-using System.Text.RegularExpressions;
-using System.IO.Compression;
 
 namespace ModMyFactory.Models
 {

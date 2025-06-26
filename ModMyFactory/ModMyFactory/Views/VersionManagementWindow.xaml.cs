@@ -1,5 +1,4 @@
-﻿using ModMyFactory.ViewModels;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -8,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using ModMyFactory.ViewModels;
 
 namespace ModMyFactory.Views
 {
@@ -78,7 +78,7 @@ namespace ModMyFactory.Views
                 }
             }
         }
-        
+
         private async void DropTimerCallback(object sender, EventArgs e)
         {
             dropTimer.Stop();

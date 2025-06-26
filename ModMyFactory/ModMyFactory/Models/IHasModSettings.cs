@@ -1,8 +1,7 @@
-﻿using ModMyFactory.Models.ModSettings;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
+using ModMyFactory.Models.ModSettings;
 
 namespace ModMyFactory.Models
 {
@@ -25,9 +24,9 @@ namespace ModMyFactory.Models
         bool HasSettings { get; }
 
         IReadOnlyCollection<IModSetting> Settings { get; }
-        
+
         ICollectionView SettingsView { get; }
-        
+
         ICommand ViewSettingsCommand { get; }
 
         void ViewSettings();

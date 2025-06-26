@@ -35,7 +35,7 @@ namespace ModMyFactory.ViewModels
         public static GameCompatibleVersion EmptyVersion => emptyVersion ?? (emptyVersion = new GameCompatibleVersion(0, 0));
 
         public OnlineModsWindow Window => (OnlineModsWindow)View;
-        
+
         List<GameCompatibleVersion> versionFilterList;
         GameCompatibleVersion selectedVersionFilter;
         List<ModInfo> mods;
@@ -44,7 +44,7 @@ namespace ModMyFactory.ViewModels
         ModInfoSorterMode sortingMode;
         ModRelease selectedRelease;
         ListCollectionView selectedReleasesView;
-        ModRelease[] selectedReleases; 
+        ModRelease[] selectedReleases;
 
         volatile int asyncFetchExtendedInfoIndex;
         ModInfo selectedMod;
@@ -133,7 +133,7 @@ namespace ModMyFactory.ViewModels
                     OnPropertyChanged(new PropertyChangedEventArgs(nameof(SelectedReleasesView)));
                 }
             }
-            
+
         }
 
         public ModRelease[] SelectedReleases
@@ -274,7 +274,7 @@ namespace ModMyFactory.ViewModels
                     SelectedReleases = null;
                     SelectedRelease = null;
                 }
-                
+
                 CommandManager.InvalidateRequerySuggested();
             }
         }
@@ -296,8 +296,11 @@ namespace ModMyFactory.ViewModels
 
         public string SelectedModDescription
         {
-            get { return (string.IsNullOrWhiteSpace(selectedModDescription) || (selectedModDescription == "."))
-                    ? selectedMod?.Summary ?? string.Empty : selectedModDescription; }
+            get
+            {
+                return (string.IsNullOrWhiteSpace(selectedModDescription) || (selectedModDescription == "."))
+                    ? selectedMod?.Summary ?? string.Empty : selectedModDescription;
+            }
             set
             {
                 if (value != selectedModDescription)
@@ -412,7 +415,7 @@ namespace ModMyFactory.ViewModels
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            
+
             if (operationIndex == asyncFetchExtendedInfoIndex) ExtendedInfo = extendedInfo;
         }
 
@@ -488,7 +491,7 @@ namespace ModMyFactory.ViewModels
                 const string prefix = "https://www.github.com/";
 
                 string url = ExtendedInfo?.GitHubUrl;
-                
+
                 if (!string.IsNullOrWhiteSpace(url))
                 {
                     try
@@ -581,7 +584,7 @@ namespace ModMyFactory.ViewModels
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                
+
                 UpdateSelectedReleases();
             }
         }
