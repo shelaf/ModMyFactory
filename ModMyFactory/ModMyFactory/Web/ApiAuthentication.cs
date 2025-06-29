@@ -22,7 +22,7 @@ namespace ModMyFactory.Web
 
             info = null;
 
-            string part1 = $"api_version=2&require_game_ownership=true&username={username}&password=";
+            string part1 = $"api_version=6&require_game_ownership=true&username={username}&password=";
             int part1Length = Encoding.UTF8.GetByteCount(part1);
 
             byte[] passwordBytes = SecureStringHelper.SecureStringToBytes(password);
