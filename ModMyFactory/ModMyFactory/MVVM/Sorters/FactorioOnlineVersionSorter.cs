@@ -9,7 +9,9 @@ namespace ModMyFactory.MVVM.Sorters
     {
         public int Compare(FactorioOnlineVersion x, FactorioOnlineVersion y)
         {
-            return y.Version.CompareTo(x.Version);
+            int result = y.Version.CompareTo(x.Version);
+            if (result != 0) return result;
+            return x.IsExpansion.CompareTo(y.IsExpansion);
         }
 
         public int Compare(object x, object y)

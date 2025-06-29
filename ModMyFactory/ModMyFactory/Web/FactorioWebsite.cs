@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using ModMyFactory.Helpers;
 using ModMyFactory.Models;
+using ModMyFactory.Web.UpdateApi;
 
 namespace ModMyFactory.Web
 {
@@ -14,27 +15,37 @@ namespace ModMyFactory.Web
     /// </summary>
     static class FactorioWebsite
     {
-        private static bool VersionListContains(List<FactorioOnlineVersion> versionList, Version version)
+        private static bool VersionListContains(List<FactorioOnlineVersion> versionList, Version version, bool isExpansion)
         {
-            return versionList.Any(item => item.Version == version);
+            return versionList.Any(item => item.Version == version && item.IsExpansion == isExpansion);
         }
 
-        private static void GetVersionsFromUrl(string url, bool isExperimental, List<FactorioOnlineVersion> versionList)
+        private static void AddVersionGroup(List<FactorioOnlineVersion> versionList, ReleaseInfo.VersionGroup versionGroup, bool isExperimental)
         {
-            const string pattern = @"<h3> *(?<version>\d+\.\d+\.\d+) +\(.+\) *<\/h3>";
+            var versions = new[] { versionGroup?.Alpha, versionGroup?.Expansion };
+            var isExpansionBuilds = new[] { false, true };
 
-            string document = WebHelper.GetDocument(url);
-            var matches = Regex.Matches(document, pattern);
-            foreach (Match match in matches)
+            foreach (var (version, isExpansion) in versions.Zip(isExpansionBuilds, (v, e) => (v, e)))
             {
-                string versionString = match.Groups["version"].Value;
-                var version = Version.Parse(versionString);
-
-                if (!VersionListContains(versionList, version))
+                if (version != null)
                 {
-                    var onlineVersion = new FactorioOnlineVersion(version, isExperimental);
-                    versionList.Add(onlineVersion);
+                    if (!VersionListContains(versionList, version, isExpansion))
+                    {
+                        var onlineVersion = new FactorioOnlineVersion(version, isExpansion, isExperimental);
+                        versionList.Add(onlineVersion);
+                    }
                 }
+            }
+        }
+
+        private static void GetVersionsFromUrl(string url, List<FactorioOnlineVersion> versionList)
+        {
+            string document = WebHelper.GetDocument(url);
+            if (!string.IsNullOrEmpty(document))
+            {
+                var releaseInfo = JsonHelper.Deserialize<ReleaseInfo>(document);
+                AddVersionGroup(versionList, releaseInfo?.Stable, false);
+                AddVersionGroup(versionList, releaseInfo?.Experimental, true);
             }
         }
 
@@ -47,8 +58,7 @@ namespace ModMyFactory.Web
             return await Task.Run(() =>
             {
                 var result = new List<FactorioOnlineVersion>();
-                GetVersionsFromUrl("https://factorio.com/download-headless", false, result);
-                GetVersionsFromUrl("https://factorio.com/download-headless/experimental", true, result);
+                GetVersionsFromUrl("https://factorio.com/api/latest-releases", result);
                 return result;
             });
         }

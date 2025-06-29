@@ -6,11 +6,13 @@ namespace ModMyFactory.Web.UpdateApi
     {
         public Package Package { get; }
 
-        public UpdateInfo(UpdateInfoTemplate template)
+        public UpdateInfo(UpdateInfoTemplate template, bool isExpansion)
         {
-            Package = Environment.Is64BitOperatingSystem
-                ? new Package(template.Win64Package)
-                : new Package(template.Win32Package);
+            var packageTemplate = Environment.Is64BitOperatingSystem
+                ? (isExpansion ? template.ExpansionPackage : template.Win64Package)
+                : template.Win32Package;
+
+            Package = packageTemplate != null ? new Package(packageTemplate, isExpansion) : null;
         }
     }
 }

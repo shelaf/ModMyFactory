@@ -343,6 +343,7 @@
     <Compile Include="Web\ModApi\PageLinks.cs" />
     <Compile Include="Web\ModWebsite.cs" />
     <Compile Include="Web\UpdateApi\Package.cs" />
+    <Compile Include="Web\UpdateApi\ReleaseInfo.cs" />
     <Compile Include="Web\UpdateApi\UpdateInfo.cs" />
     <Compile Include="Web\UpdateApi\UpdateInfoTemplate.cs" />
     <Compile Include="Web\UpdateApi\UpdateStep.cs" />

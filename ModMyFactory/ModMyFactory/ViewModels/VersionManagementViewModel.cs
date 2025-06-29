@@ -506,7 +506,8 @@ namespace ModMyFactory.ViewModels
 
         private async Task<List<UpdateStep>> GetUpdateSteps(string token)
         {
-            var updateInfo = await UpdateWebsite.GetUpdateInfoAsync(GlobalCredentials.Instance.Username, token);
+            bool isExpansion = SelectedVersion.IsExpansion;
+            var updateInfo = await UpdateWebsite.GetUpdateInfoAsync(GlobalCredentials.Instance.Username, token, isExpansion);
             return updateInfo.Package.Where(step => step.From >= SelectedVersion.Version).ToList();
         }
 

@@ -152,6 +152,8 @@ namespace ModMyFactory.Models
 
         public bool Is64Bit => Folder?.Is64Bit ?? false;
 
+        public bool IsExpansion => Folder?.IsExpansion ?? false;
+
         /// <summary>
         /// Indicates whether the user currently edits the name of this Factorio version.
         /// </summary>

@@ -10,11 +10,14 @@ namespace ModMyFactory.Web.UpdateApi
 
         public bool IsStable { get; }
 
-        public UpdateStep(Version from, Version to, bool isStable)
+        public bool IsExpansion { get; }
+
+        public UpdateStep(Version from, Version to, bool isStable, bool isExpansion)
         {
             From = from;
             To = to;
             IsStable = isStable;
+            IsExpansion = isExpansion;
         }
     }
 }

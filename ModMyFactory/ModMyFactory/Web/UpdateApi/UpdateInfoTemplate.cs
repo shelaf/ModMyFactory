@@ -10,5 +10,8 @@ namespace ModMyFactory.Web.UpdateApi
 
         [JsonProperty("core-win64")]
         public UpdateStepTemplate[] Win64Package { get; set; }
+
+        [JsonProperty("core_expansion-win64")]
+        public UpdateStepTemplate[] ExpansionPackage { get; set; }
     }
 }

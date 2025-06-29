@@ -13,15 +13,16 @@ namespace ModMyFactory.Web
     static class UpdateWebsite
     {
         const string BaseUrl = "https://updater.factorio.com";
-        const int ApiVersion = 2;
+        const int ApiVersion = 6;
 
         /// <summary>
         /// Gets all available Factorio updates.
         /// </summary>
         /// <param name="username">The username.</param>
         /// <param name="token">The login token.</param>
+        /// <param name="isExpansion">True if the package is an expansion.</param>
         /// <returns>Returns information about all available updates for Factorio.</returns>
-        public static async Task<UpdateInfo> GetUpdateInfoAsync(string username, string token)
+        public static async Task<UpdateInfo> GetUpdateInfoAsync(string username, string token, bool isExpansion)
         {
             string url = $"{BaseUrl}/get-available-versions?username={username}&token={token}&apiVersion={ApiVersion}";
             string document = await Task.Run(() => WebHelper.GetDocument(url));
@@ -29,7 +30,7 @@ namespace ModMyFactory.Web
             if (!string.IsNullOrEmpty(document))
             {
                 UpdateInfoTemplate template = JsonHelper.Deserialize<UpdateInfoTemplate>(document);
-                return new UpdateInfo(template);
+                return new UpdateInfo(template, isExpansion);
             }
 
             return null;
@@ -46,7 +47,8 @@ namespace ModMyFactory.Web
         {
             const string win64Package = "core-win64";
             const string win32Package = "core-win32";
-            string package = Environment.Is64BitOperatingSystem ? win64Package : win32Package;
+            const string expansionPackage = "core_expansion-win64";
+            string package = step.IsExpansion ? expansionPackage : Environment.Is64BitOperatingSystem ? win64Package : win32Package;
 
             string url = $"{BaseUrl}/get-download-link?username={username}&token={token}&apiVersion={ApiVersion}&package={package}&from={step.From}&to={step.To}";
             string document = await Task.Run(() => WebHelper.GetDocument(url));

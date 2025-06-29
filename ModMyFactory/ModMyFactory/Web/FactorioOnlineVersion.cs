@@ -5,11 +5,11 @@ namespace ModMyFactory.Web
 {
     sealed class FactorioOnlineVersion : NotifyPropertyChangedBase
     {
-        private static string GetBranch(Version version)
+        private static string GetBranch(bool isExpansion)
         {
-            if (version.Major == 0) return "alpha";
+            if (isExpansion) return "expansion";
 
-            return string.Empty; // Unknown yet, wait for 1.0 release
+            return "alpha";
         }
 
 
@@ -17,17 +17,23 @@ namespace ModMyFactory.Web
 
         public bool IsExperimental { get; }
 
+        public bool IsExpansion { get; }
+
         public string DownloadUrl { get; }
 
-        public FactorioOnlineVersion(Version version, bool isExperimental)
+        public string DisplayVersion { get; }
+
+        public FactorioOnlineVersion(Version version, bool isExpansion, bool isExperimental)
         {
             Version = version;
+            IsExpansion = isExpansion;
             IsExperimental = isExperimental;
 
             string versionString = version.ToString(3);
-            string branch = GetBranch(version);
+            string branch = GetBranch(isExpansion);
             string platformString = Environment.Is64BitOperatingSystem ? "win64-manual" : "win32-manual";
             DownloadUrl = $"https://www.factorio.com/get-download/{versionString}/{branch}/{platformString}";
+            DisplayVersion = versionString + (isExpansion ? " (Expansion)" : string.Empty);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace ModMyFactory.Web.UpdateApi
 
         public UpdateStep this[int index] => updateSteps[index];
 
-        public Package(UpdateStepTemplate[] templates)
+        public Package(UpdateStepTemplate[] templates, bool isExpansion)
         {
             updateSteps = new List<UpdateStep>(templates.Length);
 
@@ -23,7 +23,7 @@ namespace ModMyFactory.Web.UpdateApi
                 if (template.Stable == null)
                 {
                     bool isStable = (stableVersion != null) && (template.To == stableVersion);
-                    updateSteps.Add(new UpdateStep(template.From, template.To, isStable));
+                    updateSteps.Add(new UpdateStep(template.From, template.To, isStable, isExpansion));
                 }
             }
         }
