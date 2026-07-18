@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
 
@@ -76,7 +77,7 @@ namespace ModMyFactory.Helpers
                     content = reader.ReadToEnd();
             }
 
-            var matches = Regex.Matches(content, "\"\\d\"\\s+\"(?<path>.+)\"");
+            var matches = Regex.Matches(content, "\"path\"\\s+\"(?<path>.+)\"");
             foreach (Match match in matches)
             {
                 string path = match.Groups["path"].Value;
@@ -114,7 +115,8 @@ namespace ModMyFactory.Helpers
             foreach (var path in libraryPaths)
             {
                 var dir = GetLibrary(path);
-                if (dir.Exists) steamLibraries.Add(dir);
+                if (dir.Exists && !steamLibraries.Any(d => string.Equals(d.FullName, dir.FullName, StringComparison.OrdinalIgnoreCase)))
+                    steamLibraries.Add(dir);
             }
 
             return steamLibraries;
