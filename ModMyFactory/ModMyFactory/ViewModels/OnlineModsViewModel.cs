@@ -433,9 +433,12 @@ namespace ModMyFactory.ViewModels
 
         private bool FilterVersion(ModInfo mod)
         {
+            var version = mod.LatestRelease?.InfoFile?.FactorioVersion;
+            if (version == null) return false;
+
             if (SelectedVersionFilter == EmptyVersion) return true;
 
-            return mod.LatestRelease.InfoFile.FactorioVersion == SelectedVersionFilter;
+            return version == SelectedVersionFilter;
         }
 
         private bool ModFilter(object item)
