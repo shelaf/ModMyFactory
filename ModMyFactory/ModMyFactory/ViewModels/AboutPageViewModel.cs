@@ -50,7 +50,7 @@ namespace ModMyFactory.ViewModels
         {
             Url1Command = new RelayCommand(() => Process.Start("http://www.iconarchive.com/show/flag-icons-by-famfamfam.html"));
             Url2Command = new RelayCommand(() => Process.Start("http://www.dafont.com/sylar-stencil.font"));
-            Url3Command = new RelayCommand(() => Process.Start("http://www.ookii.org/software/dialogs/"));
+            Url3Command = new RelayCommand(() => Process.Start("https://github.com/ookii-dialogs/ookii-dialogs-wpf"));
             Url4Command = new RelayCommand(() => Process.Start("http://www.newtonsoft.com/json"));
             Url5Command = new RelayCommand(() => Process.Start("https://github.com/octokit/octokit.net"));
             Url6Command = new RelayCommand(() => Process.Start("http://www.zlib.net/"));
