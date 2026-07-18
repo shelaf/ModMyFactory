@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -307,6 +308,34 @@ namespace ModMyFactory.Views
 
                 modsListBoxDeselectionOmitted = false;
             }
+        }
+
+        private void ModpackListBoxMouseDoubleClickHandler(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton != MouseButton.Left)
+                return;
+
+            ListBox listBox = sender as ListBox;
+            if (listBox == null) return;
+
+            // Ignore double clicks on interactive controls (buttons, checkboxes, rename box, expander toggle)
+            // so they don't unintentionally toggle the contents.
+            DependencyObject current = e.OriginalSource as DependencyObject;
+            while (current != null && !(current is ListBoxItem))
+            {
+                if (current is ButtonBase || current is CheckBox || current is TextBoxBase)
+                    return;
+
+                current = VisualTreeHelper.GetParent(current);
+            }
+
+            ListBoxItem item = ItemsControl.ContainerFromElement(listBox, e.OriginalSource as DependencyObject) as ListBoxItem;
+            if (item == null) return;
+
+            Modpack modpack = listBox.ItemContainerGenerator.ItemFromContainer(item) as Modpack;
+            if (modpack == null) return;
+
+            modpack.ContentsExpanded = !modpack.ContentsExpanded;
         }
 
         private void RenameTextBoxLostFocusHandler(object sender, EventArgs e)

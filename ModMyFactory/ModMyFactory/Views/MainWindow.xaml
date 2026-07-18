@@ -672,6 +672,7 @@
             <controls:DragDropReadyListBox x:Name="ModpacksListBox" Grid.Row="1" Grid.Column="2" ItemsSource="{Binding ModpacksView}"
                       IsSynchronizedWithCurrentItem="False" SelectionMode="Extended" ScrollViewer.VerticalScrollBarVisibility="Visible"
                       PreviewMouseDown="ModpackListBoxPreviewMouseDownHandler" MouseMove="ModpackListBoxMouseMoveHandler" PreviewMouseUp="ModpackListBoxPreviewMouseUpHandler"
+                      MouseDoubleClick="ModpackListBoxMouseDoubleClickHandler"
                       AllowDrop="True" Drop="ModpackListBoxDropHandler" DragOver="ModpackListBoxDragOverHandler">
                 <controls:DragDropReadyListBox.Resources>
                     <DataTemplate x:Key="SubitemTemplate" DataType="{x:Type model:IModReference}">
