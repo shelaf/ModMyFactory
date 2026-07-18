@@ -57,7 +57,7 @@ The complete changelog can be found [here](https://github.com/Artentus/ModMyFact
 ### System requirements
 ModMyFactory has the following system requirements:
 
-- Windows 7/8.1/10
-- .Net Framework 4.5.2
+- Windows 10/11
+- .Net Framework 4.8.1
 
 There will most likely never be Linux support from my side as Mono does not support WPF. Sorry.
