@@ -1,8 +1,8 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using Microsoft.Win32;
 
 namespace ModMyFactory.Helpers
 {
@@ -75,7 +75,7 @@ namespace ModMyFactory.Helpers
                 using (var reader = new StreamReader(stream))
                     content = reader.ReadToEnd();
             }
-            
+
             var matches = Regex.Matches(content, "\"\\d\"\\s+\"(?<path>.+)\"");
             foreach (Match match in matches)
             {

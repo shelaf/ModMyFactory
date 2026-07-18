@@ -1,9 +1,9 @@
-﻿using ModMyFactory.Helpers;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ModMyFactory.Helpers;
 
 namespace ModMyFactory.Models
 {
@@ -13,9 +13,9 @@ namespace ModMyFactory.Models
     sealed class FactorioSteamVersion : FactorioVersion
     {
         const int AppId = 427520;
-        
+
         public static string SteamAppDataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Factorio");
-        
+
         /// <summary>
         /// Tries to load the Steam version of Factorio.
         /// </summary>

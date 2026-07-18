@@ -42,7 +42,7 @@ namespace ModMyFactory.ModSettings.Serialization
         {
             binaryVersion = (((ulong)main) << 48) | (((ulong)major) << 32) | (((ulong)minor) << 16) | (ulong)main;
         }
-        
+
         public override string ToString()
         {
             return string.Join(".", Main, Major, Minor, Revision);
@@ -52,7 +52,7 @@ namespace ModMyFactory.ModSettings.Serialization
         {
             return binaryVersion.GetHashCode();
         }
-        
+
         #region Equals
         public bool Equals(BinaryVersion other)
         {
@@ -78,7 +78,7 @@ namespace ModMyFactory.ModSettings.Serialization
             return !first.Equals(second);
         }
         #endregion
-        
+
         #region Compare
         public int CompareTo(BinaryVersion other)
         {

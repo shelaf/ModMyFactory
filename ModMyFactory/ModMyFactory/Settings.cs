@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
-using Newtonsoft.Json;
 using ModMyFactory.Helpers;
 using ModMyFactory.MVVM.Sorters;
+using Newtonsoft.Json;
 
 namespace ModMyFactory
 {
@@ -74,7 +74,7 @@ namespace ModMyFactory
         }
 
         FileInfo file;
-        
+
         public DirectoryOption FactorioDirectoryOption;
 
         public DirectoryOption ModDirectoryOption;
@@ -136,7 +136,7 @@ namespace ModMyFactory
         [DefaultValue(true)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool ActivateNewMods;
-        
+
         public bool ShowOptionalDependencies;
 
         [DefaultValue(true)]

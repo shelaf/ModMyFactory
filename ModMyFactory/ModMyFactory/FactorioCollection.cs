@@ -1,9 +1,9 @@
-﻿using ModMyFactory.Helpers;
-using ModMyFactory.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using ModMyFactory.Helpers;
+using ModMyFactory.Models;
 
 namespace ModMyFactory
 {

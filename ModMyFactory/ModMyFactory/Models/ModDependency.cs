@@ -1,9 +1,9 @@
-﻿using ModMyFactory.Helpers;
-using ModMyFactory.Web.ModApi;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ModMyFactory.Helpers;
+using ModMyFactory.Web.ModApi;
 using WPFCore;
 
 namespace ModMyFactory.Models
@@ -66,7 +66,7 @@ namespace ModMyFactory.Models
         /// The comparison type of the restriction. Empty if no restriction is present.
         /// </summary>
         public string RestrictionComparison { get; }
-        
+
         /// <summary>
         /// The restrictions version.
         /// </summary>
@@ -86,7 +86,7 @@ namespace ModMyFactory.Models
         /// Indicates whether this dependency is unsatisfied.
         /// </summary>
         public bool Unsatisfied { get; private set; }
-        
+
         /// <summary>
         /// Checks if a collection of mods contains a mod that satisfies this dependency.
         /// </summary>
@@ -180,7 +180,7 @@ namespace ModMyFactory.Models
 
             return result;
         }
-        
+
         /// <summary>
         /// Checks if a collection of mods satisfies this dependency and the dependency is active.
         /// </summary>
@@ -316,7 +316,7 @@ namespace ModMyFactory.Models
                 var comparison = comparisonFunctions[RestrictionComparison];
                 candidates = candidates.Where(candidate => comparison(candidate.Version, RestrictionVersion));
             }
-            
+
             if (IsInverted)
             {
                 foreach (var candidate in candidates)

@@ -1,6 +1,6 @@
-﻿using ModMyFactory.ModSettings;
-using System;
+﻿using System;
 using System.Windows;
+using ModMyFactory.ModSettings;
 
 namespace ModMyFactory.Models.ModSettings
 {

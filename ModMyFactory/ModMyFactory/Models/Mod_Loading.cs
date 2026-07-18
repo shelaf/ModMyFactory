@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -36,7 +35,7 @@ namespace ModMyFactory.Models
 
             return dictionary;
         }
-        
+
         private static void LoadModsFromFileDictionary(Dictionary<string, ModFileCollection> fileDictionary, ModCollection parentCollection, ModpackCollection modpackCollection)
         {
             foreach (var modFileList in fileDictionary.Select(kvp => kvp.Value))

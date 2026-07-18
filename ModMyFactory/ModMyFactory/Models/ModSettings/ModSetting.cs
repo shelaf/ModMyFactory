@@ -1,10 +1,10 @@
-﻿using ModMyFactory.ModSettings;
-using ModMyFactory.ModSettings.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using ModMyFactory.ModSettings;
+using ModMyFactory.ModSettings.Serialization;
 using WPFCore;
 using WPFCore.Commands;
 
@@ -59,7 +59,7 @@ namespace ModMyFactory.Models.ModSettings
             DefaultValue = defaultValue;
             value = GetStartValue();
         }
-        
+
         public virtual void Reset()
         {
             Value = DefaultValue;

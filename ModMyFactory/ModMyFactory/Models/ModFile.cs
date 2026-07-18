@@ -1,5 +1,4 @@
-﻿using ModMyFactory.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -8,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using MoonSharp.Interpreter;
+using ModMyFactory.Helpers;
 using ModMyFactory.Models.ModSettings;
+using MoonSharp.Interpreter;
 
 namespace ModMyFactory.Models
 {
@@ -30,7 +30,7 @@ namespace ModMyFactory.Models
         private FileSystemInfo file;
         private Dictionary<string, ModLocale> locales;
         private IList<IModSetting> settings;
-        
+
         /// <summary>
         /// The mods info file.
         /// </summary>
@@ -55,7 +55,7 @@ namespace ModMyFactory.Models
         /// Indicates whether updates for this mod should be extracted.
         /// </summary>
         public bool ExtractUpdates => !(isFile || App.Instance.Settings.AlwaysUpdateZipped);
-        
+
         /// <summary>
         /// Indicaes whether this mod file resides inside the managed mod directory.
         /// </summary>
@@ -154,7 +154,7 @@ namespace ModMyFactory.Models
         public int CompareTo(ModFile other)
         {
             int result = Version.CompareTo(other.Version);
-            
+
             if (result == 0)
             {
                 if (isFile)
@@ -278,11 +278,11 @@ namespace ModMyFactory.Models
                 return LoadSettingsFileFromDirectory(filePath);
             }
         }
-        
+
         public IList<IModSetting> GetSettings(ModCollection parentCollection, IHasModSettings owner)
         {
             const string mainFileName = "settings.lua";
-            
+
             if (settings == null)
             {
                 var script = new Script();
@@ -314,7 +314,7 @@ namespace ModMyFactory.Models
 
                 settings = data.ToSettings(owner);
             }
-            
+
             return settings;
         }
 
@@ -391,7 +391,7 @@ namespace ModMyFactory.Models
 
         private ModLocale GetDefaultLocale()
         {
-            
+
             if (locales.TryGetValue(DefaultLocaleString, out var storedValue))
             {
                 return storedValue;
@@ -551,7 +551,7 @@ namespace ModMyFactory.Models
 
             return false;
         }
-        
+
         /// <summary>
         /// Removes the UID from a mods name, if it is specified.
         /// </summary>
@@ -582,7 +582,7 @@ namespace ModMyFactory.Models
             version = null;
 
             enabled = (extension != ".disabled");
-            
+
             int index = fileName.LastIndexOf('_');
             if ((index < 1) || (index >= fileName.Length - 1)) return false;
 

@@ -1,5 +1,4 @@
-﻿using ModMyFactory.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,8 +6,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using ModMyFactory.ViewModels;
 using System.Windows.Threading;
+using ModMyFactory.Models;
+using ModMyFactory.ViewModels;
 
 namespace ModMyFactory.Views
 {
@@ -75,7 +75,7 @@ namespace ModMyFactory.Views
 
             return null;
         }
-        
+
         private void ModpackListBoxDropHandler(object sender, DragEventArgs e)
         {
             ListBox listBox = sender as ListBox;
@@ -234,7 +234,7 @@ namespace ModMyFactory.Views
                 modpacksListBoxDeselectionOmitted = false;
             }
         }
-        
+
         private void ModsListBoxPreviewMouseDownHandler(object sender, MouseButtonEventArgs e)
         {
             ListBox listBox = sender as ListBox;
@@ -324,7 +324,7 @@ namespace ModMyFactory.Views
                 textBox.CaretIndex = textBox.Text.Length;
             }
         }
-        
+
         private void ModsListBoxDragOverHandler(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -334,7 +334,7 @@ namespace ModMyFactory.Views
 
             e.Handled = true;
         }
-        
+
         private void ModsListBoxDropHandler(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))

@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using ModMyFactory.Helpers;
+using ModMyFactory.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using ModMyFactory.Models;
-using ModMyFactory.Helpers;
 
 namespace ModMyFactory
 {

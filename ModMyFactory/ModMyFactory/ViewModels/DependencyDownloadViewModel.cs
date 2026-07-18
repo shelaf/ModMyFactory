@@ -1,11 +1,11 @@
-﻿using ModMyFactory.Models;
-using ModMyFactory.MVVM.Sorters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
+using ModMyFactory.Models;
+using ModMyFactory.MVVM.Sorters;
 using WPFCore;
 
 namespace ModMyFactory.ViewModels
@@ -72,7 +72,7 @@ namespace ModMyFactory.ViewModels
 
             return ShowOptional || !dependency.IsOptional;
         }
-        
+
         public DependencyDownloadViewModel()
         {
             if (!App.IsInDesignMode)

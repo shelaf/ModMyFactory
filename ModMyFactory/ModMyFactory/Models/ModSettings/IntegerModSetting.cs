@@ -1,5 +1,5 @@
-﻿using ModMyFactory.ModSettings;
-using System.Windows;
+﻿using System.Windows;
+using ModMyFactory.ModSettings;
 
 namespace ModMyFactory.Models.ModSettings
 {

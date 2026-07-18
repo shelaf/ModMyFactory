@@ -1,8 +1,8 @@
-﻿using ModMyFactory.ModSettings;
-using MoonSharp.Interpreter;
-using System.Collections.Generic;
-using ModMyFactory.Models.ModSettings;
+﻿using System.Collections.Generic;
 using System.Linq;
+using ModMyFactory.Models.ModSettings;
+using ModMyFactory.ModSettings;
+using MoonSharp.Interpreter;
 
 namespace ModMyFactory.Models
 {
@@ -32,7 +32,7 @@ namespace ModMyFactory.Models
 
 
             readonly List<Dictionary<string, DynValue>> data;
-            
+
             public SettingsData()
             {
                 data = new List<Dictionary<string, DynValue>>();
@@ -98,7 +98,7 @@ namespace ModMyFactory.Models
 
                 bool isList = dict.TryGetValue("allowed_values", out var allowedValuesDyn);
                 if (isList && (allowedValuesDyn.Type != DataType.Table)) return false;
-                
+
                 if (isList)
                 {
                     var allowedValuesListDyn = allowedValuesDyn.Table.Values;

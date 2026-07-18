@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using ModMyFactory.Helpers;
 using ModMyFactory.Lang;
+using ModMyFactory.Models;
 using Octokit;
 using Application = System.Windows.Application;
-using ModMyFactory.Models;
 using FileMode = System.IO.FileMode;
-using System.Net;
-using System.Linq;
-using System.Text;
 
 namespace ModMyFactory
 {
@@ -209,7 +209,7 @@ namespace ModMyFactory
         {
             var mergedDictionaries = Resources.MergedDictionaries;
             if (mergedDictionaries.Count == 3) mergedDictionaries.RemoveAt(2);
-            
+
             string resourceName = "Strings." + culture.TwoLetterISOLanguageName;
             if (culture.TwoLetterISOLanguageName != "en" && Resources.Contains(resourceName))
                 mergedDictionaries.Add((ResourceDictionary)Resources[resourceName]);
@@ -217,7 +217,7 @@ namespace ModMyFactory
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
         }
-        
+
         /// <summary>
         /// Applies the specified theme to the UI.
         /// </summary>
@@ -274,9 +274,9 @@ namespace ModMyFactory
             sb.Append("ModMyFactory_");
             sb.Append(version);
 
-            #if PORTABLE
+#if PORTABLE
             sb.Append("_portable");
-            #endif
+#endif
 
             sb.Append(".zip");
 

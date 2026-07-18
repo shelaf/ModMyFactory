@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
 using ModMyFactory.Helpers;
 using ModMyFactory.Models;
+using Newtonsoft.Json;
 
 namespace ModMyFactory
 {
@@ -60,7 +60,7 @@ namespace ModMyFactory
                 return templateList;
             }
         }
-        
+
         FileInfo file;
         bool updating;
         int updateCount;
@@ -93,7 +93,7 @@ namespace ModMyFactory
                 return new ModTemplate(name, enabled, null);
             }
         }
-        
+
         private bool TryGetMod(string name, out ModTemplate mod)
         {
             mod = Mods.Find(item => item.Name == name);

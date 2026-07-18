@@ -1,7 +1,7 @@
-﻿using ModMyFactory.ModSettings;
-using ModMyFactory.ModSettings.Serialization;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
+using ModMyFactory.ModSettings;
+using ModMyFactory.ModSettings.Serialization;
 
 namespace ModMyFactory.Models.ModSettings
 {

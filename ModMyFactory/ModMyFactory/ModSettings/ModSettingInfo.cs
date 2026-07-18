@@ -1,8 +1,8 @@
-﻿using ModMyFactory.Models;
+﻿using System;
+using System.Linq;
+using ModMyFactory.Models;
 using ModMyFactory.Models.ModSettings;
 using Newtonsoft.Json;
-using System;
-using System.Linq;
 
 namespace ModMyFactory.ModSettings
 {
@@ -54,7 +54,7 @@ namespace ModMyFactory.ModSettings
             AllowedValues = allowedValues;
             AllowEmptyValue = allowEmptyValue;
             Ordering = ordering;
-            
+
             if (!defaultValue.Type.CompatibleTo(type))
                 throw new ArgumentException("Value types do not match.", nameof(defaultValue));
             if ((minValue != null) && !minValue.Type.CompatibleTo(type))

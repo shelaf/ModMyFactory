@@ -1,7 +1,7 @@
-﻿using ModMyFactory.ViewModels;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
+using ModMyFactory.ViewModels;
 
 namespace ModMyFactory.MVVM.Converters
 {

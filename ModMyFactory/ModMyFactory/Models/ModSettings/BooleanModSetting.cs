@@ -1,5 +1,5 @@
-﻿using ModMyFactory.ModSettings;
-using System.Windows;
+﻿using System.Windows;
+using ModMyFactory.ModSettings;
 
 namespace ModMyFactory.Models.ModSettings
 {
@@ -22,7 +22,7 @@ namespace ModMyFactory.Models.ModSettings
         public BooleanModSetting(IHasModSettings owner, string name, LoadTime loadTime, string ordering, bool defaultValue)
             : base(owner, name, loadTime, ordering, defaultValue)
         { }
-        
+
         public override IModSettingProxy CreateProxy()
         {
             return new BooleanModSettingProxy(this);

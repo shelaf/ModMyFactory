@@ -100,7 +100,7 @@ namespace ModMyFactory.Updater
 
             Console.WriteLine("Deleting backup...");
             backupDir.Delete(true);
-            
+
             Console.WriteLine($"Starting ModMyFactory...");
             var startInfo = new ProcessStartInfo(mmfAssembly.FullName, $"--update-complete={Process.GetCurrentProcess().Id}");
             startInfo.WorkingDirectory = installDir.FullName;

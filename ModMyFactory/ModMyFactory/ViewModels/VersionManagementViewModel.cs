@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using ModMyFactory.Web;
-using Ookii.Dialogs.Wpf;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using ModMyFactory.FactorioUpdate;
 using ModMyFactory.Helpers;
 using ModMyFactory.Models;
 using ModMyFactory.MVVM.Sorters;
 using ModMyFactory.Views;
+using ModMyFactory.Web;
 using ModMyFactory.Web.UpdateApi;
+using Ookii.Dialogs.Wpf;
 using WPFCore;
 using WPFCore.Commands;
 
@@ -231,7 +231,7 @@ namespace ModMyFactory.ViewModels
                 if (closeWindowTask != null)
                     await closeWindowTask;
             }
-            
+
             return result;
         }
 
@@ -298,7 +298,7 @@ namespace ModMyFactory.ViewModels
                             count++;
                         } while (File.Exists(newPath));
                     }
-                    
+
                     await Task.Run(() => saveFile.CopyTo(newPath));
                 }
             }
@@ -322,7 +322,7 @@ namespace ModMyFactory.ViewModels
                         count++;
                     } while (File.Exists(newPath));
                 }
-                
+
                 await Task.Run(() => scenarioFile.CopyTo(newPath));
             }
         }
@@ -347,7 +347,7 @@ namespace ModMyFactory.ViewModels
             // Savegames
             var localSaveDirectory = new DirectoryInfo(Path.Combine(sourceDirectory.FullName, "saves"));
             if (localSaveDirectory.Exists) await PreserveSavegames(localSaveDirectory);
-            
+
             // Scenarios
             var localScenarioDirectory = new DirectoryInfo(Path.Combine(sourceDirectory.FullName, "scenarios"));
             if (localScenarioDirectory.Exists) await PreserveScenarios(localScenarioDirectory);
@@ -358,14 +358,14 @@ namespace ModMyFactory.ViewModels
         }
 
         #endregion
-        
+
         private async Task AddFactorioInstallation(FactorioFolder folder)
         {
             await PreserveContentsAsync(folder.Directory);
 
             var factorioDir = App.Instance.Settings.GetFactorioDirectory();
             if (!factorioDir.Exists) factorioDir.Create();
-            
+
             var newFolder = await folder.CopyToAsync(factorioDir);
             newFolder.RenameToUnique();
 
@@ -542,7 +542,7 @@ namespace ModMyFactory.ViewModels
                 await SelectedVersion.UpdateAsync(files, progress);
             }
         }
-        
+
         private async Task UpdateSelectedVersionInternal(string token, UpdateTarget target)
         {
             var progressWindow = new ProgressWindow { Owner = Window };
@@ -555,7 +555,7 @@ namespace ModMyFactory.ViewModels
             var progress = new Progress<double>(value => progressViewModel.Progress = value);
             var canCancel = new Progress<bool>(value => progressViewModel.CanCancel = value);
             var description = new Progress<string>(value => progressViewModel.ProgressDescription = value);
-            
+
             try
             {
                 Task closeWindowTask = null;
@@ -592,7 +592,7 @@ namespace ModMyFactory.ViewModels
         private async Task UpdateSelectedVersion()
         {
             if ((SelectedVersion == null) || !SelectedVersion.CanUpdate) return;
-            
+
             if (GlobalCredentials.Instance.LogIn(Window, out string token))
             {
                 try
@@ -618,7 +618,7 @@ namespace ModMyFactory.ViewModels
                     {
                         if (closeWindowTask != null) await closeWindowTask;
                     }
-                    
+
                     if (updateSteps.Count > 0)
                     {
                         var targets = FactorioUpdater.GetUpdateTargets(SelectedVersion, updateSteps);

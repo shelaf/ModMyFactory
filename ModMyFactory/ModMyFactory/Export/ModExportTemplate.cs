@@ -104,7 +104,7 @@ namespace ModMyFactory.Export
                     break;
             }
         }
-        
+
 
 
         public bool Equals(ModExportTemplate other)

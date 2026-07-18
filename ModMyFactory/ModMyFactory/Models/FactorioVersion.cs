@@ -146,7 +146,7 @@ namespace ModMyFactory.Models
 
         public virtual Version Version => Folder?.Version;
 
-        public virtual string DisplayName => $"{Name} ({Version ?? new Version(0,0)})";
+        public virtual string DisplayName => $"{Name} ({Version ?? new Version(0, 0)})";
 
         public virtual DirectoryInfo Directory => Folder?.Directory;
 
@@ -325,7 +325,7 @@ namespace ModMyFactory.Models
         {
             if (!CanUpdate)
                 throw new NotSupportedException();
-            
+
             await FactorioUpdater.ApplyUpdatePackagesAsync(this, packageFiles, progress);
 
             if (!FactorioFolder.TryLoad(Directory, out var newFolder))
@@ -350,7 +350,7 @@ namespace ModMyFactory.Models
             if (!(this is SpecialFactorioVersion))
                 uniqueNames.Remove(name);
         }
-        
+
         /// <summary>
         /// Expands the 'executable', 'read-data' and 'write-data' variables in the specified path.
         /// </summary>

@@ -14,7 +14,7 @@ namespace ModMyFactory.ViewModels
     {
         bool activeEditing;
         bool propertyChanged;
-        
+
         bool useNewestVersion;
         bool useSpecificVersion;
         bool useFactorioVersion;
@@ -36,7 +36,7 @@ namespace ModMyFactory.ViewModels
                         {
                             UseSpecificVersion = false;
                             UseFactorioVersion = false;
-                            
+
                             activeEditing = true;
                             foreach (var modpackTemplate in Modpacks)
                             {
@@ -66,7 +66,7 @@ namespace ModMyFactory.ViewModels
                         {
                             UseNewestVersion = false;
                             UseFactorioVersion = false;
-                            
+
                             activeEditing = true;
                             foreach (var modpackTemplate in Modpacks)
                             {
@@ -96,7 +96,7 @@ namespace ModMyFactory.ViewModels
                         {
                             UseNewestVersion = false;
                             UseSpecificVersion = false;
-                            
+
                             activeEditing = true;
                             foreach (var modpackTemplate in Modpacks)
                             {
@@ -143,7 +143,7 @@ namespace ModMyFactory.ViewModels
         public List<ModpackTemplate> Modpacks { get; }
 
         public bool CanExport => Modpacks.Any(template => template.Export);
-        
+
         public ModpackExportViewModel()
         {
             if (!App.IsInDesignMode)

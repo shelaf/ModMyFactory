@@ -10,7 +10,7 @@ namespace ModMyFactory.Models
     class ModUpdateInfo : NotifyPropertyChangedBase
     {
         bool isSelected;
-        
+
         public ModRelease Update { get; }
 
         public string ModName { get; }
@@ -24,7 +24,7 @@ namespace ModMyFactory.Models
         public List<ModVersionUpdateInfo> ModVersions { get; }
 
         public bool Extract => ModVersions.Any(version => version.Mod.ExtractUpdates);
-        
+
         public bool IsSelected
         {
             get { return isSelected; }

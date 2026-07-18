@@ -38,7 +38,7 @@ namespace ModMyFactory.ViewModels
                     UpdateTargetsView.CustomSort = new UpdateTargetSorter();
                 }
             }
-        } 
+        }
 
         public UpdateTarget SelectedTarget
         {

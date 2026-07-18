@@ -19,15 +19,15 @@ namespace ModMyFactory.Web
     {
         const string BaseUrl = "https://mods.factorio.com";
         const string ModsUrl = BaseUrl + "/api/mods";
-        
+
         private static ApiPage DownloadPage()
         {
             string pageUrl = $"{ModsUrl}?page_size=max";
-            
+
             string document = WebHelper.GetDocument(pageUrl);
             return JsonHelper.Deserialize<ApiPage>(document);
         }
-        
+
         /// <summary>
         /// Gets all mods that are available online.
         /// </summary>

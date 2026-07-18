@@ -1,7 +1,7 @@
-﻿using ModMyFactory.MVVM.Sorters;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
+using ModMyFactory.MVVM.Sorters;
 
 namespace ModMyFactory.MVVM.Converters
 {
@@ -12,7 +12,7 @@ namespace ModMyFactory.MVVM.Converters
         {
             if (!(value is ModInfoSorterMode)) throw new ArgumentException("Value has to be of type ModInfoSorterMode.", nameof(value));
             var sortingMode = (ModInfoSorterMode)value;
-            
+
             return App.Instance.GetLocalizedResourceString(sortingMode.ToString() + "SortingMode");
         }
 

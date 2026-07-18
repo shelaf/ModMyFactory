@@ -1,19 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
-using ModMyFactory.ViewModels;
-using ModMyFactory.MVVM.Sorters;
-using WPFCore;
-using WPFCore.Commands;
 using System.Windows.Input;
-using ModMyFactory.Views;
-using System.Collections.Generic;
-using System.Linq;
 using ModMyFactory.Helpers;
 using ModMyFactory.ModSettings;
+using ModMyFactory.MVVM.Sorters;
+using ModMyFactory.ViewModels;
+using ModMyFactory.Views;
+using WPFCore;
+using WPFCore.Commands;
 
 namespace ModMyFactory.Models
 {
@@ -38,7 +38,7 @@ namespace ModMyFactory.Models
         {
             int counter = 0;
             string candidateName = baseName;
-            
+
             while (parentCollection.Contains(candidateName))
             {
                 counter++;

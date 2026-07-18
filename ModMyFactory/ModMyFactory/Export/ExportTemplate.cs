@@ -24,7 +24,7 @@ namespace ModMyFactory.Export
         [DefaultValue(1)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int Version { get; }
-        
+
         public ModExportTemplate[] Mods { get; }
 
         public ModpackExportTemplate[] Modpacks { get; }

@@ -1,12 +1,12 @@
-﻿using ModMyFactory.Helpers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using ModMyFactory.Helpers;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ModMyFactory.ModSettings.Serialization
 {
@@ -103,7 +103,7 @@ namespace ModMyFactory.ModSettings.Serialization
                         jsonWriter.WriteEndObject();
                         break;
                     }
-                    
+
 
                 case PropertyTreeType.Dictionary:
                     {
@@ -120,7 +120,7 @@ namespace ModMyFactory.ModSettings.Serialization
                         jsonWriter.WriteEndObject();
                         break;
                     }
-                    
+
 
                 default:
                     throw new InvalidOperationException($"Found unknown type {type} in property tree.");
@@ -190,7 +190,7 @@ namespace ModMyFactory.ModSettings.Serialization
             if (isEmpty) return;
 
             byte[] buffer = Encoding.UTF8.GetBytes(value);
-            
+
             if (buffer.Length < byte.MaxValue)
             {
                 writer.Write((byte)buffer.Length);

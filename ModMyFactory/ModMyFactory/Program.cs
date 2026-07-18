@@ -1,6 +1,6 @@
-﻿using ModMyFactory.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
@@ -11,9 +11,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using ModMyFactory.Helpers;
-using ModMyFactory.Win32;
-using System.Diagnostics;
+using ModMyFactory.Models;
 using ModMyFactory.ModSettings;
+using ModMyFactory.Win32;
 
 namespace ModMyFactory
 {
@@ -39,7 +39,7 @@ namespace ModMyFactory
         /// <summary>
         /// A list of files that should be imported on startup.
         /// </summary>
-        internal static List<FileInfo> ImportFileList { get; private set; } 
+        internal static List<FileInfo> ImportFileList { get; private set; }
 
         /// <summary>
         /// The assemblys GUID.
@@ -181,10 +181,10 @@ namespace ModMyFactory
         private static string BuildArguments(CommandLine commandLine)
         {
             var sb = new StringBuilder();
-            
+
             if (commandLine.TryGetArgument('s', "savegame", out string savegameName))
                 sb.Append($"--load-game \"{savegameName}\"");
-            
+
             if (commandLine.TryGetArgument('c', "commands", out string factorioCommandline))
             {
                 if (sb.Length > 0) sb.Append(' ');
@@ -459,7 +459,7 @@ namespace ModMyFactory
 
                     cancellationSource.Cancel();
                     listenTask.Wait();
-                    
+
                     return result;
                 }
                 finally

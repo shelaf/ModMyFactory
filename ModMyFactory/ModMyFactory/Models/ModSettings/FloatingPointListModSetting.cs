@@ -1,6 +1,6 @@
-﻿using ModMyFactory.ModSettings;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
+using ModMyFactory.ModSettings;
 
 namespace ModMyFactory.Models.ModSettings
 {
