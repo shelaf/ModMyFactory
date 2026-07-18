@@ -170,7 +170,7 @@ namespace ModMyFactory.Views
             if (e.ChangedButton != MouseButton.Left)
                 return;
 
-            ListBoxItem item = GetItem(listBox, e.GetPosition);
+            ListBoxItem item = ItemsControl.ContainerFromElement(listBox, e.OriginalSource as DependencyObject) as ListBoxItem;
             if (item != null)
             {
                 dragStartPoint = e.GetPosition(null);
@@ -212,7 +212,7 @@ namespace ModMyFactory.Views
                 ListBox listBox = sender as ListBox;
                 if (listBox == null) return;
 
-                ListBoxItem item = GetItem(listBox, e.GetPosition);
+                ListBoxItem item = ItemsControl.ContainerFromElement(listBox, e.OriginalSource as DependencyObject) as ListBoxItem;
                 if (item != null && item.IsSelected)
                 {
                     Modpack selectedModpack = (Modpack)listBox.ItemContainerGenerator.ItemFromContainer(item);
@@ -243,7 +243,7 @@ namespace ModMyFactory.Views
             if (e.ChangedButton != MouseButton.Left)
                 return;
 
-            ListBoxItem item = GetItem(listBox, e.GetPosition);
+            ListBoxItem item = ItemsControl.ContainerFromElement(listBox, e.OriginalSource as DependencyObject) as ListBoxItem;
             if (item != null)
             {
                 dragStartPoint = e.GetPosition(null);
@@ -286,7 +286,7 @@ namespace ModMyFactory.Views
                 ListBox listBox = sender as ListBox;
                 if (listBox == null) return;
 
-                ListBoxItem item = GetItem(listBox, e.GetPosition);
+                ListBoxItem item = ItemsControl.ContainerFromElement(listBox, e.OriginalSource as DependencyObject) as ListBoxItem;
                 if (item != null && item.IsSelected)
                 {
                     Mod selectedMod = (Mod)listBox.ItemContainerGenerator.ItemFromContainer(item);
