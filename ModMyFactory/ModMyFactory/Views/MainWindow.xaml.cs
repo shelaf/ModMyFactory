@@ -17,6 +17,9 @@ namespace ModMyFactory.Views
     {
         const int DefaultWidth = 800, DefaultHeight = 600;
 
+        const double AutoScrollThreshold = 25.0;
+        const double AutoScrollMaxSpeed = 25.0;
+
         Point dragStartPoint;
         bool dragging;
         bool modsListBoxDeselectionOmitted;
@@ -24,6 +27,10 @@ namespace ModMyFactory.Views
 
         DispatcherTimer dropTimer;
         string[] droppedFiles = null;
+
+        DispatcherTimer autoScrollTimer;
+        double autoScrollSpeed;
+        ScrollViewer autoScrollViewer;
 
         public MainWindow()
             : base(App.Instance.Settings.MainWindowInfo, DefaultWidth, DefaultHeight)
@@ -36,6 +43,10 @@ namespace ModMyFactory.Views
             dropTimer = new DispatcherTimer(DispatcherPriority.Input);
             dropTimer.Interval = TimeSpan.FromMilliseconds(1);
             dropTimer.Tick += DropTimerCallback;
+
+            autoScrollTimer = new DispatcherTimer(DispatcherPriority.Input);
+            autoScrollTimer.Interval = TimeSpan.FromMilliseconds(30);
+            autoScrollTimer.Tick += AutoScrollTimerCallback;
         }
 
         private void ClosingHandler(object sender, CancelEventArgs e)
@@ -79,6 +90,8 @@ namespace ModMyFactory.Views
 
         private void ModpackListBoxDropHandler(object sender, DragEventArgs e)
         {
+            StopAutoScroll();
+
             ListBox listBox = sender as ListBox;
             if (listBox == null) return;
 
@@ -143,6 +156,84 @@ namespace ModMyFactory.Views
             }
         }
 
+        private static ScrollViewer GetScrollViewer(DependencyObject root)
+        {
+            if (root is ScrollViewer scrollViewer)
+                return scrollViewer;
+
+            int childCount = VisualTreeHelper.GetChildrenCount(root);
+            for (int i = 0; i < childCount; i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(root, i);
+                ScrollViewer result = GetScrollViewer(child);
+                if (result != null) return result;
+            }
+
+            return null;
+        }
+
+        private void AutoScrollTimerCallback(object sender, EventArgs e)
+        {
+            if (autoScrollViewer == null || autoScrollSpeed == 0.0)
+            {
+                StopAutoScroll();
+                return;
+            }
+
+            autoScrollViewer.ScrollToVerticalOffset(autoScrollViewer.VerticalOffset + autoScrollSpeed);
+        }
+
+        private void StopAutoScroll()
+        {
+            autoScrollTimer.Stop();
+            autoScrollSpeed = 0.0;
+            autoScrollViewer = null;
+        }
+
+        private void UpdateAutoScroll(ListBox listBox, Point position)
+        {
+            ScrollViewer scrollViewer = autoScrollViewer;
+            if (scrollViewer == null || autoScrollTimer.IsEnabled == false)
+                scrollViewer = GetScrollViewer(listBox);
+
+            if (scrollViewer == null)
+            {
+                StopAutoScroll();
+                return;
+            }
+
+            double height = listBox.ActualHeight;
+            double speed = 0.0;
+
+            if (position.Y >= 0.0 && position.Y < AutoScrollThreshold)
+            {
+                double factor = (AutoScrollThreshold - position.Y) / AutoScrollThreshold;
+                speed = -AutoScrollMaxSpeed * factor;
+            }
+            else if (position.Y > height - AutoScrollThreshold && position.Y <= height)
+            {
+                double factor = (position.Y - (height - AutoScrollThreshold)) / AutoScrollThreshold;
+                speed = AutoScrollMaxSpeed * factor;
+            }
+
+            if (speed == 0.0)
+            {
+                StopAutoScroll();
+            }
+            else
+            {
+                autoScrollViewer = scrollViewer;
+                autoScrollSpeed = speed;
+                if (!autoScrollTimer.IsEnabled)
+                    autoScrollTimer.Start();
+            }
+        }
+
+        private void ModpackListBoxDragLeaveHandler(object sender, DragEventArgs e)
+        {
+            StopAutoScroll();
+        }
+
         private void ModpackListBoxDragOverHandler(object sender, DragEventArgs e)
         {
             ListBox listBox = sender as ListBox;
@@ -159,6 +250,8 @@ namespace ModMyFactory.Views
                 ListBoxItem item = GetItem(listBox, e.GetPosition);
                 e.Effects = (item == null) ? DragDropEffects.Copy : DragDropEffects.Link;
             }
+
+            UpdateAutoScroll(listBox, e.GetPosition(listBox));
 
             e.Handled = true;
         }
