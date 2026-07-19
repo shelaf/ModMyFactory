@@ -58,6 +58,8 @@ namespace ModMyFactory.ModSettings.Serialization
 
         public void AddMod(IHasModSettings mod)
         {
+            if (mod?.Settings == null) return;
+
             foreach (var setting in mod.Settings)
                 AddSetting(setting);
         }

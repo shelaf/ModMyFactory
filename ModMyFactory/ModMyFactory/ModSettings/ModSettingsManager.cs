@@ -54,7 +54,7 @@ namespace ModMyFactory.ModSettings
 
             foreach (var mod in mods)
             {
-                if (mod.Active)
+                if (mod.Active && mod.Settings != null)
                 {
                     var binary = GetTemplate(mod.FactorioVersion);
                     binary.AddMod(mod);
