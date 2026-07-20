@@ -40,7 +40,7 @@ namespace ModMyFactory.ModSettings.Serialization
         /// <param name="revision">Revision. For developer use only.</param>
         public BinaryVersion(ushort main, ushort major, ushort minor, ushort revision)
         {
-            binaryVersion = (((ulong)main) << 48) | (((ulong)major) << 32) | (((ulong)minor) << 16) | (ulong)main;
+            binaryVersion = (((ulong)main) << 48) | (((ulong)major) << 32) | (((ulong)minor) << 16) | (ulong)revision;
         }
 
         public override string ToString()

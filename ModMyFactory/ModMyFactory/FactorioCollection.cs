@@ -70,5 +70,21 @@ namespace ModMyFactory
                            .MaxBy(item => item.Version, new VersionComparer());
             }
         }
+
+        /// <summary>
+        /// Finds the installed Factorio version with the oldest build number whose major and minor version match the specified version.
+        /// Both versions are normalized to their mod-compatible two-part version before comparing,
+        /// so 1.0.x matches a specified version of 0.18.
+        /// Special versions without a concrete version are ignored.
+        /// </summary>
+        /// <returns>Returns the matching version with the oldest build, or null if none is found.</returns>
+        public FactorioVersion FindOldestByMinor(Version version)
+        {
+            var normalized = FactorioVersionHelper.Normalize(version);
+
+            return this.Where(item => (item.Version != null)
+                                   && (FactorioVersionHelper.Normalize(item.Version) == normalized))
+                       .MinBy(item => item.Version, new VersionComparer());
+        }
     }
 }

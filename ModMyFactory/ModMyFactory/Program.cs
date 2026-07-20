@@ -148,6 +148,7 @@ namespace ModMyFactory
             var modpacks = new ModpackCollection();
 
             ModManager.BeginUpdateTemplates();
+            ModSettingsManager.FactorioVersions = FactorioCollection.Load();
             ModSettingsManager.LoadSettings();
             ModSettingsManager.BeginUpdate();
 

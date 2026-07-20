@@ -1,4 +1,5 @@
 ﻿using System;
+using ModMyFactory.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -17,7 +18,7 @@ namespace ModMyFactory
             JToken token = JToken.Load(reader);
             string value = token.Value<string>();
             var v = Version.Parse(value);
-            return new Version(v.Major, v.Minor);
+            return FactorioVersionHelper.Normalize(v);
         }
 
         public override bool CanConvert(Type objectType)
