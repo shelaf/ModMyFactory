@@ -53,6 +53,12 @@ namespace ModMyFactory.Models
         public bool IsHidden { get; }
 
         /// <summary>
+        /// Indicates whether this dependency is required but does not affect mod loading order.
+        /// These kind of dependencies can be circular.
+        /// </summary>
+        public bool IsNoLoadOrder { get; }
+
+        /// <summary>
         /// The name of the mod specified by this dependency.
         /// </summary>
         public string ModName { get; }
@@ -219,6 +225,11 @@ namespace ModMyFactory.Models
                 IsInverted = true;
                 value = value.Substring(1).TrimStart();
             }
+            else if (value[0] == '~') // Required but does not affect load order
+            {
+                IsNoLoadOrder = true;
+                value = value.Substring(1).TrimStart();
+            }
             else if (value.StartsWith("(?)")) // Optional hidden
             {
                 IsOptional = true;
@@ -289,6 +300,7 @@ namespace ModMyFactory.Models
 
             if (IsOptional) sb.Append("? ");
             if (IsInverted) sb.Append('!');
+            if (IsNoLoadOrder) sb.Append('~');
 
             sb.Append(ModName);
 
