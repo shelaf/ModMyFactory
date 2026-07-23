@@ -16,12 +16,13 @@ namespace ModMyFactory.Web
         const int ApiVersion = 2;
 
         /// <summary>
-        /// Gets all available Factorio updates.
+        /// Gets all available Factorio updates for a specific package.
         /// </summary>
         /// <param name="username">The username.</param>
         /// <param name="token">The login token.</param>
-        /// <returns>Returns information about all available updates for Factorio.</returns>
-        public static async Task<UpdateInfo> GetUpdateInfoAsync(string username, string token)
+        /// <param name="package">The update package name (build and platform specific).</param>
+        /// <returns>Returns information about all available updates for the package, or null if the package is not offered.</returns>
+        public static async Task<UpdateInfo> GetUpdateInfoAsync(string username, string token, string package)
         {
             string url = $"{BaseUrl}/get-available-versions?username={username}&token={token}&apiVersion={ApiVersion}";
             string document = await Task.Run(() => WebHelper.GetDocument(url));
@@ -29,7 +30,8 @@ namespace ModMyFactory.Web
             if (!string.IsNullOrEmpty(document))
             {
                 UpdateInfoTemplate template = JsonHelper.Deserialize<UpdateInfoTemplate>(document);
-                return new UpdateInfo(template);
+                if ((template != null) && template.TryGetValue(package, out var steps))
+                    return new UpdateInfo(steps);
             }
 
             return null;
@@ -41,13 +43,10 @@ namespace ModMyFactory.Web
         /// <param name="username">The username.</param>
         /// <param name="token">The login token.</param>
         /// <param name="step">The update step to retrieve the download link of.</param>
+        /// <param name="package">The update package name (build and platform specific).</param>
         /// <returns>Returns a link that can be used to download the update step.</returns>
-        private static async Task<string> GetUpdateLinkAsync(string username, string token, UpdateStep step)
+        private static async Task<string> GetUpdateLinkAsync(string username, string token, UpdateStep step, string package)
         {
-            const string win64Package = "core-win64";
-            const string win32Package = "core-win32";
-            string package = Environment.Is64BitOperatingSystem ? win64Package : win32Package;
-
             string url = $"{BaseUrl}/get-download-link?username={username}&token={token}&apiVersion={ApiVersion}&package={package}&from={step.From}&to={step.To}";
             string document = await Task.Run(() => WebHelper.GetDocument(url));
 
@@ -64,15 +63,16 @@ namespace ModMyFactory.Web
         /// <param name="username">The username.</param>
         /// <param name="token">The login token.</param>
         /// <param name="step">The update step to download.</param>
+        /// <param name="package">The update package name (build and platform specific).</param>
         /// <param name="progress">A progress object used to report the progress of the operation.</param>
         /// <param name="cancellationToken">A cancelation token that can be used to cancel the operation.</param>
         /// <returns>Returns the downloaded file.</returns>
-        public static async Task<FileInfo> DownloadUpdatePackageAsync(string username, string token, UpdateStep step, IProgress<double> progress, CancellationToken cancellationToken)
+        public static async Task<FileInfo> DownloadUpdatePackageAsync(string username, string token, UpdateStep step, string package, IProgress<double> progress, CancellationToken cancellationToken)
         {
             var tempDir = new DirectoryInfo(App.Instance.TempPath);
             if (!tempDir.Exists) tempDir.Create();
 
-            string url = await GetUpdateLinkAsync(username, token, step);
+            string url = await GetUpdateLinkAsync(username, token, step, package);
             string fileName = Path.GetFileName(url);
             if (fileName.Contains("?")) fileName = fileName.Substring(0, fileName.LastIndexOf('?'));
 

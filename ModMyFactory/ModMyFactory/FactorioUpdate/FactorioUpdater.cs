@@ -78,10 +78,11 @@ namespace ModMyFactory.FactorioUpdate
         /// <param name="username">The username.</param>
         /// <param name="token">The login token.</param>
         /// <param name="target">The update target.</param>
+        /// <param name="package">The update package name (build and platform specific).</param>
         /// <param name="progress">A progress object used to report the progress of the operation.</param>
         /// <param name="cancellationToken">A cancelation token that can be used to cancel the operation.</param>
         /// <returns>Returns a list of update package files.</returns>
-        public static async Task<List<FileInfo>> DownloadUpdatePackagesAsync(string username, string token, UpdateTarget target, IProgress<double> progress, CancellationToken cancellationToken)
+        public static async Task<List<FileInfo>> DownloadUpdatePackagesAsync(string username, string token, UpdateTarget target, string package, IProgress<double> progress, CancellationToken cancellationToken)
         {
             var packageFiles = new List<FileInfo>();
 
@@ -94,7 +95,7 @@ namespace ModMyFactory.FactorioUpdate
                     if (cancellationToken.IsCancellationRequested) break;
 
                     var subProgress = new Progress<double>(value => progress.Report((1.0 / stepCount) * counter + (value / stepCount)));
-                    var packageFile = await UpdateWebsite.DownloadUpdatePackageAsync(username, token, step, subProgress, cancellationToken);
+                    var packageFile = await UpdateWebsite.DownloadUpdatePackageAsync(username, token, step, package, subProgress, cancellationToken);
                     if (packageFile != null) packageFiles.Add(packageFile);
 
                     counter++;

@@ -506,7 +506,9 @@ namespace ModMyFactory.ViewModels
 
         private async Task<List<UpdateStep>> GetUpdateSteps(string token)
         {
-            var updateInfo = await UpdateWebsite.GetUpdateInfoAsync(GlobalCredentials.Instance.Username, token);
+            string package = SelectedVersion.Build.ToUpdatePackage(SelectedVersion.Is64Bit);
+            var updateInfo = await UpdateWebsite.GetUpdateInfoAsync(GlobalCredentials.Instance.Username, token, package);
+            if (updateInfo == null) return new List<UpdateStep>();
             return updateInfo.Package.Where(step => step.From >= SelectedVersion.Version).ToList();
         }
 
@@ -532,7 +534,8 @@ namespace ModMyFactory.ViewModels
         {
             canCancel.Report(true);
             description.Report(App.Instance.GetLocalizedResourceString("UpdatingFactorioStage1Description"));
-            var files = await FactorioUpdater.DownloadUpdatePackagesAsync(GlobalCredentials.Instance.Username, token, target, progress, cancellationToken);
+            string package = SelectedVersion.Build.ToUpdatePackage(SelectedVersion.Is64Bit);
+            var files = await FactorioUpdater.DownloadUpdatePackagesAsync(GlobalCredentials.Instance.Username, token, target, package, progress, cancellationToken);
 
             if (!cancellationToken.IsCancellationRequested)
             {
