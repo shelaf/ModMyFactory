@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 using ModMyFactory.Helpers;
+using ModMyFactory.Web;
 
 namespace ModMyFactory.Models
 {
@@ -18,6 +19,11 @@ namespace ModMyFactory.Models
         public Version Version { get; }
 
         public bool Is64Bit { get; }
+
+        /// <summary>
+        /// The distribution build of this installation, detected from the presence of the space-age mod.
+        /// </summary>
+        public FactorioBuild Build { get; }
 
         /// <summary>
         /// Renames this Factorio folder to a unique name.
@@ -45,7 +51,7 @@ namespace ModMyFactory.Models
             string executablePath = Is64Bit ? $@"bin\{Win64BinName}\factorio.exe" : $@"bin\{Win32BinName}\factorio.exe";
             var executable = new FileInfo(Path.Combine(newDir.FullName, executablePath));
 
-            return new FactorioFolder(newDir, executable, Version, Is64Bit);
+            return new FactorioFolder(newDir, executable, Version, Is64Bit, Build);
         }
 
         /// <summary>
@@ -63,12 +69,19 @@ namespace ModMyFactory.Models
             Executable = new FileInfo(Path.Combine(newDir.FullName, executablePath));
         }
 
-        private FactorioFolder(DirectoryInfo directory, FileInfo executable, Version version, bool is64Bit)
+        private FactorioFolder(DirectoryInfo directory, FileInfo executable, Version version, bool is64Bit, FactorioBuild build)
         {
             Directory = directory;
             Executable = executable;
             Version = version;
             Is64Bit = is64Bit;
+            Build = build;
+        }
+
+        private static FactorioBuild DetectBuild(DirectoryInfo directory)
+        {
+            var spaceAgeDir = new DirectoryInfo(Path.Combine(directory.FullName, @"data\space-age"));
+            return spaceAgeDir.Exists ? FactorioBuild.Expansion : FactorioBuild.Alpha;
         }
 
         /// <summary>
@@ -139,7 +152,7 @@ namespace ModMyFactory.Models
             if (!TryLoadVersion(directory, out var version)) return false;
             if (!TryLoadBitness(directory, out bool is64Bit, out var executable)) return false;
 
-            folder = new FactorioFolder(directory, executable, version, is64Bit);
+            folder = new FactorioFolder(directory, executable, version, is64Bit, DetectBuild(directory));
             return true;
         }
 
@@ -154,7 +167,7 @@ namespace ModMyFactory.Models
 
             string executablePath = file.Is64Bit ? $@"bin\{Win64BinName}\factorio.exe" : $@"bin\{Win32BinName}\factorio.exe";
             var executable = new FileInfo(Path.Combine(dir.FullName, executablePath));
-            return new FactorioFolder(dir, executable, file.Version, file.Is64Bit);
+            return new FactorioFolder(dir, executable, file.Version, file.Is64Bit, DetectBuild(dir));
         }
     }
 }

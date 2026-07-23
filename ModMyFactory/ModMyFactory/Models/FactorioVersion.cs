@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ModMyFactory.FactorioUpdate;
 using ModMyFactory.IO;
 using ModMyFactory.ViewModels;
+using ModMyFactory.Web;
 using WPFCore;
 using WPFCore.Commands;
 
@@ -151,6 +152,8 @@ namespace ModMyFactory.Models
         public virtual DirectoryInfo Directory => Folder?.Directory;
 
         public bool Is64Bit => Folder?.Is64Bit ?? false;
+
+        public virtual FactorioBuild Build => Folder?.Build ?? FactorioBuild.Alpha;
 
         /// <summary>
         /// Indicates whether the user currently edits the name of this Factorio version.

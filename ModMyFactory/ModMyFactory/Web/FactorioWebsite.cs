@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using ModMyFactory.Helpers;
 using ModMyFactory.Models;
+using ModMyFactory.Web.DownloadApi;
 
 namespace ModMyFactory.Web
 {
@@ -14,27 +15,28 @@ namespace ModMyFactory.Web
     /// </summary>
     static class FactorioWebsite
     {
-        private static bool VersionListContains(List<FactorioOnlineVersion> versionList, Version version)
-        {
-            return versionList.Any(item => item.Version == version);
-        }
+        const string LatestReleasesUrl = "https://factorio.com/api/latest-releases";
 
-        private static void GetVersionsFromUrl(string url, bool isExperimental, List<FactorioOnlineVersion> versionList)
+        // Only the playable full-package builds are offered for download.
+        private static readonly (string Key, FactorioBuild Build)[] Builds =
         {
-            const string pattern = @"<h3> *(?<version>\d+\.\d+\.\d+) +\(.+\) *<\/h3>";
+            ("alpha", FactorioBuild.Alpha),
+            ("expansion", FactorioBuild.Expansion),
+        };
 
-            string document = WebHelper.GetDocument(url);
-            var matches = Regex.Matches(document, pattern);
-            foreach (Match match in matches)
+        private static void AddVersions(Dictionary<string, string> releases, bool isExperimental, List<FactorioOnlineVersion> versionList)
+        {
+            if (releases == null) return;
+
+            foreach (var (key, build) in Builds)
             {
-                string versionString = match.Groups["version"].Value;
-                var version = Version.Parse(versionString);
+                if (!releases.TryGetValue(key, out string versionString)) continue;
+                if (!Version.TryParse(versionString, out var version)) continue;
 
-                if (!VersionListContains(versionList, version))
-                {
-                    var onlineVersion = new FactorioOnlineVersion(version, isExperimental);
-                    versionList.Add(onlineVersion);
-                }
+                // Stable is added before experimental, so an identical experimental entry is dropped here.
+                if (versionList.Any(item => item.Version == version && item.Build == build)) continue;
+
+                versionList.Add(new FactorioOnlineVersion(version, isExperimental, build));
             }
         }
 
@@ -46,9 +48,15 @@ namespace ModMyFactory.Web
         {
             return await Task.Run(() =>
             {
+                string document = WebHelper.GetDocument(LatestReleasesUrl);
+                if (string.IsNullOrWhiteSpace(document)) return null;
+
+                var template = JsonHelper.Deserialize<LatestReleasesTemplate>(document);
+                if (template == null) return null;
+
                 var result = new List<FactorioOnlineVersion>();
-                GetVersionsFromUrl("https://factorio.com/download-headless", false, result);
-                GetVersionsFromUrl("https://factorio.com/download-headless/experimental", true, result);
+                AddVersions(template.Stable, false, result);
+                AddVersions(template.Experimental, true, result);
                 return result;
             });
         }

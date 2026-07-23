@@ -278,6 +278,8 @@
     </Compile>
     <Compile Include="Web\ApiAuthentication.cs" />
     <Compile Include="Web\AuthenticationApi\AuthenticationInfo.cs" />
+    <Compile Include="Web\DownloadApi\LatestReleasesTemplate.cs" />
+    <Compile Include="Web\FactorioBuild.cs" />
     <Compile Include="Web\ModApi\ApiPage.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="Views\AboutWindow.xaml.cs">
