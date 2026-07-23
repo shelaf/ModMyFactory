@@ -23,6 +23,8 @@ namespace ModMyFactory.ModSettings.Serialization
             String = 3,
             List = 4,
             Dictionary = 5,
+            SignedInteger = 6,   // Added in Factorio 2.0
+            UnsignedInteger = 7, // Added in Factorio 2.0
         }
 
         static readonly BinaryVersion OldestSupportedVersion = new BinaryVersion(0, 16, 0, 0);
@@ -76,6 +78,14 @@ namespace ModMyFactory.ModSettings.Serialization
 
                 case PropertyTreeType.Number:
                     jsonWriter.WriteValue(reader.ReadDouble());
+                    break;
+
+                case PropertyTreeType.SignedInteger:
+                    jsonWriter.WriteValue(reader.ReadInt64());
+                    break;
+
+                case PropertyTreeType.UnsignedInteger:
+                    jsonWriter.WriteValue(reader.ReadUInt64());
                     break;
 
                 case PropertyTreeType.String:
@@ -162,6 +172,9 @@ namespace ModMyFactory.ModSettings.Serialization
             {
                 case JTokenType.Object: return PropertyTreeType.Dictionary;
                 case JTokenType.Array: return PropertyTreeType.List;
+                // Integers (including values read back from 2.0 signed/unsigned integer nodes) are written as
+                // Number (double), which Factorio accepts for mod settings. If round-trip testing shows 2.0
+                // requires the integer node types, emit SignedInteger/UnsignedInteger here instead.
                 case JTokenType.Integer: return PropertyTreeType.Number;
                 case JTokenType.Float: return PropertyTreeType.Number;
                 case JTokenType.String: return PropertyTreeType.String;
