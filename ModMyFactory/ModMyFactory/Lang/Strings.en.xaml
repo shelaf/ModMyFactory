@@ -280,6 +280,7 @@
     <!-- headers -->
     <sys:String x:Key="ModsHeader">Mods</sys:String>
     <sys:String x:Key="ModpacksHeader">Modpacks</sys:String>
+    <sys:String x:Key="OfficialModsHeader">Official mods</sys:String>
     
     <!-- tooltips -->
     <sys:String x:Key="RenameToolTip">Rename</sys:String>

@@ -69,5 +69,50 @@ namespace ModMyFactory.Models
 
             parentCollection.EndUpdate();
         }
+
+        // The 'core' folder is always loaded by Factorio, is not listed in mod-list.json and
+        // cannot be toggled, so it is not represented as a mod.
+        private static readonly string[] HiddenOfficialMods = { "core" };
+
+        /// <summary>
+        /// Removes all currently loaded official mods from the collection.
+        /// </summary>
+        public static void UnloadOfficialMods(ModCollection parentCollection)
+        {
+            parentCollection.BeginUpdate();
+
+            foreach (var mod in parentCollection.Where(mod => mod.IsOfficial).ToList())
+                parentCollection.Remove(mod);
+
+            parentCollection.EndUpdate();
+        }
+
+        /// <summary>
+        /// Loads the official mods shipped inside a Factorio installation's data folder into the collection.
+        /// Official mods depend on the selected Factorio version and reside in the installation, not the managed mod directory.
+        /// </summary>
+        /// <param name="factorioVersion">The selected Factorio version whose official mods are loaded.</param>
+        /// <param name="parentCollection">The collection to contain the mods.</param>
+        /// <param name="modpackCollection">The collection containing all modpacks.</param>
+        public static void LoadOfficialMods(FactorioVersion factorioVersion, ModCollection parentCollection, ModpackCollection modpackCollection)
+        {
+            if ((factorioVersion?.Directory == null) || !factorioVersion.Directory.Exists) return;
+
+            var dataDirectory = new DirectoryInfo(Path.Combine(factorioVersion.Directory.FullName, "data"));
+            if (!dataDirectory.Exists) return;
+
+            parentCollection.BeginUpdate();
+
+            foreach (var directory in dataDirectory.EnumerateDirectories())
+            {
+                if (HiddenOfficialMods.Contains(directory.Name)) continue;
+                if (!ModFile.TryLoadOfficial(directory, out var modFile)) continue;
+
+                var mod = new Mod(modFile, parentCollection, modpackCollection);
+                parentCollection.Add(mod);
+            }
+
+            parentCollection.EndUpdate();
+        }
     }
 }

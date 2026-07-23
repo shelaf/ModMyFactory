@@ -122,6 +122,9 @@ namespace ModMyFactory.ViewModels
                             App.Instance.Settings.SelectedVersion = newVersionString;
                             App.Instance.Settings.Save();
                         }
+
+                        // Official mods depend on the selected Factorio version.
+                        RefreshOfficialMods();
                     }
                 }
             }
@@ -137,6 +140,8 @@ namespace ModMyFactory.ViewModels
         ModCollection mods;
         CollectionViewSource modsSource;
         ListCollectionView modsView;
+        CollectionViewSource officialModsSource;
+        ListCollectionView officialModsView;
 
         public string ModFilterPattern
         {
@@ -158,8 +163,16 @@ namespace ModMyFactory.ViewModels
             Mod mod = item as Mod;
             if (mod == null) return false;
 
+            // Official mods are shown in their own section, not in the regular mod list.
+            if (mod.IsOfficial) return false;
+
             if (string.IsNullOrWhiteSpace(ModFilterPattern)) return true;
             return StringHelper.FilterIsContained(ModFilterPattern, $"{mod.FriendlyName} {mod.Author}");
+        }
+
+        private bool OfficialModFilter(object item)
+        {
+            return (item is Mod mod) && mod.IsOfficial;
         }
 
         public bool? AllModsActive
@@ -274,6 +287,13 @@ namespace ModMyFactory.ViewModels
                     mods.CollectionChanged += ModsChangedHandler;
                     ModsView = modsView;
 
+                    if (officialModsSource == null) officialModsSource = new CollectionViewSource();
+                    officialModsSource.Source = mods;
+                    var officialModsView = (ListCollectionView)officialModsSource.View;
+                    officialModsView.CustomSort = new ModSorter();
+                    officialModsView.Filter = OfficialModFilter;
+                    OfficialModsView = officialModsView;
+
                     SetAllModsActive();
                 }
             }
@@ -290,6 +310,38 @@ namespace ModMyFactory.ViewModels
                     OnPropertyChanged(new PropertyChangedEventArgs(nameof(ModsView)));
                 }
             }
+        }
+
+        public ListCollectionView OfficialModsView
+        {
+            get { return officialModsView; }
+            private set
+            {
+                if (value != officialModsView)
+                {
+                    officialModsView = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(OfficialModsView)));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Indicates whether the selected Factorio version provides any official mods.
+        /// </summary>
+        public bool HasOfficialMods => (OfficialModsView != null) && !OfficialModsView.IsEmpty;
+
+        /// <summary>
+        /// Reloads the official mods for the currently selected Factorio version.
+        /// </summary>
+        private void RefreshOfficialMods()
+        {
+            if (Mods == null) return;
+
+            Mod.UnloadOfficialMods(Mods);
+            if (SelectedFactorioVersion != null)
+                Mod.LoadOfficialMods(SelectedFactorioVersion, Mods, Modpacks);
+
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(HasOfficialMods)));
         }
 
         #endregion
@@ -633,6 +685,10 @@ namespace ModMyFactory.ViewModels
             Mod.LoadMods(Mods, Modpacks);
             ModpackTemplateList.Instance.PopulateModpackList(Mods, Modpacks, ModpacksView);
 
+            // Selection is resolved in LoadFactorioVersions before the mods exist, so load the
+            // official mods for the selected version now that the collection is populated.
+            RefreshOfficialMods();
+
 
             modpacksLoading = false;
         }
@@ -921,6 +977,8 @@ namespace ModMyFactory.ViewModels
             {
                 foreach (Mod mod in mods)
                 {
+                    if (mod.IsFixed) continue; // The base mod cannot be added to a modpack.
+
                     if (!modpack.Contains(mod.Name, mod.FactorioVersion))
                     {
                         var reference = new ModReference(mod, modpack);

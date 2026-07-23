@@ -437,7 +437,38 @@
                     </Grid>
                 </ToggleButton>
             </Grid>
-            <controls:DragDropReadyListBox x:Name="ModsListBox" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ModsView}"
+            <Grid Grid.Row="1" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Expander Grid.Row="0" Margin="0,0,0,4" IsExpanded="True"
+                          Header="{DynamicResource OfficialModsHeader}"
+                          Visibility="{Binding HasOfficialMods, Converter={StaticResource VisibilityConverter}}">
+                    <ListBox MaxHeight="160" ItemsSource="{Binding OfficialModsView}"
+                             IsSynchronizedWithCurrentItem="False"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type model:Mod}">
+                                <Grid Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <CheckBox Grid.Column="0" Margin="2,0" VerticalAlignment="Center"
+                                              IsChecked="{Binding Active}" IsEnabled="{Binding CanToggle}"/>
+                                    <TextBlock Grid.Column="1" Margin="4,0" VerticalAlignment="Center" Text="{Binding FriendlyName}" FontWeight="DemiBold"/>
+                                    <TextBlock Grid.Column="2" Margin="4,0" VerticalAlignment="Center" Text="{Binding Version, StringFormat=v{0}}" Opacity="0.7"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Expander>
+
+                <controls:DragDropReadyListBox x:Name="ModsListBox" Grid.Row="1" ItemsSource="{Binding ModsView}"
                                        IsSynchronizedWithCurrentItem="False" SelectionMode="Extended" ScrollViewer.VerticalScrollBarVisibility="Visible"
                                        PreviewMouseDown="ModsListBoxPreviewMouseDownHandler" PreviewMouseMove="ModsListBoxPreviewMouseMoveHandler" PreviewMouseUp="ModsListBoxPreviewMouseUpHandler"
                                        AllowDrop="True" DragOver="ModsListBoxDragOverHandler" Drop="ModsListBoxDropHandler">
@@ -610,7 +641,8 @@
                         <MenuItem Header="{DynamicResource SelectInactiveModsMenuItem}" Command="{Binding SelectInactiveModsCommand}"/>
                     </ContextMenu>
                 </controls:DragDropReadyListBox.ContextMenu>
-            </controls:DragDropReadyListBox>
+                </controls:DragDropReadyListBox>
+            </Grid>
             <DockPanel Grid.Row="2" Grid.Column="0" Margin="0,4,0,0">
                 <Border DockPanel.Dock="Left" Background="{DynamicResource SelectionBrush}">
                     <Image Margin="1" Width="22" Height="22" Stretch="None" Source="{StaticResource SearchIcon}"/>

@@ -106,6 +106,8 @@ namespace ModMyFactory.Views
 
                     foreach (Mod mod in mods)
                     {
+                        if (mod.IsFixed) continue; // The base mod cannot be added to a modpack.
+
                         if (parent.Contains(mod.Name, mod.FactorioVersion, out var @ref))
                         {
                             if (@ref.Mod != mod)

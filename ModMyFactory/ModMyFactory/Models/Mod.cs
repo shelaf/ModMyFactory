@@ -70,6 +70,9 @@ namespace ModMyFactory.Models
             {
                 if (value != active)
                 {
+                    // The base mod is mandatory and can never be disabled.
+                    if (IsFixed && !value) return;
+
                     active = value;
                     OnPropertyChanged(new PropertyChangedEventArgs(nameof(Active)));
 
@@ -181,6 +184,22 @@ namespace ModMyFactory.Models
         public Version FactorioVersion => InfoFile.FactorioVersion;
 
         /// <summary>
+        /// Indicates whether this is an official mod shipping inside a Factorio installation.
+        /// Official mods cannot be deleted.
+        /// </summary>
+        public bool IsOfficial => File.IsOfficial;
+
+        /// <summary>
+        /// Indicates whether this is the base mod, which cannot be disabled or added to a modpack.
+        /// </summary>
+        public bool IsFixed => IsOfficial && (Name == "base");
+
+        /// <summary>
+        /// Indicates whether this mod's active state can be toggled by the user.
+        /// </summary>
+        public bool CanToggle => !IsFixed;
+
+        /// <summary>
         /// The friendly of the mod.
         /// </summary>
         public string FriendlyName => InfoFile.FriendlyName;
@@ -283,7 +302,7 @@ namespace ModMyFactory.Models
             this.parentCollection = parentCollection;
             this.modpackCollection = modpackCollection;
 
-            DeleteCommand = new RelayCommand<bool?>(showPrompt => Delete(showPrompt ?? true));
+            DeleteCommand = new RelayCommand<bool?>(showPrompt => Delete(showPrompt ?? true), () => !IsOfficial);
             ViewSettingsCommand = new RelayCommand(ViewSettings);
         }
 
@@ -424,6 +443,8 @@ namespace ModMyFactory.Models
         /// <param name="showPrompt">Indicates whether a confirmation prompt is shown to the user.</param>
         public void Delete(bool showPrompt)
         {
+            if (IsOfficial) return; // Official mods ship with Factorio and cannot be deleted.
+
             if (!showPrompt || (MessageBox.Show(
                 App.Instance.GetLocalizedMessage("DeleteMod", MessageType.Question),
                 App.Instance.GetLocalizedMessageTitle("DeleteMod", MessageType.Question),

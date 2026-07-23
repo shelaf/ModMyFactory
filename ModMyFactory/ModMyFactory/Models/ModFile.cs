@@ -62,6 +62,11 @@ namespace ModMyFactory.Models
         public bool ResidesInModDirectory => file.ParentDirectory().DirectoryEquals(App.Instance.Settings.GetModDirectory(InfoFile.FactorioVersion));
 
         /// <summary>
+        /// Indicates whether this is an official mod that ships inside a Factorio installation's data folder.
+        /// </summary>
+        public bool IsOfficial { get; }
+
+        /// <summary>
         /// An optional thumbnail provided in the mod file.
         /// </summary>
         public BitmapImage Thumbnail { get; }
@@ -170,13 +175,14 @@ namespace ModMyFactory.Models
             return result;
         }
 
-        private ModFile(FileSystemInfo file, InfoFile infoFile, bool isFile, bool enabled, BitmapImage thumbnail)
+        private ModFile(FileSystemInfo file, InfoFile infoFile, bool isFile, bool enabled, BitmapImage thumbnail, bool isOfficial = false)
         {
             this.file = file;
             InfoFile = infoFile;
             this.isFile = isFile;
             Enabled = enabled;
             Thumbnail = thumbnail;
+            IsOfficial = isOfficial;
         }
 
         /// <summary>
@@ -539,6 +545,26 @@ namespace ModMyFactory.Models
 
             var thumbnail = GetThumbnailFromDirectory(directory);
             result = new ModFile(directory, infoFile, false, enabled, thumbnail);
+            return true;
+        }
+
+        /// <summary>
+        /// Tries to load an official mod directory from a Factorio installation's data folder.
+        /// Official mod folders are named by mod name only (no version suffix) and are always read
+        /// directly from their info file, independent of the folder name.
+        /// </summary>
+        /// <param name="directory">The mod directory inside the data folder.</param>
+        /// <param name="result">Out. The loaded mod file.</param>
+        /// <returns>Returns true if the specified directory is a valid mod directory, otherwise false.</returns>
+        public static bool TryLoadOfficial(DirectoryInfo directory, out ModFile result)
+        {
+            result = null;
+            if (!directory.Exists) return false;
+
+            if (!TryReadInfoFileFromDirectory(directory, out var infoFile, out bool enabled)) return false;
+
+            var thumbnail = GetThumbnailFromDirectory(directory);
+            result = new ModFile(directory, infoFile, false, enabled, thumbnail, true);
             return true;
         }
 
