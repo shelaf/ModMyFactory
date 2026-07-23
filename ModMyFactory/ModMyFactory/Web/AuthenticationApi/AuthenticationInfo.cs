@@ -10,5 +10,11 @@ namespace ModMyFactory.Web.AuthenticationApi
 
         [JsonProperty("username")]
         public string Username { get; set; }
+
+        [JsonProperty("error")]
+        public string Error { get; set; }
+
+        [JsonProperty("message")]
+        public string Message { get; set; }
     }
 }

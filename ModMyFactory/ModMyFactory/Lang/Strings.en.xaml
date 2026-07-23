@@ -380,6 +380,7 @@
     <sys:String x:Key="UsernameHeader">Username or Email</sys:String>
     <sys:String x:Key="PasswordHeader">Password</sys:String>
     <sys:String x:Key="SaveCredentialsHeader">Remember my login credentials</sys:String>
+    <sys:String x:Key="AuthenticationCodeHeader">Enter the authentication code that was sent to your email</sys:String>
 
     <!-- messages -->
     <sys:String x:Key="LoginFailedMessage">Login failed!</sys:String>

@@ -133,14 +133,8 @@ namespace ModMyFactory
             }
             else if (IsLoggedIn()) // Only credentials available.
             {
-                AuthenticationInfo info;
-                failed = !ApiAuthentication.LogIn(Username, Password, out info);
-                if (!failed)
-                {
-                    username = info.Username;
-                    token = info.Token;
-                    if (App.Instance.Settings.SaveCredentials) Save();
-                }
+                if (!TryAuthenticate(owner, username, password, App.Instance.Settings.SaveCredentials))
+                    failed = true;
             }
 
             if (failed)
@@ -158,28 +152,59 @@ namespace ModMyFactory
                 };
                 bool? loginResult = loginWindow.ShowDialog();
                 if (loginResult == null || loginResult == false) return false;
-                username = loginWindow.UsernameBox.Text;
-                password = loginWindow.PasswordBox.SecurePassword;
+
+                string enteredUsername = loginWindow.UsernameBox.Text;
+                SecureString enteredPassword = loginWindow.PasswordBox.SecurePassword;
 
                 bool saveCredentials = loginWindow.SaveCredentialsBox.IsChecked ?? false;
                 App.Instance.Settings.SaveCredentials = saveCredentials;
 
-                AuthenticationInfo info;
-                failed = !ApiAuthentication.LogIn(Username, Password, out info);
-                if (failed)
-                {
-                    token = null;
-                }
-                else
-                {
-                    username = info.Username;
-                    token = info.Token;
-                    if (saveCredentials) Save();
-                }
+                failed = !TryAuthenticate(owner, enteredUsername, enteredPassword, saveCredentials);
             }
 
             loginToken = token;
             return true;
+        }
+
+        /// <summary>
+        /// Attempts to authenticate with the given credentials, resolving two-factor authentication if required.
+        /// On success the credentials and token are stored (and persisted when requested).
+        /// </summary>
+        private bool TryAuthenticate(Window owner, string user, SecureString pass, bool saveCredentials)
+        {
+            var result = ApiAuthentication.LogIn(user, pass, null, out var info);
+
+            while (result == AuthenticationResult.EmailAuthenticationRequired)
+            {
+                string code = PromptAuthenticationCode(owner);
+                if (code == null) return false; // User cancelled.
+
+                result = ApiAuthentication.LogIn(user, pass, code, out info);
+            }
+
+            if (result != AuthenticationResult.Success)
+            {
+                token = null;
+                return false;
+            }
+
+            username = info.Username;
+            password = pass;
+            token = info.Token;
+            if (saveCredentials && App.Instance.Settings.SaveCredentials) Save();
+
+            return true;
+        }
+
+        private static string PromptAuthenticationCode(Window owner)
+        {
+            var window = new LoginWindow { Owner = owner };
+            window.SetAuthenticationCodeMode();
+
+            bool? result = window.ShowDialog();
+            if (result == null || result == false) return null;
+
+            return window.AuthCodeBox.Text;
         }
 
         private void Save(FileInfo file)

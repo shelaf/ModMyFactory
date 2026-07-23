@@ -21,6 +21,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
         <Grid.ColumnDefinitions>
@@ -30,18 +31,23 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock x:Name="FailedText" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" FontSize="14" FontWeight="Bold" Text="{DynamicResource LoginFailedMessage}"/>
-        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{DynamicResource UsernameHeader}"/>
+        <TextBlock x:Name="UsernameHeader" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{DynamicResource UsernameHeader}"/>
         <TextBox x:Name="UsernameBox" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"  Margin="2" Padding="2" MaxLines="1"/>
-        <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Text="{DynamicResource PasswordHeader}"/>
+        <TextBlock x:Name="PasswordHeader" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Text="{DynamicResource PasswordHeader}"/>
         <PasswordBox x:Name="PasswordBox" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="2" Padding="2"/>
         <CheckBox x:Name="SaveCredentialsBox" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="2,6" Content="{DynamicResource SaveCredentialsHeader}"/>
 
-        <Button Grid.Row="6" Grid.Column="1" Margin="2" IsCancel="True">
+        <StackPanel x:Name="AuthCodePanel" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Visibility="Collapsed">
+            <TextBlock Margin="0,4,0,0" TextWrapping="Wrap" Text="{DynamicResource AuthenticationCodeHeader}"/>
+            <TextBox x:Name="AuthCodeBox" Margin="2" Padding="2" MaxLines="1"/>
+        </StackPanel>
+
+        <Button Grid.Row="7" Grid.Column="1" Margin="2" IsCancel="True">
             <Button.Content>
                 <TextBlock Style="{StaticResource TextBlockButtonStyle}" Text="{DynamicResource CancelButton}"/>
             </Button.Content>
         </Button>
-        <Button Grid.Row="6" Grid.Column="2" Margin="2" IsDefault="True" Click="OKButtonClickHandler">
+        <Button Grid.Row="7" Grid.Column="2" Margin="2" IsDefault="True" Click="OKButtonClickHandler">
             <Button.Content>
                 <TextBlock Style="{StaticResource TextBlockButtonStyle}" Text="{DynamicResource OkButton}"/>
             </Button.Content>
