@@ -120,7 +120,7 @@ namespace ModMyFactory.Models
             }
             else
             {
-                result = mods.ContainsbyFactorioVersion(ModName, factorioVersion);
+                result = mods.ContainsByFactorioVersion(ModName, factorioVersion);
             }
 
             Unsatisfied = !result;

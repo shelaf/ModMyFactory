@@ -200,7 +200,7 @@ namespace ModMyFactory.Models
         public bool CanToggle => !IsFixed;
 
         /// <summary>
-        /// The friendly of the mod.
+        /// The friendly name of the mod.
         /// </summary>
         public string FriendlyName => InfoFile.FriendlyName;
 

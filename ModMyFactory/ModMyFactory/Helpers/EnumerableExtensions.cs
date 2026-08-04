@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ModMyFactory.Helpers
 {
-    static class EnumarableExtensions
+    static class EnumerableExtensions
     {
         public static TSource MaxBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector, IComparer<TKey> comparer = null)
         {

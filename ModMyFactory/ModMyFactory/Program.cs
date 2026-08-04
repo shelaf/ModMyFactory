@@ -56,8 +56,8 @@ namespace ModMyFactory
         /// </summary>
         private static void DisplayHelp()
         {
-            bool attatchedConsole = Kernel32.TryAttachConsole();
-            if (attatchedConsole)
+            bool attachedConsole = Kernel32.TryAttachConsole();
+            if (attachedConsole)
             {
                 Console.WriteLine();
                 Console.WriteLine();
@@ -87,7 +87,7 @@ namespace ModMyFactory
             Console.WriteLine(@"  -s NAME, --savegame=NAME                   Load the specified savegame.");
             Console.WriteLine(@"  -c COMMANDLINE, --commands=COMMANDLINE     Start Factorio with the specified command line.");
 
-            if (attatchedConsole)
+            if (attachedConsole)
             {
                 System.Windows.Forms.SendKeys.SendWait("{Enter}");
             }
@@ -109,7 +109,7 @@ namespace ModMyFactory
             // Do not create crash logs when debugging.
             bool createCrashLog = !commandLine.IsSet('l', "no-logs");
 
-            // Do not register fily type associations when debugging.
+            // Do not register file type associations when debugging.
             bool registerFileTypes = !commandLine.IsSet('t', "no-register-filetype");
 
             // Custom AppData path for debugging purposes only.

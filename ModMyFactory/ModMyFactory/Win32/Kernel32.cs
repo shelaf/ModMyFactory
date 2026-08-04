@@ -324,7 +324,7 @@ namespace ModMyFactory.Win32
         /// </summary>
         /// <param name="path">The name of the file or directory.</param>
         /// <param name="attributes">Out. If the function succeeds, contains the attributes of the specified file or directory.</param>
-        /// <returns>Returns true if the function succeeds, othwerwise false.</returns>
+        /// <returns>Returns true if the function succeeds, otherwise false.</returns>
         public static bool TryGetFileAttributes(string path, out FileAttributes attributes)
         {
             const int invalidFileAttributes = -1;

@@ -40,7 +40,7 @@ namespace ModMyFactory
         /// <param name="name">The name of the mod.</param>
         /// <param name="factorioVersion">The mods Factorio version.</param>
         /// <returns>Returns true if the collection contains the mod, otherwise false.</returns>
-        public bool ContainsbyFactorioVersion(string name, Version factorioVersion)
+        public bool ContainsByFactorioVersion(string name, Version factorioVersion)
         {
             return this.Any(mod =>
                 string.Equals(mod.Name, name, StringComparison.InvariantCultureIgnoreCase)

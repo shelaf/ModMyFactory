@@ -123,7 +123,7 @@ namespace ModMyFactory.Web
         /// <param name="url">The URL of the request.</param>
         /// <param name="file">The file the data is written to.</param>
         /// <param name="progress">A progress object used to report the progress of the operation.</param>
-        /// <param name="cancellationToken">A cancelation token that can be used to cancel the operation.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
         public static async Task DownloadFileAsync(Uri url, FileInfo file, IProgress<double> progress, CancellationToken cancellationToken)
         {
             try

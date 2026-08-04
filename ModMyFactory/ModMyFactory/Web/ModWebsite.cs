@@ -74,7 +74,7 @@ namespace ModMyFactory.Web
         /// <summary>
         /// Gets extended information about a specific mod.
         /// </summary>
-        /// <param name="modName">The name ot the mod to get the extended information about.</param>
+        /// <param name="modName">The name of the mod to get the extended information about.</param>
         /// <returns>Returns extended information about the specified mod.</returns>
         public static async Task<ExtendedModInfo> GetExtendedInfoAsync(string modName)
         {
@@ -123,7 +123,7 @@ namespace ModMyFactory.Web
         /// <param name="username">The username.</param>
         /// <param name="token">The login token.</param>
         /// <param name="progress">A progress object used to report the progress of the operation.</param>
-        /// <param name="cancellationToken">A cancelation token that can be used to cancel the operation.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
         /// <param name="parentCollection">The collection to contain the mods.</param>
         /// <param name="modpackCollection">The collection containing all modpacks.</param>
         public static async Task<Mod> DownloadReleaseAsync(ModRelease release, string username, string token, IProgress<double> progress, CancellationToken cancellationToken,
@@ -169,7 +169,7 @@ namespace ModMyFactory.Web
         /// <param name="token">The login token.</param>
         /// <param name="fileName">The destination file name.</param>
         /// <param name="progress">A progress object used to report the progress of the operation.</param>
-        /// <param name="cancellationToken">A cancelation token that can be used to cancel the operation.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
         public static async Task<Mod> DownloadReleaseToFileAsync(ModRelease release, string username, string token, string fileName, IProgress<double> progress, CancellationToken cancellationToken)
         {
             DirectoryInfo modDirectory = App.Instance.Settings.GetModDirectory(release.InfoFile.FactorioVersion);
@@ -199,7 +199,7 @@ namespace ModMyFactory.Web
         /// <param name="username">The username.</param>
         /// <param name="token">The login token.</param>
         /// <param name="progress">A progress object used to report the progress of the operation.</param>
-        /// <param name="cancellationToken">A cancelation token that can be used to cancel the operation.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
         public static async Task<ModFile> DownloadUpdateAsync(ModRelease release, string username, string token, IProgress<double> progress, CancellationToken cancellationToken)
         {
             DirectoryInfo modDirectory = App.Instance.Settings.GetModDirectory(release.InfoFile.FactorioVersion);

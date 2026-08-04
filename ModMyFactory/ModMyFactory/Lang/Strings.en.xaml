@@ -55,7 +55,7 @@
     <sys:String x:Key="Question.MoveDirectories.Message">Do you want to move all contents of the old locations to the new ones?</sys:String>
     <sys:String x:Key="Question.MoveDirectories.Title">Move location contents?</sys:String>
     
-    <sys:String x:Key="Warning.HasConflicts.Message">The following conflicts occured while importing this modpack file:</sys:String>
+    <sys:String x:Key="Warning.HasConflicts.Message">The following conflicts occurred while importing this modpack file:</sys:String>
     <sys:String x:Key="Warning.HasConflicts.Title">Modpack file causes conflicts</sys:String>
     
     <sys:String x:Key="Question.Update.Message">You are running an old version of ModMyFactory (current version is {0}, newest version is {1}).&#x0a;Do you want to download the newest version?</sys:String>
@@ -115,7 +115,7 @@
     <sys:String x:Key="Information.FMPv1.Message">This modpack file was created in ModMyFactory version 1.5 or earlier. Support for old files has been dropped as of version 1.7 of ModMyFactory.&#x0a;The file can be imported in ModMyFactory 1.6 and then re-exported in the new format.</sys:String>
     <sys:String x:Key="Information.FMPv1.Title">Import not possible</sys:String>
     
-    <sys:String x:Key="Information.DependencyUnavailable.Message">The dependency {0} version {1} was not found on the mod portal.&#x0a;Contact the mod author for information on how to aquire the dependency.</sys:String>
+    <sys:String x:Key="Information.DependencyUnavailable.Message">The dependency {0} version {1} was not found on the mod portal.&#x0a;Contact the mod author for information on how to acquire the dependency.</sys:String>
     <sys:String x:Key="Information.DependencyUnavailable.Title">Dependency unavailable</sys:String>
     
     <sys:String x:Key="Question.Dependencies.Message">Some of your active mods require dependencies that are not active. Do you want to start the game anyway?</sys:String>
