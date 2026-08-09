@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using ModMyFactory.Export;
 using ModMyFactory.Models;
 using ModMyFactory.Views;
@@ -57,10 +58,11 @@ namespace ModMyFactory.ViewModels
                         var progressViewModel = (ProgressViewModel)progressWindow.ViewModel;
                         progressViewModel.ActionName = App.Instance.GetLocalizedResourceString("ExportingAction");
 
+                        Task task = null;
                         Task closeWindowTask = null;
                         try
                         {
-                            var task = ExportArchive(exportViewModel.Modpacks.Where(modpackTemplate => modpackTemplate.Export), dialog.FileName);
+                            task = ExportArchive(exportViewModel.Modpacks.Where(modpackTemplate => modpackTemplate.Export), dialog.FileName);
 
                             closeWindowTask = task.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
                             progressWindow.ShowDialog();
@@ -69,14 +71,38 @@ namespace ModMyFactory.ViewModels
                         {
                             if (closeWindowTask != null) await closeWindowTask;
                         }
+
+                        try
+                        {
+                            if (task != null) await task;
+                        }
+                        catch (CircularModpackReferenceException)
+                        {
+                            ShowCircularModpackReferenceError();
+                        }
                     }
                     else
                     {
-                        var exportTemplate = await ModpackExport.CreateTemplateV2(exportViewModel.Modpacks.Where(modpackTemplate => modpackTemplate.Export));
-                        ModpackExport.ExportTemplate(exportTemplate, dialog.FileName);
+                        try
+                        {
+                            var exportTemplate = await ModpackExport.CreateTemplateV2(exportViewModel.Modpacks.Where(modpackTemplate => modpackTemplate.Export));
+                            ModpackExport.ExportTemplate(exportTemplate, dialog.FileName);
+                        }
+                        catch (CircularModpackReferenceException)
+                        {
+                            ShowCircularModpackReferenceError();
+                        }
                     }
                 }
             }
+        }
+
+        private void ShowCircularModpackReferenceError()
+        {
+            MessageBox.Show(Window,
+                App.Instance.GetLocalizedMessage("CircularModpackReference", MessageType.Error),
+                App.Instance.GetLocalizedMessageTitle("CircularModpackReference", MessageType.Error),
+                MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

@@ -104,6 +104,7 @@
     <Compile Include="Controls\NumericUpDown.xaml.cs">
       <DependentUpon>NumericUpDown.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Export\CircularModpackReferenceException.cs" />
     <Compile Include="Export\ExportMode.cs" />
     <Compile Include="ExtendedVersion.cs" />
     <Compile Include="FactorioCollection.cs" />

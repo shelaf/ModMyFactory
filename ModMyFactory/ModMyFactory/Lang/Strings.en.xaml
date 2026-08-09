@@ -108,7 +108,10 @@
     
     <sys:String x:Key="Error.InvalidModpack.Message">Failed to import modpacks: file invalid or corrupt.</sys:String>
     <sys:String x:Key="Error.InvalidModpack.Title">Modpack file invalid!</sys:String>
-    
+
+    <sys:String x:Key="Error.CircularModpackReference.Message">Failed to export modpacks: a circular reference between modpacks was detected.</sys:String>
+    <sys:String x:Key="Error.CircularModpackReference.Title">Circular modpack reference!</sys:String>
+
     <sys:String x:Key="Question.SteamCustomArgs.Message">Loading savegames or using custom arguments with the Steam version of Factorio will cause a Steam notification to show up on every start. Do you want to continue?</sys:String>
     <sys:String x:Key="Question.SteamCustomArgs.Title">Custom arguments with Factorio Steam version</sys:String>
     

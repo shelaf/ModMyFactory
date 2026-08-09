@@ -147,6 +147,7 @@ namespace ModMyFactory.Export
 
             while (source.Count > 0)
             {
+                int countBefore = source.Count;
                 for (int i = source.Count - 1; i >= 0; i--)
                 {
                     var template = source[i];
@@ -156,6 +157,9 @@ namespace ModMyFactory.Export
                         source.RemoveAt(i);
                     }
                 }
+
+                if (source.Count == countBefore)
+                    throw new CircularModpackReferenceException();
             }
 
             return result;
