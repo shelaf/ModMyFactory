@@ -112,11 +112,6 @@ namespace ModMyFactory
             return modpackList.FirstOrDefault(modpack => modpack.Name == name);
         }
 
-        private ModpackTemplate GetTemplate(string name)
-        {
-            return Modpacks.First(template => template.Name == name);
-        }
-
         public void PopulateModpackList(ModCollection modList, ModpackCollection modpackList, IEditableCollectionView modpackView)
         {
             foreach (var template in Modpacks)
@@ -133,16 +128,19 @@ namespace ModMyFactory
                 modpackList.Add(modpack);
             }
 
-            foreach (var modpack in modpackList)
+            for (int i = 0; i < Modpacks.Length; i++)
             {
-                ModpackTemplate template = GetTemplate(modpack.Name);
+                ModpackTemplate template = Modpacks[i];
+                Modpack modpack = modpackList[i];
 
                 foreach (string modpackName in template.Modpacks)
                 {
                     Modpack subModpack = GetModpack(modpackList, modpackName);
+                    if (subModpack == null) continue;
+
                     var reference = new ModpackReference(subModpack, modpack);
                     reference.ParentView = modpack.ModsView;
-                    if (subModpack != null) modpack.Mods.Add(reference);
+                    modpack.Mods.Add(reference);
                 }
             }
         }
