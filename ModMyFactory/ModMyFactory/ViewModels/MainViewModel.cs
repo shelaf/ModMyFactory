@@ -643,6 +643,7 @@ namespace ModMyFactory.ViewModels
             ModManager.BeginUpdateTemplates();
 
             LoadFactorioVersions();
+            ModSettingsManager.FactorioVersions = FactorioVersions;
             ModSettingsManager.LoadSettings();
             ModSettingsManager.BeginUpdate();
             LoadModsAndModpacks();

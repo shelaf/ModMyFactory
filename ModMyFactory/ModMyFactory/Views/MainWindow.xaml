@@ -60,6 +60,7 @@
         <sys:Boolean x:Key="True">True</sys:Boolean>
 
         <converter:AdvancedVisibilityConverter x:Key="AdvancedVisibilityConverter"/>
+        <converter:ModGroupVersionConverter x:Key="ModGroupVersionConverter"/>
 
         <Style x:Key="ActiveInactiveCheckBoxStyle" TargetType="{x:Type CheckBox}">
             <Style.Setters>
@@ -536,7 +537,7 @@
                                                                 <ColumnDefinition Width="*"/>
                                                             </Grid.ColumnDefinitions>
 
-                                                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="8,2" VerticalAlignment="Center" FontSize="14" Text="{Binding Name}"/>
+                                                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="8,2" VerticalAlignment="Center" FontSize="14" Text="{Binding Name, Converter={StaticResource ModGroupVersionConverter}}"/>
                                                             <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,-24,-4" Fill="{DynamicResource SelectionBrush}"/>
                                                         </Grid>
                                                     </controls:DefaultExpandedExpander.Header>

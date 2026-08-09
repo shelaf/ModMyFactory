@@ -113,6 +113,7 @@
     <Compile Include="FactorioUpdate\FactorioUpdater.cs" />
     <Compile Include="FactorioUpdate\FileUpdateAction.cs" />
     <Compile Include="FactorioUpdate\FileUpdateInfo.cs" />
+    <Compile Include="Helpers\FactorioVersionHelper.cs" />
     <Compile Include="GameCompatibleVersion.cs" />
     <Compile Include="GameVersionConverter.cs" />
     <Compile Include="GlobalCredentials.cs" />
@@ -206,6 +207,7 @@
     <Compile Include="MVVM\Converters\FactorioVersionConverter.cs" />
     <Compile Include="MVVM\Converters\LoadTimeConverter.cs" />
     <Compile Include="MVVM\Converters\LocalizedNameConverter.cs" />
+    <Compile Include="MVVM\Converters\ModGroupVersionConverter.cs" />
     <Compile Include="MVVM\Converters\ModInfoSorterModeConverter.cs" />
     <Compile Include="MVVM\Converters\RemoveFileExtensionConverter.cs" />
     <Compile Include="MVVM\Converters\SystemIconConverter.cs" />

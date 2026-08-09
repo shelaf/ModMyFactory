@@ -34,6 +34,60 @@ namespace ModMyFactory.ModSettings
             return result;
         }
 
+        /// <summary>
+        /// Converts a Factorio version into the binary version stored inside a mod-settings file.
+        /// </summary>
+        private static BinaryVersion ToBinaryVersion(Version factorioVersion)
+        {
+            ushort main = (ushort)factorioVersion.Major;
+            ushort major = (ushort)factorioVersion.Minor;
+            ushort minor = (ushort)(factorioVersion.Build < 0 ? 0 : factorioVersion.Build);
+            return new BinaryVersion(main, major, minor, 0);
+        }
+
+        /// <summary>
+        /// Reads the binary version from an existing mod-settings.dat file, or null if it cannot be read.
+        /// </summary>
+        private static BinaryVersion TryGetExistingVersion(Version version)
+        {
+            var file = new FileInfo(Path.Combine(App.Instance.Settings.GetModDirectory(version).FullName, "mod-settings.dat"));
+            if (!file.Exists) return null;
+
+            try
+            {
+                return new BinaryFile(file).Version;
+            }
+            catch (Exception ex) when (ex is ArgumentException)
+            {
+                App.Instance.WriteExceptionLog(ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// The installed Factorio versions used to resolve mod-settings write versions.
+        /// Set by the application after the versions have been loaded to avoid touching the MainViewModel singleton,
+        /// which would cause re-entrant construction during startup.
+        /// </summary>
+        public static FactorioCollection FactorioVersions { get; set; }
+
+        /// <summary>
+        /// Resolves the binary version to write for a given mod folder version.
+        /// Priority: installed Factorio (oldest build with matching minor) -> existing file version -> synthesized major.minor.0.0.
+        /// </summary>
+        private static BinaryVersion ResolveWriteVersion(Version version)
+        {
+            var factorio = FactorioVersions?.FindOldestByMinor(version);
+            if (factorio?.Version != null)
+                return ToBinaryVersion(factorio.Version);
+
+            var existing = TryGetExistingVersion(version);
+            if (existing != null)
+                return existing;
+
+            return ToBinaryVersion(version);
+        }
+
         public static void BeginUpdate()
         {
             updateCount++;
@@ -77,7 +131,7 @@ namespace ModMyFactory.ModSettings
                 {
                     string json = JsonHelper.Serialize(template);
 
-                    var file = new BinaryFile(version, json);
+                    var file = new BinaryFile(ResolveWriteVersion(version), json);
                     var dir = App.Instance.Settings.GetModDirectory(version);
                     if (!dir.Exists) dir.Create();
                     file.Save(new FileInfo(Path.Combine(dir.FullName, "mod-settings.dat")));
