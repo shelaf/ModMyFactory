@@ -16,7 +16,7 @@ using WPFCore.Commands;
 
 namespace ModMyFactory.Models
 {
-    sealed class ModSettingsProxy : NotifyPropertyChangedBase, IHasModSettings
+    sealed class ModSettingsProxy : NotifyPropertyChangedBase, IHasModSettings, IDisposable
     {
         readonly IHasModSettings baseMod;
         readonly Modpack parent;
@@ -71,7 +71,7 @@ namespace ModMyFactory.Models
             Override = ModSettingsManager.HasSavedDataPresent(this);
         }
 
-        ~ModSettingsProxy()
+        public void Dispose()
         {
             baseMod.PropertyChanged -= PropertyChangedHandler;
         }

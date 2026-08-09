@@ -9,7 +9,7 @@ using WPFCore.Commands;
 
 namespace ModMyFactory.Models
 {
-    class ModReference : NotifyPropertyChangedBase, IModReference
+    class ModReference : NotifyPropertyChangedBase, IModReference, IDisposable
     {
         public Mod Mod { get; }
 
@@ -55,7 +55,7 @@ namespace ModMyFactory.Models
             });
         }
 
-        ~ModReference()
+        public void Dispose()
         {
             Mod.PropertyChanged -= PropertyChangedHandler;
         }

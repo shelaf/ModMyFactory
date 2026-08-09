@@ -7,7 +7,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using ModMyFactory.Helpers;
 using ModMyFactory.ModSettings;
 using ModMyFactory.MVVM.Sorters;
 using ModMyFactory.ViewModels;
@@ -20,7 +19,7 @@ namespace ModMyFactory.Models
     /// <summary>
     /// A collection of mods.
     /// </summary>
-    class Modpack : NotifyPropertyChangedBase, IEditableObject
+    class Modpack : NotifyPropertyChangedBase, IEditableObject, IDisposable
     {
         string name;
         string editingName;
@@ -32,7 +31,7 @@ namespace ModMyFactory.Models
         bool contentsExpanded;
         bool hasUnsatisfiedDependencies;
         bool isLocked;
-        Dictionary<IModReference, IEnumerable<IHasModSettings>> proxyDict;
+        Dictionary<IModReference, List<ModSettingsProxy>> proxyDict;
 
         private string GetUniqueName(string baseName)
         {
@@ -233,7 +232,7 @@ namespace ModMyFactory.Models
         /// </summary>
         public IEditableCollectionView ParentView { get; set; }
 
-        public IEnumerable<IHasModSettings> ModProxies => proxyDict.Values.ConcatAll();
+        public IEnumerable<IHasModSettings> ModProxies => proxyDict.Values.SelectMany(list => list);
 
         /// <summary>
         /// A command that deletes this modpack from the list.
@@ -430,6 +429,16 @@ namespace ModMyFactory.Models
             }
         }
 
+        private void DisposeProxiesFor(IModReference mod)
+        {
+            if (proxyDict.TryGetValue(mod, out var proxies))
+            {
+                foreach (var proxy in proxies)
+                    proxy.Dispose();
+            }
+            proxyDict.Remove(mod);
+        }
+
         private void ModsChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -438,7 +447,7 @@ namespace ModMyFactory.Models
                     foreach (IModReference mod in e.NewItems)
                     {
                         mod.PropertyChanged += ModPropertyChanged;
-                        proxyDict.Add(mod, mod.ModProxies.Select(proxy => new ModSettingsProxy(proxy, this)));
+                        proxyDict.Add(mod, mod.ModProxies.Select(proxy => new ModSettingsProxy(proxy, this)).ToList());
                     }
                     SetActive();
                     SetHasUnsatisfiedDependencies();
@@ -447,7 +456,8 @@ namespace ModMyFactory.Models
                     foreach (IModReference mod in e.OldItems)
                     {
                         mod.PropertyChanged -= ModPropertyChanged;
-                        proxyDict.Remove(mod);
+                        DisposeProxiesFor(mod);
+                        (mod as IDisposable)?.Dispose();
                     }
                     SetActive();
                     SetHasUnsatisfiedDependencies();
@@ -456,12 +466,13 @@ namespace ModMyFactory.Models
                     foreach (IModReference mod in e.NewItems)
                     {
                         mod.PropertyChanged += ModPropertyChanged;
-                        proxyDict.Add(mod, mod.ModProxies.Select(proxy => new ModSettingsProxy(proxy, this)));
+                        proxyDict.Add(mod, mod.ModProxies.Select(proxy => new ModSettingsProxy(proxy, this)).ToList());
                     }
                     foreach (IModReference mod in e.OldItems)
                     {
                         mod.PropertyChanged -= ModPropertyChanged;
-                        proxyDict.Remove(mod);
+                        DisposeProxiesFor(mod);
+                        (mod as IDisposable)?.Dispose();
                     }
                     SetActive();
                     SetHasUnsatisfiedDependencies();
@@ -492,7 +503,24 @@ namespace ModMyFactory.Models
 
                 }
                 parentCollection.Remove(this);
+                Dispose();
             }
+        }
+
+        public void Dispose()
+        {
+            Mods.CollectionChanged -= ModsChangedHandler;
+            foreach (var mod in Mods)
+            {
+                mod.PropertyChanged -= ModPropertyChanged;
+                (mod as IDisposable)?.Dispose();
+            }
+            foreach (var proxies in proxyDict.Values)
+            {
+                foreach (var proxy in proxies)
+                    proxy.Dispose();
+            }
+            proxyDict.Clear();
         }
 
         /// <summary>
@@ -507,7 +535,7 @@ namespace ModMyFactory.Models
             this.isLocked = isLocked;
             active = false;
             activeChanging = false;
-            proxyDict = new Dictionary<IModReference, IEnumerable<IHasModSettings>>();
+            proxyDict = new Dictionary<IModReference, List<ModSettingsProxy>>();
 
             Mods = new ObservableCollection<IModReference>();
             Mods.CollectionChanged += ModsChangedHandler;

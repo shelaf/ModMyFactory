@@ -7,7 +7,7 @@ using WPFCore.Commands;
 
 namespace ModMyFactory.Models
 {
-    class ModpackReference : NotifyPropertyChangedBase, IModReference
+    class ModpackReference : NotifyPropertyChangedBase, IModReference, IDisposable
     {
         public Modpack Modpack { get; }
 
@@ -49,7 +49,7 @@ namespace ModMyFactory.Models
             });
         }
 
-        ~ModpackReference()
+        public void Dispose()
         {
             Modpack.PropertyChanged -= PropertyChangedHandler;
         }
