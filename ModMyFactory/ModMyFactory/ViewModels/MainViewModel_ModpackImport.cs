@@ -326,7 +326,7 @@ namespace ModMyFactory.ViewModels
 
                     await ImportModpackFileV2(template, tempDir);
                 }
-                catch (JsonSerializationException)
+                catch (JsonException)
                 {
                     ShowInvalidModpackError();
                     return;
@@ -357,7 +357,7 @@ namespace ModMyFactory.ViewModels
                         {
                             template = ModpackExport.ImportTemplate(file);
                         }
-                        catch (JsonSerializationException)
+                        catch (JsonException)
                         {
                             ShowInvalidModpackError();
                             continue;

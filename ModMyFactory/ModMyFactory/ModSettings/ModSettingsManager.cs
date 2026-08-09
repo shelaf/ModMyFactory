@@ -158,7 +158,7 @@ namespace ModMyFactory.ModSettings
                 {
                     modSettings = JsonHelper.Deserialize<Dictionary<string, ModSettingsExportTemplate>>(settingsFile);
                 }
-                catch (JsonSerializationException ex)
+                catch (JsonException ex)
                 {
                     App.Instance.WriteExceptionLog(ex);
                     settingsFile.Delete();
@@ -191,7 +191,7 @@ namespace ModMyFactory.ModSettings
                                 var template = JsonHelper.Deserialize<ModSettingsExportTemplate>(binFile.JsonString);
                                 deserializedBinary.Add(version, template);
                             }
-                            catch (Exception ex) when (ex is ArgumentException || ex is JsonSerializationException)
+                            catch (Exception ex) when (ex is ArgumentException || ex is JsonException)
                             {
                                 App.Instance.WriteExceptionLog(ex);
                             }
@@ -207,7 +207,7 @@ namespace ModMyFactory.ModSettings
                                 var template = JsonHelper.Deserialize<ModSettingsExportTemplate>(file);
                                 deserializedBinary.Add(version, template);
                             }
-                            catch (Exception ex) when (ex is ArgumentException || ex is JsonSerializationException)
+                            catch (Exception ex) when (ex is ArgumentException || ex is JsonException)
                             {
                                 App.Instance.WriteExceptionLog(ex);
                             }
