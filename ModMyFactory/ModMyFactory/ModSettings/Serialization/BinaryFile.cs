@@ -52,6 +52,7 @@ namespace ModMyFactory.ModSettings.Serialization
             {
                 uint length = reader.ReadByte(); // Length is usually stored as 1 byte
                 if (length == byte.MaxValue) length = reader.ReadUInt32(); // If length exceeds 255 chars it is stored as 4 bytes
+                if (length > int.MaxValue) throw new EndOfStreamException("Property string length exceeds maximum supported size.");
 
                 byte[] buffer = reader.ReadBytes((int)length);
                 result = Encoding.UTF8.GetString(buffer);
@@ -85,7 +86,7 @@ namespace ModMyFactory.ModSettings.Serialization
 
                 case PropertyTreeType.List:
                     {
-                        jsonWriter.WriteStartObject();
+                        jsonWriter.WriteStartArray();
 
                         uint count = reader.ReadUInt32();
                         for (int i = 0; i < count; i++)
@@ -94,7 +95,7 @@ namespace ModMyFactory.ModSettings.Serialization
                             ReadPropertyTree(reader, jsonWriter);
                         }
 
-                        jsonWriter.WriteEndObject();
+                        jsonWriter.WriteEndArray();
                         break;
                     }
 
@@ -135,12 +136,13 @@ namespace ModMyFactory.ModSettings.Serialization
                         if (Version >= BehaviourSwitch) reader.ReadBoolean();
 
                         var sb = new StringBuilder();
-                        var sw = new StringWriter(sb);
-                        var writer = new JsonTextWriter(sw);
-                        writer.Formatting = Formatting.Indented;
-
-                        ReadPropertyTree(reader, writer);
-                        JsonString = sw.ToString();
+                        using (var sw = new StringWriter(sb))
+                        using (var writer = new JsonTextWriter(sw))
+                        {
+                            writer.Formatting = Formatting.Indented;
+                            ReadPropertyTree(reader, writer);
+                        }
+                        JsonString = sb.ToString();
                     }
                 }
             }
@@ -256,6 +258,7 @@ namespace ModMyFactory.ModSettings.Serialization
                     if (string.IsNullOrWhiteSpace(JsonString))
                     {
                         writer.Write((byte)PropertyTreeType.None);
+                        writer.Write(false); // Reserved byte, matches WritePropertyTree's behaviour for non-String types
                         return;
                     }
 
