@@ -630,6 +630,7 @@
     <Resource Include="Images\Settings_blue.png" />
     <Resource Include="Images\Settings_gray.png" />
     <Resource Include="Images\Inverted_small.png" />
+    <Resource Include="Images\NoLoadOrder_small.png" />
     <Resource Include="Images\Themes\dark.png" />
     <Resource Include="Images\Themes\light.png" />
     <Resource Include="Images\Themes.png" />

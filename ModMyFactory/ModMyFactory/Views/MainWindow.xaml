@@ -35,6 +35,7 @@
         <BitmapImage x:Key="ImportPackageIcon" UriSource="../Images/ImportPackage.png"/>
         <BitmapImage x:Key="InformationIcon" UriSource="../Images/Information.png"/>
         <BitmapImage x:Key="InvertedIcon" UriSource="../Images/Inverted_small.png"/>
+        <BitmapImage x:Key="NoLoadOrderIcon" UriSource="../Images/NoLoadOrder_small.png"/>
         <BitmapImage x:Key="LinkIcon" UriSource="../Images/Link.png"/>
         <BitmapImage x:Key="LockButtonIcon" UriSource="../Images/Lock.png"/>
         <BitmapImage x:Key="LockHoverIcon" UriSource="../Images/Lock_blue.png"/>
@@ -448,13 +449,15 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
                             <Image Grid.Column="0" Margin="1,0" Source="{StaticResource OptionalIcon}" Visibility="{Binding IsOptional, Converter={StaticResource VisibilityConverter}}" Stretch="None" VerticalAlignment="Center" Height="16"/>
                             <Image Grid.Column="1" Margin="1,0" Source="{StaticResource InvertedIcon}" Visibility="{Binding IsInverted, Converter={StaticResource VisibilityConverter}}" Stretch="None" VerticalAlignment="Center" Height="16"/>
-                            <TextBlock Grid.Column="2" Margin="1,0" VerticalAlignment="Center" Text="{Binding FriendlyDescription}" IsHitTestVisible="False"/>
-                            <Image x:Name="DependencyWarningImage" Grid.Column="3" Margin="4,0" Source="{StaticResource WarningIcon}"
+                            <Image Grid.Column="2" Margin="1,0" Source="{StaticResource NoLoadOrderIcon}" Visibility="{Binding IsNoLoadOrder, Converter={StaticResource VisibilityConverter}}" Stretch="None" VerticalAlignment="Center" Height="16"/>
+                            <TextBlock Grid.Column="3" Margin="1,0" VerticalAlignment="Center" Text="{Binding FriendlyDescription}" IsHitTestVisible="False"/>
+                            <Image x:Name="DependencyWarningImage" Grid.Column="4" Margin="4,0" Source="{StaticResource WarningIcon}"
                                        Visibility="{Binding Unsatisfied, Converter={StaticResource VisibilityConverter}}" Stretch="None" VerticalAlignment="Center"/>
                         </Grid>
 
