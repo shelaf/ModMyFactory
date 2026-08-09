@@ -264,6 +264,7 @@ namespace ModMyFactory.ViewModels
                 foreach (var modpackTemplate in template.Modpacks)
                 {
                     var modpack = new Modpack(modpackTemplate.Name, false, Modpacks);
+                    modpack.ParentView = ModpacksView;
                     modpacks.Add(modpack);
                     modpackTemplate.Modpack = modpack;
 
