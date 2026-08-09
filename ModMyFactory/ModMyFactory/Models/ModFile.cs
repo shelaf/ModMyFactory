@@ -296,20 +296,31 @@ namespace ModMyFactory.Models
                     modsTable.Set(DynValue.NewString(mod.Name), DynValue.True);
                 script.Globals.Set("mods", DynValue.NewTable(modsTable));
 
-                if (isFile)
+                // settings.lua may rely on parts of the Factorio runtime that we cannot fully
+                // emulate outside of a running game instance. If evaluation fails we simply skip
+                // the mod's settings rather than aborting the whole load process. The UI will then
+                // display the mod without its custom settings.
+                try
                 {
-                    using (var archive = ZipFile.OpenRead(file.FullName))
+                    if (isFile)
                     {
-                        script.Options.ScriptLoader = new ArchiveSettingsScriptLoader(LoadSettingsFileFromArchive, archive, parentCollection, InfoFile) { ModulePaths = new[] { "?.lua" } };
-                        string mainFile = LoadSettingsFileFromArchive(archive, mainFileName);
+                        using (var archive = ZipFile.OpenRead(file.FullName))
+                        {
+                            script.Options.ScriptLoader = new ArchiveSettingsScriptLoader(LoadSettingsFileFromArchive, archive, parentCollection, InfoFile) { ModulePaths = new[] { "?.lua" } };
+                            string mainFile = LoadSettingsFileFromArchive(archive, mainFileName);
+                            script.DoString(mainFile);
+                        }
+                    }
+                    else
+                    {
+                        script.Options.ScriptLoader = new DirectorySettingsScriptLoader(LoadSettingsFileFromDirectory, parentCollection, InfoFile) { ModulePaths = new[] { "?.lua" } };
+                        string mainFile = LoadSettingsFileFromDirectory(mainFileName);
                         script.DoString(mainFile);
                     }
                 }
-                else
+                catch
                 {
-                    script.Options.ScriptLoader = new DirectorySettingsScriptLoader(LoadSettingsFileFromDirectory, parentCollection, InfoFile) { ModulePaths = new[] { "?.lua" } };
-                    string mainFile = LoadSettingsFileFromDirectory(mainFileName);
-                    script.DoString(mainFile);
+                    // Ignore evaluation errors; the mod is simply shown without its custom settings.
                 }
 
                 settings = data.ToSettings(owner);
