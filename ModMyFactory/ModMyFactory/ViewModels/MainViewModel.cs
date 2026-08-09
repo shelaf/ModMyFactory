@@ -616,6 +616,8 @@ namespace ModMyFactory.ViewModels
             }
             else
             {
+                foreach (var mod in Mods)
+                    mod.PropertyChanged -= ModPropertyChanged;
                 Mods.Clear();
             }
 
@@ -626,6 +628,11 @@ namespace ModMyFactory.ViewModels
             }
             else
             {
+                foreach (var modpack in Modpacks)
+                {
+                    modpack.PropertyChanged -= ModpackPropertyChanged;
+                    modpack.Dispose();
+                }
                 Modpacks.Clear();
             }
 
