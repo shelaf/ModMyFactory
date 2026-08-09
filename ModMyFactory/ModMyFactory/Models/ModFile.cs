@@ -57,7 +57,7 @@ namespace ModMyFactory.Models
         public bool ExtractUpdates => !(isFile || App.Instance.Settings.AlwaysUpdateZipped);
 
         /// <summary>
-        /// Indicaes whether this mod file resides inside the managed mod directory.
+        /// Indicates whether this mod file resides inside the managed mod directory.
         /// </summary>
         public bool ResidesInModDirectory => file.ParentDirectory().DirectoryEquals(App.Instance.Settings.GetModDirectory(InfoFile.FactorioVersion));
 
@@ -232,7 +232,7 @@ namespace ModMyFactory.Models
         /// <summary>
         /// Sets the files enabled state.
         /// </summary>
-        public void SetEndabled(bool value)
+        public void SetEnabled(bool value)
         {
             if (value) Enable();
             else Disable();
@@ -656,7 +656,7 @@ namespace ModMyFactory.Models
         /// <summary>
         /// Tries to read an info file from a directory.
         /// </summary>
-        /// <param name="directory">The directory to read fromn.</param>
+        /// <param name="directory">The directory to read from.</param>
         /// <param name="infoFile">Out. The info file that has been read.</param>
         /// <returns>Returns true if an info file could be read from the directory, otherwise false.</returns>
         private static bool TryReadInfoFileFromDirectory(DirectoryInfo directory, out InfoFile infoFile, out bool enabled)

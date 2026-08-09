@@ -181,7 +181,7 @@ namespace ModMyFactory.Models
         public Version FactorioVersion => InfoFile.FactorioVersion;
 
         /// <summary>
-        /// The friendly of the mod.
+        /// The friendly name of the mod.
         /// </summary>
         public string FriendlyName => InfoFile.FriendlyName;
 

@@ -65,7 +65,7 @@ namespace ModMyFactory.Web
         /// <param name="token">The login token.</param>
         /// <param name="step">The update step to download.</param>
         /// <param name="progress">A progress object used to report the progress of the operation.</param>
-        /// <param name="cancellationToken">A cancelation token that can be used to cancel the operation.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
         /// <returns>Returns the downloaded file.</returns>
         public static async Task<FileInfo> DownloadUpdatePackageAsync(string username, string token, UpdateStep step, IProgress<double> progress, CancellationToken cancellationToken)
         {

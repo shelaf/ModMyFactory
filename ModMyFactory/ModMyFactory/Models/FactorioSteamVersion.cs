@@ -20,7 +20,7 @@ namespace ModMyFactory.Models
         /// Tries to load the Steam version of Factorio.
         /// </summary>
         /// <param name="steamVersion">Out. The Steam version.</param>
-        /// <returns>Returns true if the Steam version has been loaded sucessfully, otherwise false.</returns>
+        /// <returns>Returns true if the Steam version has been loaded successfully, otherwise false.</returns>
         public static bool TryLoad(out FactorioVersion steamVersion)
         {
             steamVersion = null;

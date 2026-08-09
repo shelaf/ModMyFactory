@@ -58,7 +58,7 @@ namespace ModMyFactory.Helpers
             return progId;
         }
 
-        public static void RegisterFileType(string extension, string handlerName, string mimeType, PercievedFileType percievedType)
+        public static void RegisterFileType(string extension, string handlerName, string mimeType, PerceivedFileType perceivedType)
         {
             if (string.IsNullOrEmpty(extension)) throw new ArgumentNullException(nameof(extension));
             if (string.IsNullOrEmpty(handlerName)) throw new ArgumentNullException(nameof(handlerName));
@@ -79,9 +79,9 @@ namespace ModMyFactory.Helpers
                     changed = true;
                 }
 
-                if ((percievedType != PercievedFileType.None) && ((string)extensionKey.GetValue("PerceivedType") != percievedType.ToString("g")))
+                if ((perceivedType != PerceivedFileType.None) && ((string)extensionKey.GetValue("PerceivedType") != perceivedType.ToString("g")))
                 {
-                    extensionKey.SetValue("PerceivedType", percievedType.ToString("g"), RegistryValueKind.String);
+                    extensionKey.SetValue("PerceivedType", perceivedType.ToString("g"), RegistryValueKind.String);
                     changed = true;
                 }
             }

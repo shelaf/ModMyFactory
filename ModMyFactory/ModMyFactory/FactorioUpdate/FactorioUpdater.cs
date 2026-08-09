@@ -79,7 +79,7 @@ namespace ModMyFactory.FactorioUpdate
         /// <param name="token">The login token.</param>
         /// <param name="target">The update target.</param>
         /// <param name="progress">A progress object used to report the progress of the operation.</param>
-        /// <param name="cancellationToken">A cancelation token that can be used to cancel the operation.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
         /// <returns>Returns a list of update package files.</returns>
         public static async Task<List<FileInfo>> DownloadUpdatePackagesAsync(string username, string token, UpdateTarget target, IProgress<double> progress, CancellationToken cancellationToken)
         {
@@ -280,7 +280,7 @@ namespace ModMyFactory.FactorioUpdate
         /// <param name="target">The update target.</param>
         /// <param name="progress">A progress object used to report the progress of the operation.</param>
         /// <param name="stageProgress">A progress object used to report the stage of the operation.</param>
-        /// <param name="cancellationToken">A cancelation token that can be used to cancel the operation.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
         public static async Task ApplyUpdatePackagesAsync(FactorioVersion versionToUpdate, List<FileInfo> packageFiles, IProgress<double> progress)
         {
             int packageCount = packageFiles.Count;

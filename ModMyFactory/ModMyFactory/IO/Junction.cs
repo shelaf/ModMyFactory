@@ -126,7 +126,7 @@ namespace ModMyFactory.IO
         /// Determines whether the given path refers to an existing directory junction on disk.
         /// </summary>
         /// <param name="path">The path to test.</param>
-        /// <returns>Returns true if path refers to an existing directory junction, othwerwise false.</returns>
+        /// <returns>Returns true if path refers to an existing directory junction, otherwise false.</returns>
         public static bool Exists(string path)
         {
             if (string.IsNullOrEmpty(path))

@@ -36,7 +36,7 @@ namespace ModMyFactory.Helpers
         /// <summary>
         /// Wraps this string on a specified with.
         /// </summary>
-        /// <param name="columnWidth">The width the string gets wraped at.</param>
+        /// <param name="columnWidth">The width the string gets wrapped at.</param>
         public static string Wrap(this string value, int columnWidth)
         {
             string[] lines = value.Split('\n');
@@ -61,7 +61,7 @@ namespace ModMyFactory.Helpers
         /// <param name="first">The first string.</param>
         /// <param name="second">The second string.</param>
         /// <param name="culture">The culture that is used to compare the strings.</param>
-        /// <param name="options">A value that spoecifies how the two string are compared.</param>
+        /// <param name="options">A value that specifies how the two strings are compared.</param>
         /// <returns>Returns the minimum edit distance between this string and the second string.</returns>
         public static int EditDistanceTo(this string first, string second, CultureInfo culture, CompareOptions options)
         {
@@ -123,7 +123,7 @@ namespace ModMyFactory.Helpers
         /// <param name="startIndex">The index tho start the comparison at.</param>
         /// <param name="other">Tee string to compare this string to.</param>
         /// <param name="culture">The culture that is used to compare the strings.</param>
-        /// <param name="options">A value that spoecifies how the two string are compared.</param>
+        /// <param name="options">A value that specifies how the two strings are compared.</param>
         /// <returns>Returns true if the given string is equal to this string starting at the given index, otherwise false.</returns>
         public static bool PositionEquals(this string value, int startIndex, string other, CultureInfo culture, CompareOptions options)
         {

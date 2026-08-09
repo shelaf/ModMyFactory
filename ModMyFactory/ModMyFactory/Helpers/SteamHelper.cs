@@ -16,7 +16,7 @@ namespace ModMyFactory.Helpers
         /// <summary>
         /// Tries to read the Steam installation path from the Registry.
         /// </summary>
-        /// <param name="path">Out. If the action was sucessful, the full path to the Steam installation directory.</param>
+        /// <param name="path">Out. If the action was successful, the full path to the Steam installation directory.</param>
         /// <returns>Returns true if the path was found in the Registry, otherwise false.</returns>
         public static bool TryGetSteamInstallPath(out string path, bool cache = true)
         {

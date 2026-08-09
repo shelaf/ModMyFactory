@@ -119,14 +119,14 @@
     <Compile Include="GlobalCredentials.cs" />
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\DirectoryInfoExtensions.cs" />
-    <Compile Include="Helpers\EnumarableExtensions.cs" />
+    <Compile Include="Helpers\EnumerableExtensions.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\FileInfoExtensions.cs" />
     <Compile Include="Helpers\FileSystemInfoExtensions.cs" />
     <Compile Include="Helpers\GitHubClientExtensions.cs" />
     <Compile Include="Helpers\INIHelper.cs" />
     <Compile Include="Helpers\ModHelper.cs" />
-    <Compile Include="Helpers\PercievedFileType.cs" />
+    <Compile Include="Helpers\PerceivedFileType.cs" />
     <Compile Include="Helpers\ProcessExtensions.cs" />
     <Compile Include="Helpers\RegistryHelper.cs" />
     <Compile Include="Helpers\SecureStringHelper.cs" />

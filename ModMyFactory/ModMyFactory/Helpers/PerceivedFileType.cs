@@ -1,6 +1,6 @@
 ﻿namespace ModMyFactory.Helpers
 {
-    enum PercievedFileType
+    enum PerceivedFileType
     {
         None,
         Folder,

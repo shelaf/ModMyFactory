@@ -41,7 +41,7 @@ namespace ModMyFactory.Web
         /// <summary>
         /// Reads the Factorio version list.
         /// </summary>
-        /// <returns>Returns the list of available Factorio versions or null if the operation was unsucessful.</returns>
+        /// <returns>Returns the list of available Factorio versions or null if the operation was unsuccessful.</returns>
         public static async Task<List<FactorioOnlineVersion>> GetVersionsAsync()
         {
             return await Task.Run(() =>
@@ -58,7 +58,7 @@ namespace ModMyFactory.Web
         /// </summary>
         /// <param name="version">The version of Factorio to be downloaded.</param>
         /// <param name="progress">A progress object used to report the progress of the operation.</param>
-        /// <param name="cancellationToken">A cancelation token that can be used to cancel the operation.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
         public static async Task<FactorioVersion> DownloadFactorioAsync(FactorioOnlineVersion version, string username, string token, IProgress<double> progress, CancellationToken cancellationToken)
         {
             var factorioDirectory = App.Instance.Settings.GetFactorioDirectory();
