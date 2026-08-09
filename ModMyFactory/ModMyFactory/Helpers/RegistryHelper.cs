@@ -15,41 +15,46 @@ namespace ModMyFactory.Helpers
             bool changed = false;
 
             string progId = string.Join(".", "ModMyFactory", component, version);
-            RegistryKey handlerKey = Registry.CurrentUser.CreateSubKey(Path.Combine(@"Software\Classes", progId));
-
-            if (handlerKey != null)
+            using (RegistryKey handlerKey = Registry.CurrentUser.CreateSubKey($@"Software\Classes\{progId}"))
             {
-                if (!string.IsNullOrEmpty(description))
+                if (handlerKey != null)
                 {
-                    if ((string)handlerKey.GetValue(null) != description)
+                    if (!string.IsNullOrEmpty(description))
                     {
-                        handlerKey.SetValue(null, description, RegistryValueKind.String);
-                        changed = true;
+                        if ((string)handlerKey.GetValue(null) != description)
+                        {
+                            handlerKey.SetValue(null, description, RegistryValueKind.String);
+                            changed = true;
+                        }
+                        if ((string)handlerKey.GetValue("FriendlyTypeName") != description)
+                        {
+                            handlerKey.SetValue("FriendlyTypeName", description, RegistryValueKind.String);
+                            changed = true;
+                        }
                     }
-                    if ((string)handlerKey.GetValue("FriendlyTypeName") != description)
-                    {
-                        handlerKey.SetValue("FriendlyTypeName", description, RegistryValueKind.String);
-                        changed = true;
-                    }
-                }
 
-                if (!string.IsNullOrEmpty(iconPath))
-                {
-                    RegistryKey iconKey = handlerKey.CreateSubKey("DefaultIcon");
-                    if ((iconKey != null) && ((string)iconKey.GetValue(null) != iconPath))
+                    if (!string.IsNullOrEmpty(iconPath))
                     {
-                        iconKey.SetValue(null, iconPath, RegistryValueKind.String);
-                        changed = true;
+                        using (RegistryKey iconKey = handlerKey.CreateSubKey("DefaultIcon"))
+                        {
+                            if ((iconKey != null) && ((string)iconKey.GetValue(null) != iconPath))
+                            {
+                                iconKey.SetValue(null, iconPath, RegistryValueKind.String);
+                                changed = true;
+                            }
+                        }
                     }
-                }
 
-                string appPath = Path.GetFullPath(Assembly.GetExecutingAssembly().Location);
-                string command = $"\"{appPath}\" \"%1\"";
-                RegistryKey openKey = handlerKey.CreateSubKey(@"shell\open\command");
-                if ((openKey != null) && ((string)openKey.GetValue(null) != command))
-                {
-                    openKey.SetValue(null, command);
-                    changed = true;
+                    string appPath = Path.GetFullPath(Assembly.GetExecutingAssembly().Location);
+                    string command = $"\"{appPath}\" \"%1\"";
+                    using (RegistryKey openKey = handlerKey.CreateSubKey(@"shell\open\command"))
+                    {
+                        if ((openKey != null) && ((string)openKey.GetValue(null) != command))
+                        {
+                            openKey.SetValue(null, command);
+                            changed = true;
+                        }
+                    }
                 }
             }
 
@@ -67,22 +72,27 @@ namespace ModMyFactory.Helpers
 
             bool changed = false;
 
-            RegistryKey extensionKey = Registry.CurrentUser.CreateSubKey(Path.Combine(@"Software\Classes", extension));
-
-            if (extensionKey != null)
+            using (RegistryKey extensionKey = Registry.CurrentUser.CreateSubKey($@"Software\Classes\{extension}"))
             {
-                extensionKey.SetValue(null, handlerName);
-
-                if (!string.IsNullOrEmpty(mimeType) && ((string)extensionKey.GetValue("Content Type") != mimeType))
+                if (extensionKey != null)
                 {
-                    extensionKey.SetValue("Content Type", mimeType, RegistryValueKind.String);
-                    changed = true;
-                }
+                    if ((string)extensionKey.GetValue(null) != handlerName)
+                    {
+                        extensionKey.SetValue(null, handlerName);
+                        changed = true;
+                    }
 
-                if ((perceivedType != PerceivedFileType.None) && ((string)extensionKey.GetValue("PerceivedType") != perceivedType.ToString("g")))
-                {
-                    extensionKey.SetValue("PerceivedType", perceivedType.ToString("g"), RegistryValueKind.String);
-                    changed = true;
+                    if (!string.IsNullOrEmpty(mimeType) && ((string)extensionKey.GetValue("Content Type") != mimeType))
+                    {
+                        extensionKey.SetValue("Content Type", mimeType, RegistryValueKind.String);
+                        changed = true;
+                    }
+
+                    if ((perceivedType != PerceivedFileType.None) && ((string)extensionKey.GetValue("PerceivedType") != perceivedType.ToString("g")))
+                    {
+                        extensionKey.SetValue("PerceivedType", perceivedType.ToString("g"), RegistryValueKind.String);
+                        changed = true;
+                    }
                 }
             }
 
