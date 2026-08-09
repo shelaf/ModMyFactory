@@ -173,6 +173,7 @@ namespace ModMyFactory.ModSettings
             binaryFiles = new Dictionary<Version, BinaryFile>();
             deserializedBinary = new Dictionary<Version, ModSettingsExportTemplate>();
             var modDir = App.Instance.Settings.GetModDirectory();
+            if (!modDir.Exists) return;
             foreach (var subDir in modDir.EnumerateDirectories())
             {
                 if (Version.TryParse(subDir.Name, out var version))
