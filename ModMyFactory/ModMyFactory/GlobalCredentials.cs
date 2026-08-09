@@ -25,15 +25,12 @@ namespace ModMyFactory
         }
 
 
-        public static GlobalCredentials Instance { get; }
+        private static GlobalCredentials instance;
+        public static GlobalCredentials Instance => instance ?? (instance = new GlobalCredentials());
 
-        private static FileInfo CredentialsFile { get; }
-
-        static GlobalCredentials()
-        {
-            CredentialsFile = new FileInfo(Path.Combine(App.Instance.AppDataPath, "credentials.json"));
-            Instance = new GlobalCredentials();
-        }
+        private static FileInfo credentialsFile;
+        private static FileInfo CredentialsFile =>
+            credentialsFile ?? (credentialsFile = new FileInfo(Path.Combine(App.Instance.AppDataPath, "credentials.json")));
 
         private static byte[] GenerateEntropy()
         {
@@ -107,7 +104,7 @@ namespace ModMyFactory
                 {
                     if (CredentialsFile.Exists) Load(CredentialsFile);
                 }
-                catch (CryptographicException)
+                catch (Exception ex) when (ex is CryptographicException || ex is FormatException || ex is JsonException)
                 {
                     DeleteSave();
                 }
