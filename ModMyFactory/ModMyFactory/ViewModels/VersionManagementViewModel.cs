@@ -27,7 +27,7 @@ namespace ModMyFactory.ViewModels
     {
         static VersionManagementViewModel instance;
 
-        public static VersionManagementViewModel Instance = instance ?? (instance = new VersionManagementViewModel());
+        public static VersionManagementViewModel Instance => instance ?? (instance = new VersionManagementViewModel());
 
         public VersionManagementWindow Window => (VersionManagementWindow)View;
 
