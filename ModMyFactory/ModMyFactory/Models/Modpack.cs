@@ -463,16 +463,22 @@ namespace ModMyFactory.Models
                     SetHasUnsatisfiedDependencies();
                     break;
                 case NotifyCollectionChangedAction.Reset:
-                    foreach (IModReference mod in e.NewItems)
+                    if (e.NewItems != null)
                     {
-                        mod.PropertyChanged += ModPropertyChanged;
-                        proxyDict.Add(mod, mod.ModProxies.Select(proxy => new ModSettingsProxy(proxy, this)).ToList());
+                        foreach (IModReference mod in e.NewItems)
+                        {
+                            mod.PropertyChanged += ModPropertyChanged;
+                            proxyDict.Add(mod, mod.ModProxies.Select(proxy => new ModSettingsProxy(proxy, this)).ToList());
+                        }
                     }
-                    foreach (IModReference mod in e.OldItems)
+                    if (e.OldItems != null)
                     {
-                        mod.PropertyChanged -= ModPropertyChanged;
-                        DisposeProxiesFor(mod);
-                        (mod as IDisposable)?.Dispose();
+                        foreach (IModReference mod in e.OldItems)
+                        {
+                            mod.PropertyChanged -= ModPropertyChanged;
+                            DisposeProxiesFor(mod);
+                            (mod as IDisposable)?.Dispose();
+                        }
                     }
                     SetActive();
                     SetHasUnsatisfiedDependencies();
