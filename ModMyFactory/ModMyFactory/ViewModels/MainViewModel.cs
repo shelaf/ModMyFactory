@@ -878,11 +878,9 @@ namespace ModMyFactory.ViewModels
 
             Task processModsTask = AddModsFromFilesInner(fileNames, copy, progress, cancellationSource.Token);
 
-            Task closeWindowTask = processModsTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-            progressWindow.ShowDialog();
+            await progressWindow.ShowProgressAsync(processModsTask);
 
             await processModsTask;
-            await closeWindowTask;
         }
 
         private async Task AddModsFromFiles()
@@ -1117,11 +1115,9 @@ namespace ModMyFactory.ViewModels
                 newFactorioDirectory, newModDirectory, newSavegameDirectory, newScenarioDirectory,
                 moveFactorioDirectory, moveModDirectory, moveSavegameDirectory, moveScenarioDirectory);
 
-            Task closeWindowTask = moveDirectoriesTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-            progressWindow.ShowDialog();
+            await progressWindow.ShowProgressAsync(moveDirectoriesTask);
 
             await moveDirectoriesTask;
-            await closeWindowTask;
         }
 
         private async Task ApplySettings(Settings settings, SettingsViewModel settingsViewModel, SettingsWindow settingsWindow)
@@ -1249,20 +1245,11 @@ namespace ModMyFactory.ViewModels
 
             try
             {
-                Task closeWindowTask = null;
-                try
-                {
-                    var downloadTask = WebHelper.DownloadFileAsync(url, file, progress, cancellationSource.Token);
+                var downloadTask = WebHelper.DownloadFileAsync(url, file, progress, cancellationSource.Token);
 
-                    closeWindowTask = downloadTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                    progressWindow.ShowDialog();
+                await progressWindow.ShowProgressAsync(downloadTask);
 
-                    await downloadTask;
-                }
-                finally
-                {
-                    if (closeWindowTask != null) await closeWindowTask;
-                }
+                await downloadTask;
             }
             catch (HttpRequestException)
             {

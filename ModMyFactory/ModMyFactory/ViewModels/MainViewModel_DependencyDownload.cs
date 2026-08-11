@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using ModMyFactory.Helpers;
 using ModMyFactory.Models;
 using ModMyFactory.Views;
 using ModMyFactory.Web;
@@ -140,20 +141,11 @@ namespace ModMyFactory.ViewModels
 
             try
             {
-                Task closeWindowTask = null;
-                try
-                {
-                    var getDependenciesTask = GetDependencies(cancellationSource.Token);
+                var getDependenciesTask = GetDependencies(cancellationSource.Token);
 
-                    closeWindowTask = getDependenciesTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                    progressWindow.ShowDialog();
+                await progressWindow.ShowProgressAsync(getDependenciesTask);
 
-                    dependencies = await getDependenciesTask;
-                }
-                finally
-                {
-                    if (closeWindowTask != null) await closeWindowTask;
-                }
+                dependencies = await getDependenciesTask;
             }
             catch (Exception ex) when ((ex is WebException) || (ex is HttpRequestException))
             {
@@ -192,21 +184,12 @@ namespace ModMyFactory.ViewModels
 
                         try
                         {
-                            Task closeWindowTask = null;
-                            try
-                            {
-                                var selectedDependencies = dependencies.Where(dependency => dependency.IsSelected).ToList();
-                                var downloadTask = DownloadDependenciesInternal(selectedDependencies, progress, cancellationSource.Token, token);
+                            var selectedDependencies = dependencies.Where(dependency => dependency.IsSelected).ToList();
+                            var downloadTask = DownloadDependenciesInternal(selectedDependencies, progress, cancellationSource.Token, token);
 
-                                closeWindowTask = downloadTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                                progressWindow.ShowDialog();
+                            await progressWindow.ShowProgressAsync(downloadTask);
 
-                                await downloadTask;
-                            }
-                            finally
-                            {
-                                if (closeWindowTask != null) await closeWindowTask;
-                            }
+                            await downloadTask;
                         }
                         catch (Exception ex) when ((ex is WebException) || (ex is HttpRequestException))
                         {

@@ -235,20 +235,11 @@ namespace ModMyFactory.ViewModels
             List<ModUpdateInfo> modUpdates;
             try
             {
-                Task closeWindowTask = null;
-                try
-                {
-                    Task<List<ModUpdateInfo>> searchForUpdatesTask = GetModUpdatesAsync(progress, cancellationSource.Token);
+                Task<List<ModUpdateInfo>> searchForUpdatesTask = GetModUpdatesAsync(progress, cancellationSource.Token);
 
-                    closeWindowTask = searchForUpdatesTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                    progressWindow.ShowDialog();
+                await progressWindow.ShowProgressAsync(searchForUpdatesTask);
 
-                    modUpdates = await searchForUpdatesTask;
-                }
-                finally
-                {
-                    if (closeWindowTask != null) await closeWindowTask;
-                }
+                modUpdates = await searchForUpdatesTask;
             }
             catch (WebException)
             {
@@ -289,11 +280,9 @@ namespace ModMyFactory.ViewModels
 
                             Task updateTask = UpdateModsAsyncInner(modUpdates, token, progress, cancellationSource.Token);
 
-                            Task closeWindowTask = updateTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                            progressWindow.ShowDialog();
+                            await progressWindow.ShowProgressAsync(updateTask);
 
                             await updateTask;
-                            await closeWindowTask;
                         }
                     }
                 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using ModMyFactory.Export;
+using ModMyFactory.Helpers;
 using ModMyFactory.Models;
 using ModMyFactory.Views;
 using Ookii.Dialogs.Wpf;
@@ -58,23 +59,13 @@ namespace ModMyFactory.ViewModels
                         var progressViewModel = (ProgressViewModel)progressWindow.ViewModel;
                         progressViewModel.ActionName = App.Instance.GetLocalizedResourceString("ExportingAction");
 
-                        Task task = null;
-                        Task closeWindowTask = null;
-                        try
-                        {
-                            task = ExportArchive(exportViewModel.Modpacks.Where(modpackTemplate => modpackTemplate.Export), dialog.FileName);
+                        Task task = ExportArchive(exportViewModel.Modpacks.Where(modpackTemplate => modpackTemplate.Export), dialog.FileName);
 
-                            closeWindowTask = task.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                            progressWindow.ShowDialog();
-                        }
-                        finally
-                        {
-                            if (closeWindowTask != null) await closeWindowTask;
-                        }
+                        await progressWindow.ShowProgressAsync(task);
 
                         try
                         {
-                            if (task != null) await task;
+                            await task;
                         }
                         catch (CircularModpackReferenceException)
                         {

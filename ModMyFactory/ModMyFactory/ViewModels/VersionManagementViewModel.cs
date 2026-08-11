@@ -98,20 +98,11 @@ namespace ModMyFactory.ViewModels
                 progressViewModel.IsIndeterminate = true;
                 progressViewModel.CanCancel = false;
 
-                Task closeWindowTask = null;
-                try
-                {
-                    var getVersionsTask = FactorioWebsite.GetVersionsAsync();
+                var getVersionsTask = FactorioWebsite.GetVersionsAsync();
 
-                    closeWindowTask = getVersionsTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                    progressWindow.ShowDialog();
+                await progressWindow.ShowProgressAsync(getVersionsTask);
 
-                    versions = await getVersionsTask;
-                }
-                finally
-                {
-                    if (closeWindowTask != null) await closeWindowTask;
-                }
+                versions = await getVersionsTask;
             }
             catch (WebException)
             {
@@ -173,20 +164,11 @@ namespace ModMyFactory.ViewModels
                     FactorioVersion newVersion;
                     try
                     {
-                        Task closeWindowTask = null;
-                        try
-                        {
-                            Task<FactorioVersion> downloadTask = FactorioWebsite.DownloadFactorioAsync(selectedVersion, GlobalCredentials.Instance.Username, token, progress, cancellationSource.Token);
+                        Task<FactorioVersion> downloadTask = FactorioWebsite.DownloadFactorioAsync(selectedVersion, GlobalCredentials.Instance.Username, token, progress, cancellationSource.Token);
 
-                            closeWindowTask = downloadTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                            progressWindow.ShowDialog();
+                        await progressWindow.ShowProgressAsync(downloadTask);
 
-                            newVersion = await downloadTask;
-                        }
-                        finally
-                        {
-                            if (closeWindowTask != null) await closeWindowTask;
-                        }
+                        newVersion = await downloadTask;
                     }
                     catch (HttpRequestException)
                     {
@@ -214,25 +196,11 @@ namespace ModMyFactory.ViewModels
             progressViewModel.ProgressDescription = App.Instance.GetLocalizedResourceString("ExtractingDescription");
             progressViewModel.IsIndeterminate = true;
 
-            FactorioFolder result = null;
-            Task<FactorioFolder> extractTask;
-            Task closeWindowTask = null;
-            try
-            {
-                extractTask = FactorioFolder.FromFileAsync(file, App.Instance.Settings.GetFactorioDirectory());
+            Task<FactorioFolder> extractTask = FactorioFolder.FromFileAsync(file, App.Instance.Settings.GetFactorioDirectory());
 
-                closeWindowTask = extractTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                progressWindow.ShowDialog();
+            await progressWindow.ShowProgressAsync(extractTask);
 
-                result = await extractTask;
-            }
-            finally
-            {
-                if (closeWindowTask != null)
-                    await closeWindowTask;
-            }
-
-            return result;
+            return await extractTask;
         }
 
         public async Task AddZippedVersion(string path)
@@ -391,21 +359,11 @@ namespace ModMyFactory.ViewModels
                         progressViewModel.ProgressDescription = App.Instance.GetLocalizedResourceString("CopyingFilesDescription");
                         progressViewModel.IsIndeterminate = true;
 
-                        Task closeWindowTask = null;
-                        try
-                        {
-                            Task addTask = AddFactorioInstallation(folder);
+                        Task addTask = AddFactorioInstallation(folder);
 
-                            closeWindowTask = addTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                            progressWindow.ShowDialog();
+                        await progressWindow.ShowProgressAsync(addTask);
 
-                            await addTask;
-                        }
-                        finally
-                        {
-                            if (closeWindowTask != null)
-                                await closeWindowTask;
-                        }
+                        await addTask;
                     }
                     else
                     {
@@ -475,21 +433,11 @@ namespace ModMyFactory.ViewModels
             progressViewModel.ProgressDescription = App.Instance.GetLocalizedResourceString("CopyingFilesDescription");
             progressViewModel.IsIndeterminate = true;
 
-            Task closeWindowTask = null;
-            try
-            {
-                Task moveTask = MoveSteamVersionContents();
+            Task moveTask = MoveSteamVersionContents();
 
-                closeWindowTask = moveTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                progressWindow.ShowDialog();
+            await progressWindow.ShowProgressAsync(moveTask);
 
-                await moveTask;
-            }
-            finally
-            {
-                if (closeWindowTask != null)
-                    await closeWindowTask;
-            }
+            await moveTask;
 
             App.Instance.Settings.LoadSteamVersion = true;
             App.Instance.Settings.Save();
@@ -558,20 +506,11 @@ namespace ModMyFactory.ViewModels
 
             try
             {
-                Task closeWindowTask = null;
-                try
-                {
-                    Task updateTask = ApplyUpdate(token, target, progress, canCancel, description, cancellationSource.Token);
+                Task updateTask = ApplyUpdate(token, target, progress, canCancel, description, cancellationSource.Token);
 
-                    closeWindowTask = updateTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                    progressWindow.ShowDialog();
+                await progressWindow.ShowProgressAsync(updateTask);
 
-                    await updateTask;
-                }
-                finally
-                {
-                    if (closeWindowTask != null) await closeWindowTask;
-                }
+                await updateTask;
             }
             catch (HttpRequestException)
             {
@@ -603,21 +542,11 @@ namespace ModMyFactory.ViewModels
                     progressViewModel.IsIndeterminate = true;
                     progressViewModel.CanCancel = false;
 
-                    List<UpdateStep> updateSteps = null;
-                    Task closeWindowTask = null;
-                    try
-                    {
-                        var getUpdateStepsTask = GetUpdateSteps(token);
+                    var getUpdateStepsTask = GetUpdateSteps(token);
 
-                        closeWindowTask = getUpdateStepsTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                        progressWindow.ShowDialog();
+                    await progressWindow.ShowProgressAsync(getUpdateStepsTask);
 
-                        updateSteps = await getUpdateStepsTask;
-                    }
-                    finally
-                    {
-                        if (closeWindowTask != null) await closeWindowTask;
-                    }
+                    List<UpdateStep> updateSteps = await getUpdateStepsTask;
 
                     if (updateSteps.Count > 0)
                     {
@@ -661,21 +590,11 @@ namespace ModMyFactory.ViewModels
                 progressViewModel.IsIndeterminate = true;
                 progressViewModel.CanCancel = false;
 
-                Task closeWindowTask = null;
-                try
-                {
-                    Task deleteTask = SelectedVersion.DeleteAsync();
+                Task deleteTask = SelectedVersion.DeleteAsync();
 
-                    closeWindowTask = deleteTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                    progressWindow.ShowDialog();
+                await progressWindow.ShowProgressAsync(deleteTask);
 
-                    await deleteTask;
-                }
-                finally
-                {
-                    if (closeWindowTask != null)
-                        await closeWindowTask;
-                }
+                await deleteTask;
 
                 FactorioVersions.Remove(SelectedVersion);
             }

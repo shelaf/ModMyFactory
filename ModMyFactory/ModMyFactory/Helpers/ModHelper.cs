@@ -20,11 +20,9 @@ namespace ModMyFactory.Helpers
 
             Task<List<ModInfo>> fetchModsTask = ModWebsite.GetModsAsync(installedMods);
 
-            Task closeWindowTask = fetchModsTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-            progressWindow.ShowDialog();
+            await progressWindow.ShowProgressAsync(fetchModsTask);
 
             List<ModInfo> modInfos = await fetchModsTask;
-            await closeWindowTask;
 
             return modInfos;
         }

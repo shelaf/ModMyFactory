@@ -562,22 +562,13 @@ namespace ModMyFactory.ViewModels
                 Mod newMod;
                 try
                 {
-                    Task closeWindowTask = null;
-                    try
-                    {
-                        var downloadTask = ModWebsite.DownloadReleaseAsync(selectedRelease,
-                            GlobalCredentials.Instance.Username, token,
-                            progress, cancellationSource.Token, InstalledMods, MainViewModel.Instance.Modpacks);
+                    var downloadTask = ModWebsite.DownloadReleaseAsync(selectedRelease,
+                        GlobalCredentials.Instance.Username, token,
+                        progress, cancellationSource.Token, InstalledMods, MainViewModel.Instance.Modpacks);
 
-                        closeWindowTask = downloadTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                        progressWindow.ShowDialog();
+                    await progressWindow.ShowProgressAsync(downloadTask);
 
-                        newMod = await downloadTask;
-                    }
-                    finally
-                    {
-                        if (closeWindowTask != null) await closeWindowTask;
-                    }
+                    newMod = await downloadTask;
                 }
                 catch (HttpRequestException)
                 {

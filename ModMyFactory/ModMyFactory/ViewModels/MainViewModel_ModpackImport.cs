@@ -221,20 +221,11 @@ namespace ModMyFactory.ViewModels
 
             try
             {
-                Task closeWindowTask = null;
-                try
-                {
-                    Task downloadTask = DownloadImportedMods(template, fileLocation, progress, cancellationSource.Token);
+                Task downloadTask = DownloadImportedMods(template, fileLocation, progress, cancellationSource.Token);
 
-                    closeWindowTask = downloadTask.ContinueWith(t => progressWindow.Dispatcher.Invoke(progressWindow.Close));
-                    progressWindow.ShowDialog();
+                await progressWindow.ShowProgressAsync(downloadTask);
 
-                    await downloadTask;
-                }
-                finally
-                {
-                    if (closeWindowTask != null) await closeWindowTask;
-                }
+                await downloadTask;
             }
             catch (WebException)
             {
