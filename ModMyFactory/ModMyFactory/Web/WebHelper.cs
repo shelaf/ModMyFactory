@@ -140,7 +140,7 @@ namespace ModMyFactory.Web
                         long? fileSize = response.Content.Headers.ContentLength;
 
                         if (file.Directory?.Exists == false) file.Directory.Create();
-                        using (Stream fs = file.OpenWrite())
+                        using (Stream fs = file.Open(FileMode.Create, FileAccess.Write))
                         {
                             byte[] buffer = new byte[8192];
                             int byteCount;
@@ -160,6 +160,7 @@ namespace ModMyFactory.Web
             catch (TaskCanceledException)
             {
                 if (file.Exists) file.Delete();
+                if (!cancellationToken.IsCancellationRequested) throw;
             }
             catch (Exception)
             {
