@@ -20,6 +20,8 @@ namespace ModMyFactory
     public static class Program
     {
         private const string NewInstanceGameStartedSpecifier = "_&_game_started_&_";
+        private const int MaxPipeArgumentCount = 1024;
+        private const int MaxPipeArgumentLength = 1 << 20; // 1 MiB
 
 
         private static readonly object SyncRoot;
@@ -300,27 +302,33 @@ namespace ModMyFactory
 
         private static void ListenInner(IAsyncResult result)
         {
+            var tuple = (Tuple<NamedPipeServerStream, ManualResetEvent>)result.AsyncState;
+            var server = tuple.Item1;
+            var resetEvent = tuple.Item2;
+
             try
             {
-                var tuple = (Tuple<NamedPipeServerStream, ManualResetEvent>)result.AsyncState;
-                var server = tuple.Item1;
-                var resetEvent = tuple.Item2;
-
                 server.EndWaitForConnection(result);
 
                 using (var reader = new BinaryReader(server))
                 {
                     int argumentCount = reader.ReadInt32();
+                    if (argumentCount < 0 || argumentCount > MaxPipeArgumentCount)
+                        throw new InvalidDataException($"Received invalid argument count: {argumentCount}");
+
                     string[] arguments = new string[argumentCount];
 
                     for (int i = 0; i < argumentCount; i++)
                     {
                         int argumentLength = reader.ReadInt32();
-                        byte[] buffer = new byte[argumentLength];
-                        reader.Read(buffer, 0, argumentLength);
+                        if (argumentLength < 0 || argumentLength > MaxPipeArgumentLength)
+                            throw new InvalidDataException($"Received invalid argument length: {argumentLength}");
 
-                        string argument = Encoding.UTF8.GetString(buffer);
-                        arguments[i] = argument;
+                        byte[] buffer = reader.ReadBytes(argumentLength);
+                        if (buffer.Length != argumentLength)
+                            throw new EndOfStreamException();
+
+                        arguments[i] = Encoding.UTF8.GetString(buffer);
                     }
 
                     bool gameStarted = false;
@@ -331,11 +339,17 @@ namespace ModMyFactory
                     }
                     NewInstanceStarted?.Invoke(null, new InstanceStartedEventArgs(new CommandLine(arguments), gameStarted));
                 }
-
-                resetEvent.Set();
             }
             catch (ObjectDisposedException)
             { }
+            catch (Exception ex) when (ex is IOException || ex is InvalidDataException)
+            {
+                App.Instance.WriteExceptionLog(ex);
+            }
+            finally
+            {
+                resetEvent.Set();
+            }
         }
 
         private static Task ListenForNewInstanceStarted(CancellationToken cancellationToken)
@@ -371,6 +385,10 @@ namespace ModMyFactory
 
                             resetEvent.WaitOne();
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        App.Instance.WriteExceptionLog(ex);
                     }
                     finally
                     {
