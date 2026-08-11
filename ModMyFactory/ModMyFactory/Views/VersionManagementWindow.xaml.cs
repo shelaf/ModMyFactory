@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using ModMyFactory.Models;
 using ModMyFactory.ViewModels;
 
 namespace ModMyFactory.Views
@@ -100,7 +101,8 @@ namespace ModMyFactory.Views
         private void RenameTextBoxLostFocusHandler(object sender, EventArgs e)
         {
             var textBox = (TextBox)sender;
-            textBox.Visibility = Visibility.Collapsed;
+            if (textBox.DataContext is FactorioVersion factorioVersion && factorioVersion.Editing)
+                factorioVersion.CancelEdit();
         }
 
         private void RenameTextBoxVisibilityChangedHandler(object sender, DependencyPropertyChangedEventArgs e)
