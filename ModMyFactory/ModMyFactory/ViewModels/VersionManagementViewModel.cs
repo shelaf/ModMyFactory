@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -75,6 +76,10 @@ namespace ModMyFactory.ViewModels
                 FactorioVersionsView.CustomSort = new FactorioVersionSorter();
                 FactorioVersionsView.Filter = item => !(item is SpecialFactorioVersion);
 
+                foreach (var version in FactorioVersions)
+                    version.ScrollIntoViewRequested += FactorioVersionScrollIntoViewRequestedHandler;
+                FactorioVersions.CollectionChanged += FactorioVersionsChangedHandler;
+
                 Mods = MainViewModel.Instance.Mods;
 
                 DownloadCommand = new RelayCommand(() => AsyncCommand.Run(DownloadOnlineVersion));
@@ -84,6 +89,38 @@ namespace ModMyFactory.ViewModels
                 OpenFolderCommand = new RelayCommand(OpenFolder, () => SelectedVersion != null);
                 UpdateCommand = new RelayCommand(() => AsyncCommand.Run(UpdateSelectedVersion), () => SelectedVersion != null && SelectedVersion.CanUpdate);
                 RemoveCommand = new RelayCommand(() => AsyncCommand.Run(RemoveSelectedVersion), () => SelectedVersion != null);
+            }
+        }
+
+        private void FactorioVersionScrollIntoViewRequestedHandler(object sender, EventArgs e)
+        {
+            Window?.FactorioVersionsListBox.ScrollIntoView(sender);
+        }
+
+        private void FactorioVersionsChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (FactorioVersion version in e.NewItems)
+                        version.ScrollIntoViewRequested += FactorioVersionScrollIntoViewRequestedHandler;
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (FactorioVersion version in e.OldItems)
+                        version.ScrollIntoViewRequested -= FactorioVersionScrollIntoViewRequestedHandler;
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    if (e.NewItems != null)
+                    {
+                        foreach (FactorioVersion version in e.NewItems)
+                            version.ScrollIntoViewRequested += FactorioVersionScrollIntoViewRequestedHandler;
+                    }
+                    if (e.OldItems != null)
+                    {
+                        foreach (FactorioVersion version in e.OldItems)
+                            version.ScrollIntoViewRequested -= FactorioVersionScrollIntoViewRequestedHandler;
+                    }
+                    break;
             }
         }
 

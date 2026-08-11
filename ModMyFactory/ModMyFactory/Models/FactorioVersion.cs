@@ -174,11 +174,16 @@ namespace ModMyFactory.Models
                         Name = EditingName;
                         VersionManagementViewModel.Instance.FactorioVersionsView.CommitEdit();
 
-                        VersionManagementViewModel.Instance.Window.FactorioVersionsListBox.ScrollIntoView(this);
+                        ScrollIntoViewRequested?.Invoke(this, EventArgs.Empty);
                     }
                 }
             }
         }
+
+        /// <summary>
+        /// Occurs when this Factorio version requests to be scrolled into view.
+        /// </summary>
+        public event EventHandler ScrollIntoViewRequested;
 
         /// <summary>
         /// A command that finishes renaming this Factorio version.

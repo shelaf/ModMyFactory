@@ -390,30 +390,47 @@ namespace ModMyFactory.ViewModels
             }
         }
 
+        private void ModpackScrollIntoViewRequestedHandler(object sender, EventArgs e)
+        {
+            Window?.ModpacksListBox.ScrollIntoView(sender);
+        }
+
         private void ModpacksChangedHandler(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                     foreach (Modpack modpack in e.NewItems)
+                    {
                         modpack.PropertyChanged += ModpackPropertyChanged;
+                        modpack.ScrollIntoViewRequested += ModpackScrollIntoViewRequestedHandler;
+                    }
                     SetAllModpacksActive();
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     foreach (Modpack modpack in e.OldItems)
+                    {
                         modpack.PropertyChanged -= ModpackPropertyChanged;
+                        modpack.ScrollIntoViewRequested -= ModpackScrollIntoViewRequestedHandler;
+                    }
                     SetAllModpacksActive();
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     if (e.NewItems != null)
                     {
                         foreach (Modpack modpack in e.NewItems)
+                        {
                             modpack.PropertyChanged += ModpackPropertyChanged;
+                            modpack.ScrollIntoViewRequested += ModpackScrollIntoViewRequestedHandler;
+                        }
                     }
                     if (e.OldItems != null)
                     {
                         foreach (Modpack modpack in e.OldItems)
+                        {
                             modpack.PropertyChanged -= ModpackPropertyChanged;
+                            modpack.ScrollIntoViewRequested -= ModpackScrollIntoViewRequestedHandler;
+                        }
                     }
                     SetAllModpacksActive();
                     break;

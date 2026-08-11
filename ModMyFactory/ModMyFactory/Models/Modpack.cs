@@ -156,13 +156,18 @@ namespace ModMyFactory.Models
                         Name = EditingName;
                         ParentView.CommitEdit();
 
-                        MainViewModel.Instance.Window.ModpacksListBox.ScrollIntoView(this);
-                        ModpackTemplateList.Instance.Update(MainViewModel.Instance.Modpacks);
+                        ScrollIntoViewRequested?.Invoke(this, EventArgs.Empty);
+                        ModpackTemplateList.Instance.Update(parentCollection);
                         ModpackTemplateList.Instance.Save();
                     }
                 }
             }
         }
+
+        /// <summary>
+        /// Occurs when this modpack requests to be scrolled into view.
+        /// </summary>
+        public event EventHandler ScrollIntoViewRequested;
 
         /// <summary>
         /// Indicates whether the contents of this modpack are currently expanded on the UI.
@@ -209,7 +214,7 @@ namespace ModMyFactory.Models
                     isLocked = value;
                     OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsLocked)));
 
-                    ModpackTemplateList.Instance.Update(MainViewModel.Instance.Modpacks);
+                    ModpackTemplateList.Instance.Update(parentCollection);
                     ModpackTemplateList.Instance.Save();
 
                     if (isLocked && editing) EndEdit();
