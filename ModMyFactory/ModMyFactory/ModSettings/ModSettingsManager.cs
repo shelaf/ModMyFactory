@@ -96,7 +96,7 @@ namespace ModMyFactory.ModSettings
         public static void EndUpdate(bool force = false)
         {
             if (force) updateCount = 0;
-            else updateCount--;
+            else if (updateCount > 0) updateCount--;
         }
 
         public static void SaveBinarySettings(ModCollection mods)
