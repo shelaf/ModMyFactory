@@ -185,6 +185,11 @@ namespace ModMyFactory.Models
         /// </summary>
         public RelayCommand EndEditCommand { get; }
 
+        /// <summary>
+        /// A command that cancels renaming this Factorio version.
+        /// </summary>
+        public RelayCommand CancelEditCommand { get; }
+
         protected FactorioVersion()
         {
             hasLinks = false;
@@ -196,6 +201,7 @@ namespace ModMyFactory.Models
             name = LoadName();
             editingName = name;
             EndEditCommand = new RelayCommand(EndEdit, () => Editing);
+            CancelEditCommand = new RelayCommand(CancelEdit, () => Editing);
         }
 
         protected FactorioVersion(FactorioFolder folder, bool canMove, DirectoryInfo linkDirectory)
@@ -209,6 +215,7 @@ namespace ModMyFactory.Models
             name = LoadName();
             editingName = name;
             EndEditCommand = new RelayCommand(EndEdit, () => Editing);
+            CancelEditCommand = new RelayCommand(CancelEdit, () => Editing);
 
             this.linkDirectory = linkDirectory;
             if (!linkDirectory.Exists) linkDirectory.Create();
@@ -226,6 +233,7 @@ namespace ModMyFactory.Models
             name = LoadName();
             editingName = name;
             EndEditCommand = new RelayCommand(EndEdit, () => Editing);
+            CancelEditCommand = new RelayCommand(CancelEdit, () => Editing);
 
             linkDirectory = folder.Directory;
             CreateLinks();
@@ -290,7 +298,8 @@ namespace ModMyFactory.Models
 
         public void CancelEdit()
         {
-            throw new NotSupportedException();
+            EditingName = Name;
+            Editing = false;
         }
 
         /// <summary>

@@ -63,6 +63,7 @@
                                              Visibility="{Binding Editing, Converter={StaticResource VisibilityConverter}, Mode=TwoWay}">
                             <TextBox.InputBindings>
                                 <KeyBinding Key="Return" Command="{Binding EndEditCommand}"/>
+                                <KeyBinding Key="Escape" Command="{Binding CancelEditCommand}"/>
                             </TextBox.InputBindings>
                         </TextBox>
                         <TextBlock Grid.Column="2" Margin="2" VerticalAlignment="Center" IsHitTestVisible="False" Text="{Binding Version, StringFormat=({0})}" Foreground="{DynamicResource MutedForegroundBrush}"/>

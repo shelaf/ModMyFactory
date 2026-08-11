@@ -245,6 +245,11 @@ namespace ModMyFactory.Models
         public RelayCommand EndEditCommand { get; }
 
         /// <summary>
+        /// A command that cancels renaming this modpack.
+        /// </summary>
+        public RelayCommand CancelEditCommand { get; }
+
+        /// <summary>
         /// Indicates whether any mods in this modpack have settings;
         /// </summary>
         public bool HasSettings
@@ -551,6 +556,7 @@ namespace ModMyFactory.Models
 
             DeleteCommand = new RelayCommand<bool?>(showPrompt => Delete(showPrompt ?? true));
             EndEditCommand = new RelayCommand(EndEdit, () => Editing);
+            CancelEditCommand = new RelayCommand(CancelEdit, () => Editing);
             ViewSettingsCommand = new RelayCommand(ViewSettings);
         }
 
@@ -566,7 +572,8 @@ namespace ModMyFactory.Models
 
         public void CancelEdit()
         {
-            throw new NotSupportedException();
+            EditingName = Name;
+            Editing = false;
         }
     }
 }
