@@ -673,8 +673,9 @@ namespace ModMyFactory.ViewModels
                 AvailableCultures = App.Instance.GetAvailableCultures();
                 AvailableCulturesView = (ListCollectionView)CollectionViewSource.GetDefaultView(AvailableCultures);
                 AvailableCulturesView.CustomSort = new CultureEntrySorter();
-                AvailableCultures.First(entry =>
-                    string.Equals(entry.LanguageCode, App.Instance.Settings.SelectedLanguage, StringComparison.InvariantCultureIgnoreCase)).Select();
+                (AvailableCultures.FirstOrDefault(entry =>
+                    string.Equals(entry.LanguageCode, App.Instance.Settings.SelectedLanguage, StringComparison.InvariantCultureIgnoreCase))
+                    ?? AvailableCultures.First(entry => entry.LanguageCode == "en")).Select();
 
                 Themes = Theme.AvailableThemes;
 
