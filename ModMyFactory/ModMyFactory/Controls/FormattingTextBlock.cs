@@ -301,7 +301,7 @@ namespace ModMyFactory.Controls
                                 if (diff > 0)
                                 {
                                     string url = text.Substring(index, diff).SplitOnWhitespace()[0];
-                                    if (!string.IsNullOrWhiteSpace(url) && Uri.TryCreate(url, UriKind.Absolute, out var uri))
+                                    if (!string.IsNullOrWhiteSpace(url) && Uri.TryCreate(url, UriKind.Absolute, out var uri) && uri.IsWebLink())
                                         link.NavigateUri = uri;
                                 }
 
@@ -331,7 +331,7 @@ namespace ModMyFactory.Controls
                         string url = text.Substring(index, endIndex - index);
 
                         var link = new Hyperlink(new Run(url));
-                        if (!string.IsNullOrWhiteSpace(url) && Uri.TryCreate(url, UriKind.Absolute, out var uri))
+                        if (!string.IsNullOrWhiteSpace(url) && Uri.TryCreate(url, UriKind.Absolute, out var uri) && uri.IsWebLink())
                             link.NavigateUri = uri;
                         link.RequestNavigate += LinkOnRequestNavigate;
                         inlines.Add(link);
@@ -359,9 +359,12 @@ namespace ModMyFactory.Controls
             try
             {
                 string url = e.Uri?.ToString();
-                if (!string.IsNullOrWhiteSpace(url)) Process.Start(url);
+                if (!string.IsNullOrWhiteSpace(url) && e.Uri.IsWebLink()) Process.Start(url);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                App.Instance.WriteExceptionLog(ex);
+            }
         }
 
         #endregion

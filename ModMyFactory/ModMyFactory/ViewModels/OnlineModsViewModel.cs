@@ -468,7 +468,7 @@ namespace ModMyFactory.ViewModels
             OpenLicenseLinkCommand = new RelayCommand(() =>
             {
                 string url = ExtendedInfo?.License?.Url;
-                if (!string.IsNullOrWhiteSpace(url))
+                if (!string.IsNullOrWhiteSpace(url) && Uri.TryCreate(url, UriKind.Absolute, out var uri) && uri.IsWebLink())
                 {
                     try
                     {
@@ -480,7 +480,7 @@ namespace ModMyFactory.ViewModels
             OpenHomepageCommand = new RelayCommand(() =>
             {
                 string url = ExtendedInfo?.Homepage;
-                if (!string.IsNullOrWhiteSpace(url))
+                if (!string.IsNullOrWhiteSpace(url) && Uri.TryCreate(url, UriKind.Absolute, out var uri) && uri.IsWebLink())
                 {
                     try
                     {
