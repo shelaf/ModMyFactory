@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using ModMyFactory.Helpers;
 using ModMyFactory.Models;
 using ModMyFactory.Web.ModApi;
@@ -113,7 +114,7 @@ namespace ModMyFactory.Web
 
         private static Uri BuildUrl(ModRelease release, string username, string token)
         {
-            return new Uri($"{BaseUrl}{release.DownloadUrl}?username={username}&token={token}");
+            return new Uri($"{BaseUrl}{release.DownloadUrl}?username={HttpUtility.UrlEncode(username)}&token={HttpUtility.UrlEncode(token)}");
         }
 
         /// <summary>

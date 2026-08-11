@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -159,6 +160,8 @@ namespace ModMyFactory
         /// </summary>
         internal void WriteExceptionLog(Exception exception)
         {
+            string text = Regex.Replace(exception.ToString(), "token=[^&\\s]*", "token=***", RegexOptions.IgnoreCase);
+
             var logFile = new FileInfo(Path.Combine(AppDataPath, "error-log.txt"));
             if (logFile.Exists)
             {
@@ -168,7 +171,7 @@ namespace ModMyFactory
                     {
                         writer.WriteLine();
                         writer.WriteLine();
-                        writer.Write(exception.ToString());
+                        writer.Write(text);
                     }
                 }
             }
@@ -178,7 +181,7 @@ namespace ModMyFactory
                 {
                     using (var writer = new StreamWriter(stream))
                     {
-                        writer.Write(exception.ToString());
+                        writer.Write(text);
                     }
                 }
             }

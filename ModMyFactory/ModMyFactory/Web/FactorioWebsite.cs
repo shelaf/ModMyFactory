@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using ModMyFactory.Models;
 
 namespace ModMyFactory.Web
@@ -65,7 +66,7 @@ namespace ModMyFactory.Web
             if (!factorioDirectory.Exists) factorioDirectory.Create();
 
             var file = new FileInfo(Path.Combine(factorioDirectory.FullName, "package.zip"));
-            string url = version.DownloadUrl + $"?username={username}&token={token}";
+            string url = version.DownloadUrl + $"?username={HttpUtility.UrlEncode(username)}&token={HttpUtility.UrlEncode(token)}";
             await WebHelper.DownloadFileAsync(new Uri(url), file, progress, cancellationToken);
 
             try

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using ModMyFactory.Helpers;
 using ModMyFactory.Web.UpdateApi;
 
@@ -23,7 +24,7 @@ namespace ModMyFactory.Web
         /// <returns>Returns information about all available updates for Factorio.</returns>
         public static async Task<UpdateInfo> GetUpdateInfoAsync(string username, string token)
         {
-            string url = $"{BaseUrl}/get-available-versions?username={username}&token={token}&apiVersion={ApiVersion}";
+            string url = $"{BaseUrl}/get-available-versions?username={HttpUtility.UrlEncode(username)}&token={HttpUtility.UrlEncode(token)}&apiVersion={ApiVersion}";
             string document = await Task.Run(() => WebHelper.GetDocument(url));
 
             if (!string.IsNullOrEmpty(document))
@@ -48,7 +49,7 @@ namespace ModMyFactory.Web
             const string win32Package = "core-win32";
             string package = Environment.Is64BitOperatingSystem ? win64Package : win32Package;
 
-            string url = $"{BaseUrl}/get-download-link?username={username}&token={token}&apiVersion={ApiVersion}&package={package}&from={step.From}&to={step.To}";
+            string url = $"{BaseUrl}/get-download-link?username={HttpUtility.UrlEncode(username)}&token={HttpUtility.UrlEncode(token)}&apiVersion={ApiVersion}&package={package}&from={step.From}&to={step.To}";
             string document = await Task.Run(() => WebHelper.GetDocument(url));
 
             int firstIndex = document.IndexOf('"');
