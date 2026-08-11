@@ -54,6 +54,7 @@ namespace ModMyFactory
                 ActivateOptionalDependencies = false,
 
                 LoadSteamVersion = false,
+                Theme = "light",
             };
             return defaultSettings;
         }

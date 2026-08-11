@@ -235,6 +235,8 @@ namespace ModMyFactory
         /// <param name="name">The themes name.</param>
         internal void SetTheme(string name)
         {
+            if (string.IsNullOrEmpty(name)) name = "light";
+
             var dict = new ResourceDictionary() { Source = new Uri($"Colors_{name}.xaml", UriKind.Relative) };
             Resources.MergedDictionaries[0] = dict;
 

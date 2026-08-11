@@ -63,7 +63,8 @@ namespace ModMyFactory
             SelectCommand = new RelayCommand(() => Selected = true);
             themes.Add(this);
 
-            if (App.Instance.Settings.Theme == Name)
+            string configuredTheme = string.IsNullOrEmpty(App.Instance.Settings.Theme) ? "light" : App.Instance.Settings.Theme;
+            if (configuredTheme == Name)
             {
                 selected = true;
                 App.Instance.SetTheme(Name);
