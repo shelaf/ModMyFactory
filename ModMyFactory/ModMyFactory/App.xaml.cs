@@ -95,6 +95,17 @@ namespace ModMyFactory
             // Reset log
             ResetExceptionLog();
 
+            // Log exceptions that occur off the UI thread and would otherwise go unnoticed.
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+            {
+                if (e.ExceptionObject is Exception ex) WriteExceptionLog(ex);
+            };
+            TaskScheduler.UnobservedTaskException += (sender, e) =>
+            {
+                WriteExceptionLog(e.Exception);
+                e.SetObserved();
+            };
+
             // Generate log when crashed.
             if (createCrashLog)
             {

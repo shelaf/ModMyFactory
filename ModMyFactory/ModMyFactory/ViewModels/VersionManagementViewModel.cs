@@ -77,13 +77,13 @@ namespace ModMyFactory.ViewModels
 
                 Mods = MainViewModel.Instance.Mods;
 
-                DownloadCommand = new RelayCommand(async () => await DownloadOnlineVersion());
-                AddFromZipCommand = new RelayCommand(async () => await AddZippedVersion());
-                AddFromFolderCommand = new RelayCommand(async () => await AddLocalVersion());
-                SelectSteamCommand = new RelayCommand(async () => await SelectSteamVersion(), () => !App.Instance.Settings.LoadSteamVersion);
+                DownloadCommand = new RelayCommand(() => AsyncCommand.Run(DownloadOnlineVersion));
+                AddFromZipCommand = new RelayCommand(() => AsyncCommand.Run(AddZippedVersion));
+                AddFromFolderCommand = new RelayCommand(() => AsyncCommand.Run(AddLocalVersion));
+                SelectSteamCommand = new RelayCommand(() => AsyncCommand.Run(SelectSteamVersion), () => !App.Instance.Settings.LoadSteamVersion);
                 OpenFolderCommand = new RelayCommand(OpenFolder, () => SelectedVersion != null);
-                UpdateCommand = new RelayCommand(async () => await UpdateSelectedVersion(), () => SelectedVersion != null && SelectedVersion.CanUpdate);
-                RemoveCommand = new RelayCommand(async () => await RemoveSelectedVersion(), () => SelectedVersion != null);
+                UpdateCommand = new RelayCommand(() => AsyncCommand.Run(UpdateSelectedVersion), () => SelectedVersion != null && SelectedVersion.CanUpdate);
+                RemoveCommand = new RelayCommand(() => AsyncCommand.Run(RemoveSelectedVersion), () => SelectedVersion != null);
             }
         }
 

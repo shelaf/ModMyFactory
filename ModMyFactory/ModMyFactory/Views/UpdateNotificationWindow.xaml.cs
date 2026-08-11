@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 using ModMyFactory.Web;
@@ -65,7 +66,14 @@ namespace ModMyFactory.Views
 
         private async void WindowLoadedHandler(object sender, RoutedEventArgs e)
         {
-            ChangelogTextBlock.Text = await DownloadChangelogAsync(Version);
+            try
+            {
+                ChangelogTextBlock.Text = await DownloadChangelogAsync(Version);
+            }
+            catch (Exception ex)
+            {
+                App.Instance.WriteExceptionLog(ex);
+            }
         }
     }
 }

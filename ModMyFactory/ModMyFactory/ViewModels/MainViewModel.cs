@@ -695,23 +695,23 @@ namespace ModMyFactory.ViewModels
 
 
                 // 'File' menu
-                DownloadModsCommand = new RelayCommand(async () => await DownloadMods());
-                AddModsFromFilesCommand = new RelayCommand(async () => await AddModsFromFiles());
-                AddModFromFolderCommand = new RelayCommand(async () => await AddModFromFolder());
+                DownloadModsCommand = new RelayCommand(() => AsyncCommand.Run(DownloadMods));
+                AddModsFromFilesCommand = new RelayCommand(() => AsyncCommand.Run(AddModsFromFiles));
+                AddModFromFolderCommand = new RelayCommand(() => AsyncCommand.Run(AddModFromFolder));
                 CreateModpackCommand = new RelayCommand(CreateNewModpack);
                 CreateLinkCommand = new RelayCommand(CreateLink);
 
-                ExportModpacksCommand = new RelayCommand(async () => await ExportModpacks());
-                ImportModpacksCommand = new RelayCommand(async () => await ImportModpacks());
+                ExportModpacksCommand = new RelayCommand(() => AsyncCommand.Run(ExportModpacks));
+                ImportModpacksCommand = new RelayCommand(() => AsyncCommand.Run(ImportModpacks));
 
                 StartGameCommand = new RelayCommand(StartGame, () => SelectedFactorioVersion != null);
 
                 // 'Edit' menu
-                UpdateModsCommand = new RelayCommand(async () => await UpdateMods());
-                DownloadDependenciesCommand = new RelayCommand(async () => await DownloadDependencies());
+                UpdateModsCommand = new RelayCommand(() => AsyncCommand.Run(UpdateMods));
+                DownloadDependenciesCommand = new RelayCommand(() => AsyncCommand.Run(DownloadDependencies));
 
                 OpenVersionManagerCommand = new RelayCommand(OpenVersionManager);
-                OpenSettingsCommand = new RelayCommand(async () => await OpenSettings());
+                OpenSettingsCommand = new RelayCommand(() => AsyncCommand.Run(OpenSettings));
 
                 // 'View' menu
                 OpenFactorioFolderCommand = new RelayCommand(() =>
@@ -746,7 +746,7 @@ namespace ModMyFactory.ViewModels
                 BrowseModWebsiteCommand = new RelayCommand(() => Process.Start("https://mods.factorio.com/"));
                 BrowseForumThreadCommand = new RelayCommand(() => Process.Start("https://forums.factorio.com/viewtopic.php?f=137&t=33370"));
 
-                UpdateCommand = new RelayCommand<bool>(async silent => await Update(silent), () => !updating);
+                UpdateCommand = new RelayCommand<bool>(silent => AsyncCommand.Run(() => Update(silent)), () => !updating);
                 OpenAboutWindowCommand = new RelayCommand(OpenAboutWindow);
                 BrowseWikiCommand = new RelayCommand(() => Process.Start("https://github.com/Artentus/ModMyFactory/wiki"));
 
@@ -1487,7 +1487,14 @@ namespace ModMyFactory.ViewModels
 
         private async void NewInstanceStartedHandler(object sender, InstanceStartedEventArgs e)
         {
-            await Window.Dispatcher.InvokeAsync(async () => await OnNewInstanceStarted(e.CommandLine, e.GameStarted));
+            try
+            {
+                await await Window.Dispatcher.InvokeAsync(() => OnNewInstanceStarted(e.CommandLine, e.GameStarted));
+            }
+            catch (Exception ex)
+            {
+                App.Instance.WriteExceptionLog(ex);
+            }
         }
 
         private async Task OnNewInstanceStarted(CommandLine commandLine, bool gameStarted)

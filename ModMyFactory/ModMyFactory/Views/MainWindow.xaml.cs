@@ -470,10 +470,17 @@ namespace ModMyFactory.Views
         {
             dropTimer.Stop();
 
-            if (droppedFiles != null)
+            try
             {
-                await MainViewModel.Instance.AddModsFromFiles(droppedFiles, true);
-                droppedFiles = null;
+                if (droppedFiles != null)
+                {
+                    await MainViewModel.Instance.AddModsFromFiles(droppedFiles, true);
+                    droppedFiles = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                App.Instance.WriteExceptionLog(ex);
             }
         }
     }

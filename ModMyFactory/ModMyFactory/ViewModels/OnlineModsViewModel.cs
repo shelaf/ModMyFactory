@@ -226,7 +226,7 @@ namespace ModMyFactory.ViewModels
 
                         ExtendedInfo = null;
                         asyncFetchExtendedInfoIndex++;
-                        new Action(async () => await LoadExtendedModInfoAsync(selectedMod, asyncFetchExtendedInfoIndex)).Invoke();
+                        AsyncCommand.Run(() => LoadExtendedModInfoAsync(selectedMod, asyncFetchExtendedInfoIndex));
                     }
                     else
                     {
@@ -461,9 +461,9 @@ namespace ModMyFactory.ViewModels
             sortingMode = App.IsInDesignMode ? ModInfoSorterMode.Score : App.Instance.Settings.OnlineModListSorting;
             sorter = new ModInfoSorter() { Mode = sortingMode };
 
-            DownloadCommand = new RelayCommand(async () => await DownloadSelectedModRelease(), () => SelectedRelease != null && !SelectedRelease.IsInstalled);
+            DownloadCommand = new RelayCommand(() => AsyncCommand.Run(DownloadSelectedModRelease), () => SelectedRelease != null && !SelectedRelease.IsInstalled);
             DeleteCommand = new RelayCommand(DeleteSelectedModRelease, () => SelectedRelease != null && SelectedRelease.IsInstalled);
-            RefreshCommand = new RelayCommand(async () => await RefreshModList());
+            RefreshCommand = new RelayCommand(() => AsyncCommand.Run(RefreshModList));
 
             OpenLicenseLinkCommand = new RelayCommand(() =>
             {

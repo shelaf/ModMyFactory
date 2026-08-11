@@ -83,10 +83,17 @@ namespace ModMyFactory.Views
         {
             dropTimer.Stop();
 
-            if (!string.IsNullOrEmpty(droppedFile))
+            try
             {
-                await VersionManagementViewModel.Instance.AddZippedVersion(droppedFile);
-                droppedFile = null;
+                if (!string.IsNullOrEmpty(droppedFile))
+                {
+                    await VersionManagementViewModel.Instance.AddZippedVersion(droppedFile);
+                    droppedFile = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                App.Instance.WriteExceptionLog(ex);
             }
         }
 
