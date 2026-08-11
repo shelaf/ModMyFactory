@@ -83,7 +83,15 @@ namespace ModMyFactory
 
         public override int GetHashCode()
         {
-            return Major.GetHashCode() ^ Minor.GetHashCode() ^ Build.GetHashCode() ^ Revision.GetHashCode();
+            unchecked
+            {
+                int hash = 17;
+                hash = (hash * 31) + Major;
+                hash = (hash * 31) + Minor;
+                hash = (hash * 31) + Build;
+                hash = (hash * 31) + Revision;
+                return hash;
+            }
         }
 
         public override string ToString()
