@@ -160,7 +160,7 @@ namespace ModMyFactory
             return version?.baseVersion;
         }
 
-        public static implicit operator GameCompatibleVersion(Version version)
+        public static explicit operator GameCompatibleVersion(Version version)
         {
             if (ReferenceEquals(version, null)) return null;
             else return new GameCompatibleVersion(version);
