@@ -32,8 +32,16 @@ namespace ModMyFactory.Helpers
                 string softwarePath = Environment.Is64BitProcess ? @"SOFTWARE\WOW6432Node" : "SOFTWARE";
                 softwareKey = Registry.LocalMachine.OpenSubKey(softwarePath, false);
 
-                using (var key = softwareKey.OpenSubKey(@"Valve\Steam"))
+                using (var key = softwareKey?.OpenSubKey(@"Valve\Steam"))
                 {
+                    if (key == null)
+                    {
+                        installPath = null;
+                        steamInstalled = false;
+                        path = null;
+                        return false;
+                    }
+
                     var obj = key.GetValue("InstallPath");
                     installPath = obj as string;
                     steamInstalled = (!string.IsNullOrWhiteSpace(installPath) && Directory.Exists(installPath));
@@ -42,15 +50,15 @@ namespace ModMyFactory.Helpers
                     return steamInstalled.Value;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                App.Instance.WriteExceptionLog(ex);
                 path = null;
                 return false;
             }
             finally
             {
-                if (softwareKey != null)
-                    softwareKey.Close();
+                softwareKey?.Close();
             }
         }
 
@@ -77,7 +85,7 @@ namespace ModMyFactory.Helpers
                     content = reader.ReadToEnd();
             }
 
-            var matches = Regex.Matches(content, "\"path\"\\s+\"(?<path>.+)\"");
+            var matches = Regex.Matches(content, "\"path\"\\s+\"(?<path>[^\"]+)\"");
             foreach (Match match in matches)
             {
                 string path = match.Groups["path"].Value;
